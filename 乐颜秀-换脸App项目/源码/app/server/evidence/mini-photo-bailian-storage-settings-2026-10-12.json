@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "checkedOn": "2026-10-12",
+  "method": "existing-chrome-visible-console-and-in-memory-endpoint-comparison",
+  "region": "cn-beijing",
+  "productionEndpointMatchesObservedWorkspace": true,
+  "inferenceLogs": { "observedText": "推理日志未开启", "enabled": false },
+  "assetCenter": { "observedText": "未开通", "activated": false },
+  "remoteConfigurationChanged": false,
+  "modelCalls": 0,
+  "moderationCalls": 0,
+  "userMediaRead": false,
+  "providerZeroRetentionVerified": false,
+  "historicalCopiesVerifiedAbsent": false,
+  "sources": [
+    "https://help.aliyun.com/zh/model-studio/privacy-notice",
+    "https://help.aliyun.com/en/model-studio/model-telemetry",
+    "https://help.aliyun.com/zh/model-studio/asset-center"
+  ]
+}

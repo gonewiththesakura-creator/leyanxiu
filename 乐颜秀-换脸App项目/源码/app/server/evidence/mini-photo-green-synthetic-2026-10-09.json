@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "scope": "two-authorized-synthetic-image-moderation-calls",
+  "activationConfirmedInConsole": true,
+  "userApproval": "explicit confirmation for pay-as-you-go activation and at most two synthetic image checks",
+  "region": "cn-shanghai",
+  "probeVersion": "synthetic-probe-v1",
+  "probeFinishedAt": "2026-10-09T15:38:14.470Z",
+  "cleanupObservedAt": "2026-10-09T15:39:19.037Z",
+  "sample": { "format": "PNG", "width": 256, "height": 256, "solidColour": true, "containsPeople": false, "containsUserMedia": false },
+  "actualGreenAttempts": 2,
+  "automaticRetries": false,
+  "resourcePackagePurchased": false,
+  "rulesChanged": false,
+  "rulesObservedBeforeCalls": {
+    "baselineCheck": {
+      "largeModelAddonEnabled": false,
+      "exemptionLibraries": 0,
+      "categorySwitchCounts": {
+        "adult": { "on": 3, "off": 4 },
+        "sexy": { "on": 6, "off": 6 },
+        "politics": { "on": 8, "off": 17 },
+        "terrorism": { "on": 4, "off": 9 },
+        "prohibited": { "on": 1, "off": 3 },
+        "special": { "on": 1, "off": 0 }
+      }
+    },
+    "aigcCheck": {
+      "largeModelAddonEnabled": false,
+      "exemptionLibraries": 0,
+      "categorySwitchCounts": {
+        "adult": { "on": 3, "off": 0 },
+        "vulgar": { "on": 2, "off": 0 },
+        "sexy": { "on": 11, "off": 2 },
+        "behavior": { "on": 2, "off": 0 },
+        "politics": { "on": 14, "off": 0 },
+        "terrorism": { "on": 6, "off": 1 },
+        "prohibited": { "on": 2, "off": 0 },
+        "discomfort": { "on": 5, "off": 0 },
+        "bad": { "on": 3, "off": 0 },
+        "religion": { "on": 3, "off": 0 },
+        "special": { "on": 1, "off": 0 }
+      }
+    }
+  },
+  "results": [
+    {
+      "direction": "input", "service": "baselineCheck", "decision": "allow",
+      "riskLevel": "none", "labels": ["nonLabel"], "receiptBound": true,
+      "requestIdPresent": true, "cleanupPending": false,
+      "authenticatedHeadStatus": 404, "authenticatedHeadCode": "NoSuchKey"
+    },
+    {
+      "direction": "output", "service": "aigcCheck", "decision": "allow",
+      "riskLevel": "none", "labels": ["nonLabel"], "receiptBound": true,
+      "requestIdPresent": true, "cleanupPending": false,
+      "authenticatedHeadStatus": 404, "authenticatedHeadCode": "NoSuchKey"
+    }
+  ],
+  "cost": {
+    "estimatedBaseCny": 0.003,
+    "ossRequestsAndTrafficExcluded": true,
+    "invoiceVerified": false
+  },
+  "probePassed": true,
+  "productionApproved": false,
+  "userSalesOpened": false,
+  "realGenerationExecuted": false,
+  "limits": [
+    "Normal synthetic samples prove connectivity and receipt binding, not harmful-content detection accuracy.",
+    "Observed rule settings are a point-in-time snapshot, not an immutable production policy.",
+    "Authenticated HEAD proves current key absence; historical versions, backups and provider copies were not verified.",
+    "Original request identifiers and object keys remain in the protected local probe journal only.",
+    "No application deployment, real photo delivery, formal payment activation or mini-program release is asserted."
+  ],
+  "sources": [
+    "https://help.aliyun.com/zh/document_detail/467826.html",
+    "https://help.aliyun.com/zh/document_detail/467827.html",
+    "https://help.aliyun.com/zh/document_detail/467829.html"
+  ]
+}

@@ -1,0 +1,6183 @@
+PDF脱敏正文；原扫描层、签章、图片和元数据不纳入。
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第1页  共60页
+capacitor.config.ts 第1行 至 src/App.tsx 第4行
+00001   
+import type { CapacitorConfig } from "@capacitor/cli";
+00002   
+00003   
+const isDebugBuild = process.env.CAPACITOR_BUILD_VARIANT === "debug";
+00004   
+00005   
+const config: CapacitorConfig = {
+00006   
+  appId: "com.yibohuaxia.leyanxiu",
+00007   
+  appName: "乐颜秀",
+00008   
+  webDir: "dist",
+00009   
+  server: {
+00010   
+    hostname: "localhost",
+00011   
+    androidScheme: "https",
+00012   
+  },
+00013   
+  android: {
+00014   
+    backgroundColor: "#000000",
+00015   
+    allowMixedContent: isDebugBuild,
+00016   
+  },
+00017   
+  plugins: {
+00018   
+    StatusBar: {
+00019   
+      overlaysWebView: false,
+00020   
+      style: "LIGHT",
+00021   
+      backgroundColor: "#000000",
+00022   
+    },
+00023   
+    Keyboard: {
+00024   
+      resize: "native",
+00025   
+    },
+00026   
+  },
+00027   
+};
+00028   
+00029   
+export default config;
+00030   
+import { StrictMode } from 'react'
+00031   
+import { createRoot } from 'react-dom/client'
+00032   
+import './index.css'
+00033   
+import './App.css'
+00034   
+import App from './App.tsx'
+00035   
+import { initializeNativeUi } from './lib/native.ts'
+00036   
+import { AppErrorBoundary } from './components/AppErrorBoundary.tsx'
+00037   
+00038   
+void initializeNativeUi()
+00039   
+00040   
+createRoot(document.getElementById('root')!).render(
+00041   
+  <StrictMode>
+00042   
+    <AppErrorBoundary>
+00043   
+      <App />
+00044   
+    </AppErrorBoundary>
+00045   
+  </StrictMode>,
+00046   
+)
+00047   
+import { useEffect, useRef, useState } from "react";
+00048   
+import type { Template } from "@/data/templates";
+00049   
+import { FEATURED_TEMPLATES, TEMPLATES } from "@/data/templates";
+00050   
+import { SongsView } from "@/views/Songs";
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第2页  共60页
+src/App.tsx 第5行 至 src/App.tsx 第53行
+00051   
+import { RankView } from "@/views/Rank";
+00052   
+import { FeaturedTemplateFeed, VideoDetailView } from "@/views/TemplateMedia";
+00053   
+import { CustomView } from "@/views/Custom";
+00054   
+import { PlayView } from "@/views/Play";
+00055   
+import { UploadView, GeneratingView, ResultView } from "@/views/Flow";
+00056   
+import { MineView, WorksView } from "@/views/Mine";
+00057   
+import { getCredits } from "@/lib/growth";
+00058   
+import { getServerEntitlements, resumePendingCreation } from "@/lib/api";
+00059   
+import { ShieldCheck, Trophy, Music2, ThumbsUp, WandSparkles, UserRound } from "lucide-react";
+00060   
+import { App as NativeApp } from "@capacitor/app";
+00061   
+import { IS_NATIVE_APP } from "@/lib/native";
+00062   
+import { PrivacyGate } from "@/views/PrivacyGate";
+00063   
+import { acceptPrivacy, hasAcceptedPrivacy } from "@/lib/privacy";
+00064   
+00065   
+type MainTab = "rank" | "songs" | "featured" | "custom" | "mine";
+00066   
+00067   
+type View =
+00068   
+  | { name: MainTab }
+00069   
+  | { name: "caption"; returnTo: MainTab }
+00070   
+  | { name: "video-detail"; template: Template; returnTo: MainTab }
+00071   
+  | { name: "upload"; template: Template; returnTo: MainTab }
+00072   
+  | { name: "generating"; template: Template; photo: string; returnTo: MainTab }
+00073   
+  | { name: "result"; template: Template; result: string; kind: "video" | "image"; assetId?: string; returnTo: MainTab
+00073.1 
+ }
+00074   
+  | { name: "works" };
+00075   
+00076   
+type PrivacyMode = "notice" | "browse" | "accepted";
+00077   
+00078   
+const NAV_ITEMS: Array<{ key: MainTab; icon: typeof Trophy; label: string }> = [
+00079   
+  { key: "rank", icon: Trophy, label: "推荐" },
+00080   
+  { key: "songs", icon: Music2, label: "视频玩法" },
+00081   
+  { key: "featured", icon: ThumbsUp, label: "精选" },
+00082   
+  { key: "custom", icon: WandSparkles, label: "百变图片" },
+00083   
+  { key: "mine", icon: UserRound, label: "我的" },
+00084   
+];
+00085   
+00086   
+export default function App() {
+00087   
+  const [view, setView] = useState<View>({ name: "featured" });
+00088   
+  const [privacyMode, setPrivacyMode] = useState<PrivacyMode>(() => hasAcceptedPrivacy() ? "accepted" : "notice");
+00089   
+  const [pendingTemplate, setPendingTemplate] = useState<{ template: Template; returnTo: MainTab } | null>(null);
+00090   
+  const privacyAccepted = privacyMode === "accepted";
+00091   
+  const [credits, setCredits] = useState(() => privacyAccepted ? getCredits() : 0);
+00092   
+  const [online, setOnline] = useState(() => navigator.onLine);
+00093   
+  const [recovering, setRecovering] = useState(false);
+00094   
+  const [recoveryMessage, setRecoveryMessage] = useState("");
+00095   
+  const recoveryStarted = useRef(false);
+00096   
+00097   
+  useEffect(() => {
+00098   
+    if (!privacyAccepted) return;
+00099   
+    void getServerEntitlements().then(setCredits).catch(() => undefined);
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第3页  共60页
+src/App.tsx 第54行 至 src/App.tsx 第102行
+00100   
+  }, [privacyAccepted]);
+00101   
+00102   
+  useEffect(() => {
+00103   
+    if (!privacyAccepted || recoveryStarted.current) return;
+00104   
+    recoveryStarted.current = true;
+00105   
+    queueMicrotask(() => setRecovering(true));
+00106   
+    void resumePendingCreation()
+00107   
+      .then((result) => {
+00108   
+        if (!result) return;
+00109   
+        const template = TEMPLATES.find((item) => item.id === result.templateId);
+00110   
+        if (!template) throw new Error("已完成的任务对应模板已下线，请到我的作品查看");
+00111   
+        setView({
+00112   
+          name: "result",
+00113   
+          template,
+00114   
+          result: result.url,
+00115   
+          kind: result.kind,
+00116   
+          assetId: result.assetId,
+00117   
+          returnTo: template.media === "video" ? "featured" : "custom",
+00118   
+        });
+00119   
+      })
+00120   
+      .catch((error) => setRecoveryMessage(error instanceof Error ? error.message : "上次任务恢复失败"))
+00121   
+      .finally(() => setRecovering(false));
+00122   
+  }, [privacyAccepted]);
+00123   
+00124   
+  useEffect(() => {
+00125   
+    const update = () => setOnline(navigator.onLine);
+00126   
+    window.addEventListener("online", update);
+00127   
+    window.addEventListener("offline", update);
+00128   
+    return () => {
+00129   
+      window.removeEventListener("online", update);
+00130   
+      window.removeEventListener("offline", update);
+00131   
+    };
+00132   
+  }, []);
+00133   
+00134   
+  useEffect(() => {
+00135   
+    if (!IS_NATIVE_APP) return;
+00136   
+    const backListener = NativeApp.addListener("backButton", () => {
+00137   
+      setView((current) => {
+00138   
+        const overlayBack = new Event("leyanxiu:native-back", { cancelable: true });
+00139   
+        if (!document.dispatchEvent(overlayBack)) return current;
+00140   
+        if (current.name === "generating") return current;
+00141   
+        if (current.name === "caption" || current.name === "video-detail" || current.name === "upload" || current.name
+00141.1 
+ === "result") {
+00142   
+          return { name: current.returnTo };
+00143   
+        }
+00144   
+        if (current.name === "works") return { name: "mine" };
+00145   
+        void NativeApp.exitApp();
+00146   
+        return current;
+00147   
+      });
+00148   
+    });
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第4页  共60页
+src/App.tsx 第103行 至 src/App.tsx 第152行
+00149   
+    const stateListener = NativeApp.addListener("appStateChange", ({ isActive }) => {
+00150   
+      if (!isActive) document.querySelectorAll("video").forEach((video) => video.pause());
+00151   
+    });
+00152   
+    return () => {
+00153   
+      void backListener.then((listener) => listener.remove());
+00154   
+      void stateListener.then((listener) => listener.remove());
+00155   
+    };
+00156   
+  }, []);
+00157   
+00158   
+  const goTo = (name: MainTab) => setView({ name });
+00159   
+00160   
+  const selectTemplate = (template: Template, returnTo: MainTab) => {
+00161   
+    if (!privacyAccepted) {
+00162   
+      setPendingTemplate({ template, returnTo });
+00163   
+      setPrivacyMode("notice");
+00164   
+      return;
+00165   
+    }
+00166   
+    setView({ name: "upload", template, returnTo });
+00167   
+  };
+00168   
+00169   
+  const openVideoDetail = (template: Template, returnTo: MainTab) => {
+00170   
+    setView({ name: "video-detail", template, returnTo });
+00171   
+  };
+00172   
+00173   
+  const startGenerate = (template: Template, photo: string, returnTo: MainTab) => {
+00174   
+    setView({ name: "generating", template, photo, returnTo });
+00175   
+  };
+00176   
+00177   
+  const inFlow = view.name === "upload" || view.name === "generating" || view.name === "result";
+00178   
+  const activeTab: MainTab = view.name === "caption" || view.name === "video-detail"
+00179   
+    ? view.returnTo
+00180   
+    : view.name === "works"
+00181   
+      ? "mine"
+00182   
+      : view.name === "upload" || view.name === "generating" || view.name === "result"
+00183   
+        ? view.returnTo
+00184   
+        : view.name;
+00185   
+00186   
+  if (privacyMode === "notice") {
+00187   
+    return (
+00188   
+      <PrivacyGate
+00189   
+        onBrowse={() => {
+00190   
+          setPendingTemplate(null);
+00191   
+          setPrivacyMode("browse");
+00192   
+        }}
+00193   
+        onAccept={() => {
+00194   
+          acceptPrivacy();
+00195   
+          setCredits(getCredits());
+00196   
+          setPrivacyMode("accepted");
+00197   
+          if (pendingTemplate) {
+00198   
+            setView({ name: "upload", template: pendingTemplate.template, returnTo: pendingTemplate.returnTo });
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第5页  共60页
+src/App.tsx 第153行 至 src/App.tsx 第194行
+00199   
+            setPendingTemplate(null);
+00200   
+          }
+00201   
+        }}
+00202   
+      />
+00203   
+    );
+00204   
+  }
+00205   
+00206   
+  return (
+00207   
+    <div className="app-shell flex min-h-[100dvh] items-center justify-center bg-[#171717] min-[480px]:p-6">
+00208   
+      <div className="relative h-[100dvh] w-full overflow-hidden bg-black text-white min-[480px]:h-[860px] min-[480px]
+00208.1 
+:max-h-[94vh] min-[480px]:w-[430px] min-[480px]:rounded-[44px] min-[480px]:border-[8px] min-[480px]:border-[#2a2a2a] m
+00208.2 
+in-[480px]:shadow-[0_28px_70px_rgba(0,0,0,.48)]">
+00209   
+        <div className="hidden h-7 items-center justify-between bg-black px-6 text-[11px] font-semibold text-white min
+00209.1 
+-[480px]:flex">
+00210   
+          <span>9:41</span>
+00211   
+          <div className="h-5 w-20 rounded-full bg-[#1d1d1f]" />
+00212   
+          <span>5G&nbsp;&nbsp;   </span>
+00213   
+        </div>
+00214   
+00215   
+        <div className="relative h-full min-[480px]:h-[calc(100%-28px)]">
+00216   
+          {!online && (
+00217   
+            <div role="status" className="absolute inset-x-3 top-[max(8px,env(safe-area-inset-top))] z-50 rounded-[8px
+00217.1 
+] bg-[#fff4e5] px-4 py-2 text-center text-xs font-semibold text-[#8a5200] shadow-lg">
+00218   
+              当前网络不可用，已暂停在线生成
+00219   
+            </div>
+00220   
+          )}
+00221   
+          {(recovering || recoveryMessage) && (
+00222   
+            <div role="status" className={`absolute inset-x-3 top-[max(8px,env(safe-area-inset-top))] z-50 rounded-[8p
+00222.1 
+x] px-4 py-2 text-center text-xs font-semibold shadow-lg ${recoveryMessage ? "bg-[#fff4e5] text-[#8a5200]" : "bg-[#edf
+00222.2 
+6ff] text-[#0055a4]"}`}>
+00223   
+              {recoveryMessage || "正在恢复上次生成任务，不会重复扣除次数"}
+00224   
+            </div>
+00225   
+          )}
+00226   
+          {!privacyAccepted && (
+00227   
+            <button
+00228   
+              type="button"
+00229   
+              onClick={() => setPrivacyMode("notice")}
+00230   
+              className="absolute left-3 top-[max(8px,env(safe-area-inset-top))] z-50 flex min-h-10 items-center gap-2
+00230.1 
+ rounded-[8px] bg-white/92 px-3 text-xs font-semibold text-[#1d1d1f] shadow-lg backdrop-blur-xl"
+00231   
+            >
+00232   
+              <ShieldCheck size={15} className="text-[#0071e3]" /> 仅浏览 · 开启创作
+00233   
+            </button>
+00234   
+          )}
+00235   
+          <div key={`${view.name}-${"template" in view ? view.template.id : "main"}`} className="view-enter h-full">
+00236   
+            {view.name === "rank" && <RankView onSelect={(template) => openVideoDetail(template, "rank")} />}
+00237   
+            {view.name === "songs" && <SongsView credits={credits} onSelect={(template) => openVideoDetail(template, "
+00237.1 
+songs")} />}
+00238   
+            {view.name === "featured" && (
+00239   
+              <FeaturedTemplateFeed
+00240   
+                templates={FEATURED_TEMPLATES}
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第6页  共60页
+src/App.tsx 第195行 至 src/App.tsx 第242行
+00241   
+                onSelect={(template) => selectTemplate(template, "featured")}
+00242   
+              />
+00243   
+            )}
+00244   
+            {view.name === "custom" && (
+00245   
+              <CustomView
+00246   
+                onSelect={(template) => selectTemplate(template, "custom")}
+00247   
+                onCaption={() => privacyAccepted ? setView({ name: "caption", returnTo: "custom" }) : setPrivacyMode("
+00247.1 
+notice")}
+00248   
+                networkEnabled={privacyAccepted}
+00249   
+              />
+00250   
+            )}
+00251   
+            {view.name === "mine" && (
+00252   
+              <MineView
+00253   
+                credits={credits}
+00254   
+                onMake={() => goTo("custom")}
+00255   
+                onWorks={() => setView({ name: "works" })}
+00256   
+                onRefill={() => { if (privacyAccepted) void getServerEntitlements().then(setCredits).catch(() => undef
+00256.1 
+ined); }}
+00257   
+                privacyAccepted={privacyAccepted}
+00258   
+                onRequestPrivacy={() => setPrivacyMode("notice")}
+00259   
+                onPrivacyReset={() => {
+00260   
+                  setCredits(0);
+00261   
+                  setPrivacyMode("notice");
+00262   
+                  setView({ name: "featured" });
+00263   
+                }}
+00264   
+              />
+00265   
+            )}
+00266   
+            {view.name === "caption" && <PlayView onBack={() => goTo(view.returnTo)} />}
+00267   
+            {view.name === "video-detail" && (
+00268   
+              <VideoDetailView
+00269   
+                template={view.template}
+00270   
+                onBack={() => goTo(view.returnTo)}
+00271   
+                onUse={() => selectTemplate(view.template, view.returnTo)}
+00272   
+              />
+00273   
+            )}
+00274   
+            {view.name === "upload" && (
+00275   
+              <UploadView
+00276   
+                template={view.template}
+00277   
+                credits={credits}
+00278   
+                onBack={() => goTo(view.returnTo)}
+00279   
+                onGenerate={(photo, targetAge) => startGenerate(
+00280   
+                  targetAge ? { ...view.template, targetAge } : view.template,
+00281   
+                  photo,
+00282   
+                  view.returnTo,
+00283   
+                )}
+00284   
+              />
+00285   
+            )}
+00286   
+            {view.name === "generating" && (
+00287   
+              <GeneratingView
+00288   
+                template={view.template}
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第7页  共60页
+src/App.tsx 第243行 至 src/App.tsx 第289行
+00289   
+                photo={view.photo}
+00290   
+                onDone={(result) => setView({ name: "result", template: view.template, result: result.url, kind: resul
+00290.1 
+t.kind, assetId: result.assetId, returnTo: view.returnTo })}
+00291   
+                onError={(message) => {
+00292   
+                   void getServerEntitlements().then(setCredits).catch(() => undefined);
+00293   
+                  window.alert(message);
+00294   
+                  setView({ name: "upload", template: view.template, returnTo: view.returnTo });
+00295   
+                }}
+00296   
+              />
+00297   
+            )}
+00298   
+            {view.name === "result" && (
+00299   
+              <ResultView
+00300   
+                template={view.template}
+00301   
+                result={view.result}
+00302   
+                kind={view.kind}
+00303   
+                assetId={view.assetId}
+00304   
+                onRestart={() => goTo(view.returnTo)}
+00305   
+                onFinish={() => goTo(view.returnTo)}
+00306   
+                onGoWorks={() => setView({ name: "works" })}
+00307   
+              />
+00308   
+            )}
+00309   
+            {view.name === "works" && <WorksView onMake={() => goTo("custom")} />}
+00310   
+          </div>
+00311   
+00312   
+          {!inFlow && (
+00313   
+            <nav className="tab-bar absolute inset-x-0 bottom-0 z-20 grid h-[78px] grid-cols-5 border-t border-white/[
+00313.1 
+.08] bg-[#101010]/95 pb-[max(6px,env(safe-area-inset-bottom))] pt-1.5 backdrop-blur-2xl" aria-label="主导航">
+00314   
+              {NAV_ITEMS.map((item) => {
+00315   
+                const Icon = item.icon;
+00316   
+                const selected = activeTab === item.key;
+00317   
+                return (
+00318   
+                  <button
+00319   
+                    type="button"
+00320   
+                    key={item.key}
+00321   
+                    onClick={() => goTo(item.key)}
+00322   
+                    aria-current={selected ? "page" : undefined}
+00323   
+                    className={`flex min-w-0 flex-col items-center justify-center gap-0.5 px-1 transition-colors ${sel
+00323.1 
+ected ? "text-[#f23bd1]" : "text-[#8b8b8f]"}`}
+00324   
+                  >
+00325   
+                    <Icon size={22} strokeWidth={selected ? 2.3 : 1.8} />
+00326   
+                    <span className="text-[11px] font-medium">{item.label}</span>
+00327   
+                  </button>
+00328   
+                );
+00329   
+              })}
+00330   
+            </nav>
+00331   
+          )}
+00332   
+        </div>
+00333   
+      </div>
+00334   
+    </div>
+00335   
+  );
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第8页  共60页
+src/App.tsx 第290行 至 src/App.css 第49行
+00336   
+}
+00337   
+#root {
+00338   
+  min-height: 100dvh;
+00339   
+}
+00340   
+00341   
+.app-shell {
+00342   
+  color: #fff;
+00343   
+}
+00344   
+00345   
+.apple-card {
+00346   
+  border: 1px solid rgb(0 0 0 / 6%);
+00347   
+  background: rgb(255 255 255 / 88%);
+00348   
+  box-shadow: 0 12px 34px rgb(0 0 0 / 7%);
+00349   
+  backdrop-filter: blur(22px) saturate(150%);
+00350   
+}
+00351   
+00352   
+.image-scrim {
+00353   
+  background: linear-gradient(180deg, rgb(0 0 0 / 2%) 25%, rgb(0 0 0 / 74%) 100%);
+00354   
+}
+00355   
+00356   
+.card-scrim {
+00357   
+  background: linear-gradient(180deg, rgb(0 0 0 / 3%) 42%, rgb(0 0 0 / 82%) 100%);
+00358   
+}
+00359   
+00360   
+.featured-feed {
+00361   
+  overscroll-behavior-y: contain;
+00362   
+  touch-action: pan-x pinch-zoom;
+00363   
+}
+00364   
+00365   
+.featured-feed-container {
+00366   
+  display: flex;
+00367   
+  height: 100%;
+00368   
+  flex-direction: column;
+00369   
+}
+00370   
+00371   
+.featured-slide {
+00372   
+  flex: 0 0 100%;
+00373   
+  min-height: 0;
+00374   
+}
+00375   
+00376   
+.featured-card {
+00377   
+  position: relative;
+00378   
+  height: 100%;
+00379   
+  width: 100%;
+00380   
+  overflow: hidden;
+00381   
+  background: #1d1d1f;
+00382   
+}
+00383   
+00384   
+.featured-card-scrim {
+00385   
+  background: linear-gradient(180deg, rgb(0 0 0 / 22%) 0%, rgb(0 0 0 / 2%) 35%, rgb(0 0 0 / 84%) 100%);
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第9页  共60页
+src/App.css 第50行 至 src/App.css 第99行
+00386   
+}
+00387   
+00388   
+.featured-description {
+00389   
+  display: -webkit-box;
+00390   
+  overflow: hidden;
+00391   
+  -webkit-box-orient: vertical;
+00392   
+  -webkit-line-clamp: 2;
+00393   
+}
+00394   
+00395   
+.banner-scrim {
+00396   
+  background: linear-gradient(90deg, rgb(0 0 0 / 88%) 0%, rgb(0 0 0 / 58%) 46%, rgb(0 0 0 / 6%) 78%);
+00397   
+}
+00398   
+00399   
+.mine-vip-banner {
+00400   
+  background: linear-gradient(105deg, #5b48aa 0%, #8458bd 58%, #d8b8eb 100%);
+00401   
+}
+00402   
+00403   
+.scrollbar-none {
+00404   
+  scrollbar-width: none;
+00405   
+}
+00406   
+00407   
+.scrollbar-none::-webkit-scrollbar {
+00408   
+  display: none;
+00409   
+}
+00410   
+00411   
+button,
+00412   
+[role="button"] {
+00413   
+  -webkit-tap-highlight-color: transparent;
+00414   
+}
+00415   
+00416   
+button:focus {
+00417   
+  outline: none;
+00418   
+}
+00419   
+00420   
+button:focus-visible,
+00421   
+[role="button"]:focus-visible {
+00422   
+  outline: 2px solid #f23bd1;
+00423   
+  outline-offset: 2px;
+00424   
+}
+00425   
+00426   
+.tab-bar button:focus-visible {
+00427   
+  border-radius: 8px;
+00428   
+  outline-offset: -6px;
+00429   
+}
+00430   
+00431   
+img {
+00432   
+  -webkit-user-drag: none;
+00433   
+}
+00434   
+00435   
+@keyframes view-enter {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第10页  共60页
+src/App.css 第100行 至 src/App.css 第149行
+00436   
+  from {
+00437   
+    opacity: 0;
+00438   
+    transform: translateY(8px) scale(0.995);
+00439   
+    filter: blur(2px);
+00440   
+  }
+00441   
+  to {
+00442   
+    opacity: 1;
+00443   
+    transform: translateY(0) scale(1);
+00444   
+    filter: blur(0);
+00445   
+  }
+00446   
+}
+00447   
+00448   
+@keyframes stagger-rise {
+00449   
+  from {
+00450   
+    opacity: 0;
+00451   
+    transform: translateY(14px);
+00452   
+  }
+00453   
+  to {
+00454   
+    opacity: 1;
+00455   
+    transform: translateY(0);
+00456   
+  }
+00457   
+}
+00458   
+00459   
+@keyframes sheet-up {
+00460   
+  from { transform: translateY(100%); }
+00461   
+  to { transform: translateY(0); }
+00462   
+}
+00463   
+00464   
+@keyframes backdrop-in {
+00465   
+  from { opacity: 0; }
+00466   
+  to { opacity: 1; }
+00467   
+}
+00468   
+00469   
+@keyframes hero-sweep {
+00470   
+  0%, 62% { transform: translateX(-125%) skewX(-18deg); opacity: 0; }
+00471   
+  72% { opacity: 0.34; }
+00472   
+  100% { transform: translateX(150%) skewX(-18deg); opacity: 0; }
+00473   
+}
+00474   
+00475   
+.view-enter {
+00476   
+  animation: view-enter 380ms cubic-bezier(.22, .8, .32, 1);
+00477   
+}
+00478   
+00479   
+.stagger-item {
+00480   
+  opacity: 0;
+00481   
+  animation: stagger-rise 460ms cubic-bezier(.2, .78, .28, 1) both;
+00482   
+}
+00483   
+00484   
+.soft-press,
+00485   
+.category-tile,
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第11页  共60页
+src/App.css 第150行 至 src/App.css 第198行
+00486   
+.media-card {
+00487   
+  transition: transform 220ms cubic-bezier(.2, .8, .3, 1), box-shadow 220ms ease, border-color 220ms ease, background-
+00487.1 
+color 220ms ease;
+00488   
+}
+00489   
+00490   
+.soft-press:active,
+00491   
+.category-tile:active,
+00492   
+.media-card:active {
+00493   
+  transform: scale(.975);
+00494   
+}
+00495   
+00496   
+.category-tile[aria-selected="true"] {
+00497   
+  transform: translateY(-2px);
+00498   
+}
+00499   
+00500   
+.category-icon {
+00501   
+  transition: transform 220ms cubic-bezier(.2, .8, .3, 1);
+00502   
+}
+00503   
+00504   
+.category-tile[aria-selected="true"] .category-icon {
+00505   
+  transform: scale(1.08);
+00506   
+}
+00507   
+00508   
+.effect-category-scrim {
+00509   
+  background: linear-gradient(180deg, rgb(0 0 0 / 3%) 32%, rgb(23 19 17 / 78%) 100%);
+00510   
+}
+00511   
+00512   
+.effect-category img,
+00513   
+.video-template-card video,
+00514   
+.video-template-card img {
+00515   
+  transition: transform 520ms cubic-bezier(.2, .78, .3, 1), opacity 300ms ease;
+00516   
+}
+00517   
+00518   
+.effect-category[aria-selected="true"] img {
+00519   
+  transform: scale(1.035);
+00520   
+}
+00521   
+00522   
+.effect-option {
+00523   
+  animation: stagger-rise 380ms cubic-bezier(.2, .78, .28, 1) both;
+00524   
+}
+00525   
+00526   
+.video-template-card:active video,
+00527   
+.video-template-card:active img {
+00528   
+  transform: scale(1.015);
+00529   
+}
+00530   
+00531   
+.modal-backdrop {
+00532   
+  animation: backdrop-in 220ms ease both;
+00533   
+}
+00534   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第12页  共60页
+src/App.css 第199行 至 src/index.css 第4行
+00535   
+.bottom-sheet {
+00536   
+  animation: sheet-up 420ms cubic-bezier(.2, .84, .28, 1) both;
+00537   
+}
+00538   
+00539   
+.brand-mark {
+00540   
+  position: relative;
+00541   
+  overflow: hidden;
+00542   
+}
+00543   
+00544   
+.brand-mark::after {
+00545   
+  position: absolute;
+00546   
+  inset: -40% 55% -40% -45%;
+00547   
+  content: "";
+00548   
+  background: linear-gradient(100deg, transparent, rgb(255 255 255 / 34%), transparent);
+00549   
+  transform: skewX(-18deg);
+00550   
+  animation: hero-sweep 6.4s ease-in-out 1.2s infinite;
+00551   
+}
+00552   
+00553   
+.caption-hero img {
+00554   
+  animation: caption-breathe 9s ease-in-out infinite alternate;
+00555   
+}
+00556   
+00557   
+@keyframes caption-breathe {
+00558   
+  from { transform: scale(1); }
+00559   
+  to { transform: scale(1.035); }
+00560   
+}
+00561   
+00562   
+.result-reveal {
+00563   
+  animation: view-enter 420ms cubic-bezier(.2, .8, .28, 1) both;
+00564   
+}
+00565   
+00566   
+@media (prefers-reduced-motion: reduce) {
+00567   
+  *,
+00568   
+  *::before,
+00569   
+  *::after {
+00570   
+    scroll-behavior: auto !important;
+00571   
+    animation-duration: 0.01ms !important;
+00572   
+    animation-iteration-count: 1 !important;
+00573   
+    transition-duration: 0.01ms !important;
+00574   
+  }
+00575   
+00576   
+  .stagger-item {
+00577   
+    opacity: 1;
+00578   
+  }
+00579   
+00580   
+}
+00581   
+@tailwind base;
+00582   
+@tailwind components;
+00583   
+@tailwind utilities;
+00584   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第13页  共60页
+src/index.css 第5行 至 src/components/AppErrorBoundary.tsx 第9行
+00585   
+@layer base {
+00586   
+  :root {
+00587   
+    --background: 0 0% 0%;
+00588   
+    --foreground: 0 0% 100%;
+00589   
+    --card: 0 0% 100%;
+00590   
+    --card-foreground: 222 22% 12%;
+00591   
+    --popover: 0 0% 100%;
+00592   
+    --popover-foreground: 222 22% 12%;
+00593   
+    --primary: 311 88% 61%;
+00594   
+    --primary-foreground: 0 0% 100%;
+00595   
+    --secondary: 220 16% 93%;
+00596   
+    --secondary-foreground: 222 22% 12%;
+00597   
+    --muted: 220 16% 93%;
+00598   
+    --muted-foreground: 220 10% 42%;
+00599   
+    --accent: 211 100% 96%;
+00600   
+    --accent-foreground: 211 100% 38%;
+00601   
+    --destructive: 0 72% 51%;
+00602   
+    --destructive-foreground: 0 0% 100%;
+00603   
+    --border: 220 14% 88%;
+00604   
+    --input: 220 14% 88%;
+00605   
+    --ring: 311 88% 61%;
+00606   
+    --radius: 0.9rem;
+00607   
+  }
+00608   
+  * { @apply border-border; }
+00609   
+  html { background: hsl(var(--background)); }
+00610   
+  body {
+00611   
+    @apply bg-background text-foreground;
+00612   
+    margin: 0;
+00613   
+    min-width: 320px;
+00614   
+    overflow: hidden;
+00615   
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Microsoft YaHei",
+00615.1 
+ sans-serif;
+00616   
+    -webkit-font-smoothing: antialiased;
+00617   
+    letter-spacing: 0;
+00618   
+  }
+00619   
+  button {
+00620   
+    min-height: 44px;
+00621   
+    font: inherit;
+00622   
+    letter-spacing: 0;
+00623   
+  }
+00624   
+}
+00625   
+import { Component, type ErrorInfo, type ReactNode } from "react";
+00626   
+import { CircleAlert, RotateCcw } from "lucide-react";
+00627   
+00628   
+interface State {
+00629   
+  failed: boolean;
+00630   
+}
+00631   
+00632   
+export class AppErrorBoundary extends Component<{ children: ReactNode }, State> {
+00633   
+  state: State = { failed: false };
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第14页  共60页
+src/components/AppErrorBoundary.tsx 第10行 至 src/data/effects.ts 第22行
+00634   
+00635   
+  static getDerivedStateFromError(): State {
+00636   
+    return { failed: true };
+00637   
+  }
+00638   
+00639   
+  componentDidCatch(error: Error, info: ErrorInfo) {
+00640   
+    console.error("应用界面异常", error, info.componentStack);
+00641   
+  }
+00642   
+00643   
+  render() {
+00644   
+    if (!this.state.failed) return this.props.children;
+00645   
+    return (
+00646   
+      <main className="flex min-h-[100dvh] items-center justify-center bg-[#f5f5f7] p-6 text-[#1d1d1f]">
+00647   
+        <section className="w-full max-w-sm rounded-[8px] bg-white p-6 text-center shadow-[0_18px_50px_rgba(0,0,0,.12)
+00647.1 
+]">
+00648   
+          <CircleAlert size={38} className="mx-auto text-[#ff9500]" />
+00649   
+          <h1 className="mt-4 text-xl font-semibold">页面暂时没有正常显示</h1>
+00650   
+          <p className="mt-2 text-sm leading-6 text-[#6e6e73]">你的照片不会因为这个错误自动上传。重新打开页面即可继续
+00650.1 
+。</p>
+00651   
+          <button type="button" onClick={() => window.location.reload()} className="mt-5 flex w-full items-center just
+00651.1 
+ify-center gap-2 rounded-[8px] bg-[#0071e3] py-3 text-base font-semibold text-white">
+00652   
+            <RotateCcw size={18} /> 重新打开
+00653   
+          </button>
+00654   
+        </section>
+00655   
+      </main>
+00656   
+    );
+00657   
+  }
+00658   
+}
+00659   
+import type { Template } from "@/data/templates";
+00660   
+00661   
+export type PhotoEffectCategoryId = "time" | "culture" | "art" | "restore";
+00662   
+00663   
+export interface PhotoEffectCategory {
+00664   
+  id: PhotoEffectCategoryId;
+00665   
+  name: string;
+00666   
+  kicker: string;
+00667   
+  description: string;
+00668   
+  cover: string;
+00669   
+  accent: string;
+00670   
+}
+00671   
+00672   
+export interface PhotoEffect {
+00673   
+  id: string;
+00674   
+  title: string;
+00675   
+  subtitle: string;
+00676   
+  categoryId: PhotoEffectCategoryId;
+00677   
+  badge?: string;
+00678   
+  targetAge?: number;
+00679   
+  preview?: string;
+00680   
+}
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第15页  共60页
+src/data/effects.ts 第23行 至 src/data/effects.ts 第68行
+00681   
+00682   
+export const PHOTO_EFFECT_CATEGORIES: PhotoEffectCategory[] = [
+00683   
+  { id: "time", name: "时光穿越", kicker: "岁月影像", description: "年龄、年代与未来感，一张照片看见不同时光", cover: 
+00683.1 
+"/effects/time-travel.webp", accent: "#b44352" },
+00684   
+  { id: "culture", name: "国风大片", kicker: "东方美学", description: "宋韵、敦煌、旗袍与水墨江南", cover: "/effects/c
+00684.1 
+hinese-style.webp", accent: "#26766b" },
+00685   
+  { id: "art", name: "艺术风格", kicker: "百变画风", description: "漫画、水彩、油画与高级杂志肖像", cover: "/effects/a
+00685.1 
+rt-styles.webp", accent: "#315fa8" },
+00686   
+  { id: "restore", name: "修复焕新", kicker: "旧照新生", description: "修清、上色、提亮，留住熟悉的面孔", cover: "/eff
+00686.1 
+ects/restore-renew.webp", accent: "#80643f" },
+00687   
+];
+00688   
+00689   
+const timeEffects: Omit<PhotoEffect, "categoryId">[] = [
+00690   
+  { id: "age-change", title: "年龄变化", subtitle: "一张照片，看见不同人生阶段", badge: "热门", targetAge: 60 },
+00691   
+  { id: "hong-kong-90s", title: "九十年代港风", subtitle: "胶片光影里的电影感", badge: "新" },
+00692   
+  { id: "vintage-80s", title: "八十年代留影", subtitle: "复古色彩与旧时照相馆" },
+00693   
+  { id: "classic-black-white", title: "经典黑白照", subtitle: "简洁光影，留下熟悉神态" },
+00694   
+];
+00695   
+00696   
+const cultureEffects: Omit<PhotoEffect, "categoryId">[] = [
+00697   
+  { id: "song-portrait", title: "宋韵雅集", subtitle: "清雅服饰与山水庭院", badge: "热门" },
+00698   
+  { id: "dunhuang", title: "敦煌飞天", subtitle: "壁画色彩与轻盈飘带", badge: "新" },
+00699   
+  { id: "new-chinese", title: "新中式肖像", subtitle: "现代剪裁与东方气质" },
+00700   
+  { id: "cheongsam", title: "海派旗袍", subtitle: "温润端庄的复古写真" },
+00701   
+];
+00702   
+00703   
+const artEffects: Omit<PhotoEffect, "categoryId">[] = [
+00704   
+  { id: "natural-avatar", title: "自然AI头像", subtitle: "干净耐看，保留真实年龄", badge: "热门" },
+00705   
+  { id: "modern-comic", title: "现代漫画像", subtitle: "线条明快，还是熟悉的自己" },
+00706   
+  { id: "gentle-watercolor", title: "温润水彩像", subtitle: "柔和笔触，像一张手绘留影" },
+00707   
+  { id: "classic-oil", title: "经典油画肖像", subtitle: "细腻质感与沉稳色彩" },
+00708   
+  { id: "pencil-sketch", title: "铅笔素描像", subtitle: "清楚轮廓，也留下神态" },
+00709   
+];
+00710   
+00711   
+const restoreEffects: Omit<PhotoEffect, "categoryId">[] = [
+00712   
+  { id: "face-enhance", title: "老照片清晰修复", subtitle: "修清人脸细节，保留原来的样子", badge: "热门" },
+00713   
+  { id: "natural-color", title: "黑白照片上色", subtitle: "补上自然颜色，旧影更有温度" },
+00714   
+  { id: "super-resolution", title: "高清放大", subtitle: "提升清晰度，适合保存与冲印" },
+00715   
+  { id: "scratch-repair", title: "破损旧照修复", subtitle: "去划痕与折痕，保持人物原貌", badge: "AI修复" },
+00716   
+];
+00717   
+00718   
+export const PHOTO_EFFECTS: PhotoEffect[] = [
+00719   
+  ...timeEffects.map((effect) => ({ ...effect, categoryId: "time" as const })),
+00720   
+  ...cultureEffects.map((effect) => ({ ...effect, categoryId: "culture" as const })),
+00721   
+  ...artEffects.map((effect) => ({ ...effect, categoryId: "art" as const })),
+00722   
+  ...restoreEffects.map((effect) => ({ ...effect, categoryId: "restore" as const })),
+00723   
+].map((effect) => ({ ...effect, preview: `/effects/previews/${effect.id}.webp` }));
+00724   
+00725   
+export function photoEffectToTemplate(effect: PhotoEffect): Template {
+00726   
+  const category = PHOTO_EFFECT_CATEGORIES.find((item) => item.id === effect.categoryId)!;
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第16页  共60页
+src/data/effects.ts 第69行 至 src/data/templates.ts 第33行
+00727   
+  const isAgeChange = effect.id === "age-change";
+00728   
+  return {
+00729   
+    id: `effect-${effect.id}`,
+00730   
+    name: effect.title,
+00731   
+    category: category.name,
+00732   
+    group: effect.categoryId === "restore" ? "restore" : "portrait",
+00733   
+    mode: isAgeChange ? "photo-age" : "photo-effect",
+00734   
+    media: "image",
+00735   
+    description: effect.subtitle,
+00736   
+    cover: effect.preview || category.cover,
+00737   
+    duration: isAgeChange ? "约 20 秒" : "约 30–60 秒",
+00738   
+    targetAge: effect.targetAge,
+00739   
+    agePicker: isAgeChange,
+00740   
+    effectId: isAgeChange ? undefined : effect.id,
+00741   
+    anchor: { fx: 0.5, fy: 0.36, fr: 0.16 },
+00742   
+  };
+00743   
+}
+00744   
+export type CreationMedia = "video" | "image";
+00745   
+00746   
+export type CreationGroup =
+00747   
+  | "featured"
+00748   
+  | "singing"
+00749   
+  | "dancing"
+00750   
+  | "quote"
+00751   
+  | "avatar"
+00752   
+  | "comic"
+00753   
+  | "portrait"
+00754   
+  | "restore";
+00755   
+00756   
+export type CreationMode =
+00757   
+  | "video-fusion"
+00758   
+  | "photo-restore"
+00759   
+  | "photo-age"
+00760   
+  | "photo-anime"
+00761   
+  | "photo-bg"
+00762   
+  | "photo-effect";
+00763   
+00764   
+export interface Template {
+00765   
+  id: string;
+00766   
+  name: string;
+00767   
+  category: string;
+00768   
+  group: CreationGroup;
+00769   
+  mode: CreationMode;
+00770   
+  media: CreationMedia;
+00771   
+  description: string;
+00772   
+  cover: string;
+00773   
+  previewVideo?: string;
+00774   
+  duration: string;
+00775   
+  hot?: boolean;
+00776   
+  targetAge?: number;
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第17页  共60页
+src/data/templates.ts 第34行 至 src/data/templates.ts 第59行
+00777   
+  agePicker?: boolean;
+00778   
+  animeStyle?: "anime" | "comic" | "cartoon3d" | "watercolor" | "sketch" | "portrait";
+00779   
+  bgId?: "greatwall" | "westlake" | "beach";
+00780   
+  effectId?: string;
+00781   
+  audience?: "male" | "female" | "all";
+00782   
+  publishedAt?: string;
+00783   
+  anchor: { fx: number; fy: number; fr: number };
+00784   
+}
+00785   
+00786   
+const DEFAULT_ANCHOR = { fx: 0.5, fy: 0.36, fr: 0.16 };
+00787   
+00788   
+export const TEMPLATES: Template[] = [
+00789   
+  { id: "jinqu", name: "经典歌曲", category: "照片唱歌", group: "singing", mode: "video-fusion", media: "video", descr
+00789.1 
+iption: "让照片唱出经典旋律，成片约 6 秒", cover: "/templates/classic-song-openai-r2.webp", previewVideo: "/templates/
+00789.2 
+classic-song-preview-r9.mp4", duration: "约 1–3 分钟", hot: true, audience: "female", publishedAt: "2026-07-28T10:00:
+00789.3 
+00+08:00", anchor: DEFAULT_ANCHOR },
+00790   
+  { id: "street", name: "夜景唱歌", category: "照片唱歌", group: "singing", mode: "video-fusion", media: "video", desc
+00790.1 
+ription: "夜景街拍唱歌，成片约 25 秒", cover: "/templates/night-song-openai-r2.webp", previewVideo: "/templates/night-
+00790.2 
+song-preview-r9.mp4", duration: "约 2–4 分钟", audience: "female", publishedAt: "2026-08-19T10:00:00+08:00", anchor: 
+00790.3 
+DEFAULT_ANCHOR },
+00791   
+  { id: "dance", name: "轻松跳舞", category: "照片跳舞", group: "dancing", mode: "video-fusion", media: "video", descr
+00791.1 
+iption: "舒缓好学的自然舞步，照片一键动起来", cover: "/templates/dance-r12.webp", previewVideo: "/templates/dance-prev
+00791.2 
+iew-r12.mp4", duration: "约 1–3 分钟", hot: true, audience: "female", publishedAt: "2026-08-24T11:00:00+08:00", ancho
+00791.3 
+r: DEFAULT_ANCHOR },
+00792   
+  { id: "quote", name: "暖心语录", category: "情感语录", group: "quote", mode: "video-fusion", media: "video", descrip
+00792.1 
+tion: "让照片自然开口，说一句暖心生活感悟", cover: "/templates/quote-r12.webp", previewVideo: "/templates/quote-previe
+00792.2 
+w-r12.mp4", duration: "约 1–3 分钟", audience: "male", publishedAt: "2026-08-24T10:00:00+08:00", anchor: DEFAULT_ANCH
+00792.3 
+OR },
+00793   
+  { id: "ai-avatar", name: "AI头像", category: "AI头像", group: "avatar", mode: "photo-anime", media: "image", descrip
+00793.1 
+tion: "生成自然耐看的个人头像", cover: "/templates/ai-avatar-openai-r8.webp", duration: "约 30 秒", animeStyle: "portr
+00793.2 
+ait", anchor: DEFAULT_ANCHOR },
+00794   
+  { id: "comic", name: "漫画风格", category: "漫画风格", group: "comic", mode: "photo-anime", media: "image", descript
+00794.1 
+ion: "把照片变成鲜明的漫画形象", cover: "/templates/comic-openai-r8.webp", duration: "约 30 秒", animeStyle: "comic", 
+00794.2 
+anchor: DEFAULT_ANCHOR },
+00795   
+  { id: "watercolor", name: "水彩画像", category: "写真", group: "portrait", mode: "photo-anime", media: "image", desc
+00795.1 
+ription: "把照片变成温润的手绘画像", cover: "/templates/watercolor-openai-r2.webp", duration: "约 30 秒", animeStyle: 
+00795.2 
+"watercolor", anchor: DEFAULT_ANCHOR },
+00796   
+  { id: "westlake", name: "西湖留影", category: "写真", group: "portrait", mode: "photo-bg", media: "image", descripti
+00796.1 
+on: "足不出户拍一张西湖旅行照", cover: "/templates/westlake-openai-r2.webp", duration: "约 30 秒", bgId: "westlake", a
+00796.2 
+nchor: DEFAULT_ANCHOR },
+00797   
+  { id: "restore", name: "老照片修复", category: "照片修复", group: "restore", mode: "photo-restore", media: "image", 
+00797.1 
+description: "修复模糊破损，并自然上色", cover: "/templates/restore-openai-r2.webp", duration: "约 20 秒", hot: true, 
+00797.2 
+anchor: DEFAULT_ANCHOR },
+00798   
+  { id: "younger", name: "重返年轻", category: "照片修复", group: "restore", mode: "photo-age", media: "image", descri
+00798.1 
+ption: "看看三十岁时的自然模样", cover: "/templates/younger-openai-r2.webp", duration: "约 20 秒", targetAge: 30, anch
+00798.2 
+or: DEFAULT_ANCHOR },
+00799   
+];
+00800   
+00801   
+const FEATURED_TEMPLATE_IDS = new Set(["jinqu", "dance", "quote", "street"]);
+00802   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第18页  共60页
+src/data/templates.ts 第60行 至 src/data/templates.ts 第109行
+00803   
+export const VIDEO_TEMPLATES = TEMPLATES.filter(
+00804   
+  (template) => template.media === "video" && Boolean(template.previewVideo),
+00805   
+).sort((a, b) => Date.parse(b.publishedAt || "1970-01-01") - Date.parse(a.publishedAt || "1970-01-01"));
+00806   
+00807   
+export const FEATURED_TEMPLATES = VIDEO_TEMPLATES.filter(
+00808   
+  (template) => FEATURED_TEMPLATE_IDS.has(template.id),
+00809   
+);
+00810   
+00811   
+export const CREATION_TYPES: Array<{
+00812   
+  id: CreationMedia;
+00813   
+  name: string;
+00814   
+  description: string;
+00815   
+}> = [
+00816   
+  { id: "video", name: "视频玩法", description: "让照片动起来" },
+00817   
+  { id: "image", name: "照片玩法", description: "头像、漫画、写真和修复" },
+00818   
+];
+00819   
+00820   
+export const CREATION_GROUPS: Array<{
+00821   
+  id: CreationGroup;
+00822   
+  media: CreationMedia;
+00823   
+  name: string;
+00824   
+  shortName: string;
+00825   
+  description: string;
+00826   
+}> = [
+00827   
+  { id: "featured", media: "video", name: "精选", shortName: "精选", description: "精选视频模板，挑一个开始制作" },
+00828   
+  { id: "singing", media: "video", name: "唱歌", shortName: "唱歌", description: "让照片唱出一段视频" },
+00829   
+  { id: "dancing", media: "video", name: "跳舞", shortName: "跳舞", description: "正在准备更多跳舞玩法" },
+00830   
+  { id: "quote", media: "video", name: "语录", shortName: "语录", description: "正在准备更多语录玩法" },
+00831   
+  { id: "avatar", media: "image", name: "AI头像", shortName: "AI头像", description: "生成自然耐看的个人头像" },
+00832   
+  { id: "comic", media: "image", name: "漫画风格", shortName: "漫画", description: "把照片变成鲜明的漫画形象" },
+00833   
+  { id: "portrait", media: "image", name: "写真", shortName: "写真", description: "水彩画像和西湖旅行照" },
+00834   
+  { id: "restore", media: "image", name: "修复", shortName: "修复", description: "修复、上色或重返年轻" },
+00835   
+];
+00836   
+00837   
+export const SAMPLE_AVATARS = [
+00838   
+  "/avatars/sample-woman-openai-r2.webp",
+00839   
+  "/avatars/sample-man-openai-r2.webp",
+00840   
+  "/avatars/sample-young-woman-openai-r2.webp",
+00841   
+];
+00842   
+00843   
+export interface Work {
+00844   
+  id: string;
+00845   
+  templateName: string;
+00846   
+  image: string;
+00847   
+  kind?: "video" | "image";
+00848   
+  createdAt: number;
+00849   
+}
+00850   
+00851   
+export function loadWorks(): Work[] {
+00852   
+  try {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第19页  共60页
+src/data/templates.ts 第110行 至 src/lib/api.ts 第12行
+00853   
+    return JSON.parse(localStorage.getItem("ly_works") || "[]");
+00854   
+  } catch {
+00855   
+    return [];
+00856   
+  }
+00857   
+}
+00858   
+00859   
+export function saveWork(work: Work) {
+00860   
+  const works = loadWorks();
+00861   
+  works.unshift(work);
+00862   
+  try {
+00863   
+    localStorage.setItem("ly_works", JSON.stringify(works.slice(0, 20)));
+00864   
+  } catch {
+00865   
+    localStorage.setItem("ly_works", JSON.stringify(works.slice(0, 5)));
+00866   
+  }
+00867   
+}
+00868   
+00869   
+export function removeWork(id: string) {
+00870   
+  localStorage.setItem("ly_works", JSON.stringify(loadWorks().filter((work) => work.id !== id)));
+00871   
+}
+00872   
+import * as React from "react"
+00873   
+00874   
+const MOBILE_BREAKPOINT = 768
+00875   
+00876   
+export function useIsMobile() {
+00877   
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+00878   
+00879   
+  React.useEffect(() => {
+00880   
+    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
+00881   
+    const onChange = () => {
+00882   
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+00883   
+    }
+00884   
+    mql.addEventListener("change", onChange)
+00885   
+    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+00886   
+    return () => mql.removeEventListener("change", onChange)
+00887   
+  }, [])
+00888   
+00889   
+  return !!isMobile
+00890   
+}
+00891   
+/**
+00892   
+ * 生成服务客户端
+00893   
+ * - 默认走同域真实 API；VITE_API_BASE 仅用于前后端分域部署
+00894   
+ * - 只有显式设置 VITE_USE_MOCK=true 时才启用本地演示合成
+00895   
+ * - 真实服务失败直接抛错，不伪装成本地成功
+00896   
+ */
+00897   
+import { compositeFace } from "@/lib/composite";
+00898   
+import type { Template, Work } from "@/data/templates";
+00899   
+import {
+00900   
+  APP_CHANNEL,
+00901   
+  IS_NATIVE_APP,
+00902   
+  getNativeDevicePublicKey,
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第20页  共60页
+src/lib/api.ts 第13行 至 src/lib/api.ts 第61行
+00903   
+  signNativeDeviceChallenge,
+00904   
+} from "@/lib/native";
+00905   
+00906   
+const API_BASE = import.meta.env.VITE_API_BASE || "";
+00907   
+const USE_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+00908   
+export const LOCAL_DEMO_MODE = USE_MOCK;
+00909   
+const SESSION_KEY = "lyx_session_token";
+00910   
+const CLIENT_KEY = "lyx_client_id";
+00911   
+const PENDING_GENERATION_KEY = "lyx_pending_generation_v1";
+00912   
+let sessionRequest: Promise<string> | null = null;
+00913   
+00914   
+interface PendingGeneration {
+00915   
+  taskId: string;
+00916   
+  templateId: string;
+00917   
+  createdAt: string;
+00918   
+}
+00919   
+00920   
+function browserStorage() {
+00921   
+  return typeof window === "undefined" ? null : window.localStorage;
+00922   
+}
+00923   
+00924   
+function sessionStorageBackend() {
+00925   
+  return typeof window === "undefined" ? null : window.sessionStorage;
+00926   
+}
+00927   
+00928   
+function clientId() {
+00929   
+  const storage = browserStorage();
+00930   
+  if (!storage) return "server-rendered-client";
+00931   
+  let value = storage.getItem(CLIENT_KEY);
+00932   
+  if (!value) {
+00933   
+    value = `${APP_CHANNEL}_${crypto.randomUUID()}`;
+00934   
+    storage.setItem(CLIENT_KEY, value);
+00935   
+  }
+00936   
+  return value;
+00937   
+}
+00938   
+00939   
+async function createSessionToken(): Promise<string> {
+00940   
+  if (IS_NATIVE_APP) {
+00941   
+    const deviceKey = await getNativeDevicePublicKey();
+00942   
+    const challengeResponse = await fetch(`${API_BASE}/api/auth/device/challenge`, {
+00943   
+      method: "POST",
+00944   
+      headers: { "Content-Type": "application/json" },
+00945   
+      body: JSON.stringify({
+00946   
+        algorithm: deviceKey.algorithm,
+00947   
+        publicKeySpki: deviceKey.publicKeySpki,
+00948   
+      }),
+00949   
+    });
+00950   
+    const challengeJson = await challengeResponse.json().catch(() => ({}));
+00951   
+    if (!challengeResponse.ok || challengeJson.code !== 0 || !challengeJson.data?.challengeId || !challengeJson.data?.
+00951.1 
+challenge) {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第21页  共60页
+src/lib/api.ts 第62行 至 src/lib/api.ts 第111行
+00952   
+      throw new Error(challengeJson.message || "设备认证服务暂时不可用");
+00953   
+    }
+00954   
+    const proof = await signNativeDeviceChallenge(challengeJson.data.challenge as string);
+00955   
+    const verifyResponse = await fetch(`${API_BASE}/api/auth/device/verify`, {
+00956   
+      method: "POST",
+00957   
+      headers: { "Content-Type": "application/json" },
+00958   
+      body: JSON.stringify({
+00959   
+        challengeId: challengeJson.data.challengeId,
+00960   
+        challenge: challengeJson.data.challenge,
+00961   
+        algorithm: proof.algorithm,
+00962   
+        publicKeySpki: deviceKey.publicKeySpki,
+00963   
+        signature: proof.signature,
+00964   
+      }),
+00965   
+    });
+00966   
+    const verifyJson = await verifyResponse.json().catch(() => ({}));
+00967   
+    if (!verifyResponse.ok || verifyJson.code !== 0 || !verifyJson.data?.token) {
+00968   
+      throw new Error(verifyJson.message || "设备身份验证失败");
+00969   
+    }
+00970   
+    return verifyJson.data.token as string;
+00971   
+  }
+00972   
+00973   
+  const response = await fetch(`${API_BASE}/api/auth/session`, {
+00974   
+    method: "POST",
+00975   
+    headers: { "Content-Type": "application/json" },
+00976   
+    body: JSON.stringify({ clientId: clientId(), channel: APP_CHANNEL }),
+00977   
+  });
+00978   
+  const json = await response.json().catch(() => ({}));
+00979   
+  if (!response.ok || json.code !== 0 || !json.data?.token) throw new Error(json.message || "登录服务暂时不可用");
+00980   
+  return json.data.token as string;
+00981   
+}
+00982   
+00983   
+async function ensureSession(): Promise<string> {
+00984   
+  const storage = sessionStorageBackend();
+00985   
+  const existing = storage?.getItem(SESSION_KEY);
+00986   
+  if (existing) return existing;
+00987   
+  sessionRequest ??= createSessionToken()
+00988   
+    .then((token) => {
+00989   
+      storage?.setItem(SESSION_KEY, token);
+00990   
+      return token;
+00991   
+    })
+00992   
+    .finally(() => {
+00993   
+      sessionRequest = null;
+00994   
+    });
+00995   
+  return sessionRequest;
+00996   
+}
+00997   
+00998   
+async function apiFetch(input: string, init: RequestInit = {}, retry = true): Promise<Response> {
+00999   
+  const token = await ensureSession();
+01000   
+  const headers = new Headers(init.headers || {});
+01001   
+  headers.set("Authorization", `Bearer ${token}`);
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第22页  共60页
+src/lib/api.ts 第112行 至 src/lib/api.ts 第158行
+01002   
+  const response = await fetch(`${API_BASE}${input}`, { ...init, headers });
+01003   
+  if (response.status === 401 && retry) {
+01004   
+    sessionStorageBackend()?.removeItem(SESSION_KEY);
+01005   
+    return apiFetch(input, init, false);
+01006   
+  }
+01007   
+  return response;
+01008   
+}
+01009   
+01010   
+function hasActiveConsent(entries: Array<{ consentType?: string; version?: string; action?: string; occurredAt?: strin
+01010.1 
+g }>, consentType: string, version: string) {
+01011   
+  return entries
+01012   
+    .filter((entry) => entry.consentType === consentType && entry.version === version)
+01013   
+    .sort((left, right) => Date.parse(left.occurredAt || "") - Date.parse(right.occurredAt || ""))
+01014   
+    .at(-1)?.action === "granted";
+01015   
+}
+01016   
+01017   
+async function grantConsent(consentType: string, version: string, purpose: string, dataTypes: string[], suppliers: str
+01017.1 
+ing[], subjectAuthorization?: "self" | "authorized") {
+01018   
+  const response = await apiFetch("/api/consents", {
+01019   
+    method: "POST",
+01020   
+    headers: { "Content-Type": "application/json" },
+01021   
+    body: JSON.stringify({ consentType, version, action: "granted", purpose, dataTypes, suppliers, ...(subjectAuthoriz
+01021.1 
+ation ? { subjectAuthorization } : {}) }),
+01022   
+  });
+01023   
+  const json = await response.json().catch(() => ({}));
+01024   
+  if (!response.ok || json.code !== 0) throw new Error(json.message || "授权记录失败");
+01025   
+}
+01026   
+01027   
+async function consentState() {
+01028   
+  const response = await apiFetch("/api/consents");
+01029   
+  const json = await response.json().catch(() => ({}));
+01030   
+  if (!response.ok || json.code !== 0) throw new Error(json.message || "无法读取授权状态");
+01031   
+  const entries = Array.isArray(json.data?.entries) ? json.data.entries : [];
+01032   
+  const basicVersion = String(json.data?.current?.basic || "");
+01033   
+  const faceVersion = String(json.data?.current?.face_processing || "");
+01034   
+  return { entries, basicVersion, faceVersion };
+01035   
+}
+01036   
+01037   
+export async function recordCreationConsent({
+01038   
+  suppliers,
+01039   
+  subjectAuthorization,
+01040   
+  purpose,
+01041   
+}: {
+01042   
+  suppliers: string[];
+01043   
+  subjectAuthorization: "self" | "authorized";
+01044   
+  purpose: string;
+01045   
+}) {
+01046   
+  if (USE_MOCK) return;
+01047   
+  const disclosedSuppliers = [...new Set(suppliers.map((item) => item.trim()).filter(Boolean))];
+01048   
+  if (disclosedSuppliers.length === 0) throw new Error("影像处理服务商尚未完成披露，当前不能上传照片");
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第23页  共60页
+src/lib/api.ts 第159行 至 src/lib/api.ts 第206行
+01049   
+  const { entries, basicVersion, faceVersion } = await consentState();
+01050   
+  if (!hasActiveConsent(entries, "basic", basicVersion)) {
+01051   
+    await grantConsent("basic", basicVersion, "使用乐颜秀基础服务", ["账户标识", "操作日志"], []);
+01052   
+  }
+01053   
+  // Every creation records the user's current, informed authorization and the suppliers shown on screen.
+01054   
+  await grantConsent("face_processing", faceVersion, purpose, ["人脸图像", "生成结果"], disclosedSuppliers, subjectAut
+01054.1 
+horization);
+01055   
+}
+01056   
+01057   
+async function ensureFaceConsent() {
+01058   
+  const { entries, basicVersion, faceVersion } = await consentState();
+01059   
+  if (!hasActiveConsent(entries, "basic", basicVersion) || !hasActiveConsent(entries, "face_processing", faceVersion))
+01059.1 
+ {
+01060   
+    throw new Error("授权状态未生效，请返回制作页重新确认");
+01061   
+  }
+01062   
+}
+01063   
+01064   
+interface FusionTask {
+01065   
+  taskId: string;
+01066   
+  provider: string;
+01067   
+}
+01068   
+01069   
+interface FusionResult {
+01070   
+  status: "QUEUED" | "RUNNING" | "SUCCESS" | "FAILED";
+01071   
+  videoUrl?: string;
+01072   
+  assetId?: string;
+01073   
+}
+01074   
+01075   
+async function createTask(templateId: string, userPhotoUrl: string): Promise<FusionTask> {
+01076   
+  const resp = await apiFetch("/api/fusion", {
+01077   
+    method: "POST",
+01078   
+    headers: { "Content-Type": "application/json" },
+01079   
+    body: JSON.stringify({ templateId, userPhotoUrl }),
+01080   
+  });
+01081   
+  const json = await resp.json();
+01082   
+  if (json.code !== 0) throw new Error(json.message || "创建任务失败");
+01083   
+  return json.data;
+01084   
+}
+01085   
+01086   
+async function uploadPhoto(photoDataUrl: string): Promise<string> {
+01087   
+  const resp = await apiFetch("/api/upload", {
+01088   
+    method: "POST",
+01089   
+    headers: { "Content-Type": "application/json" },
+01090   
+    body: JSON.stringify({ image: photoDataUrl }),
+01091   
+  });
+01092   
+  const json = await resp.json();
+01093   
+  if (json.code !== 0 || !json.data?.url) throw new Error(json.message || "照片上传失败");
+01094   
+  return json.data.url;
+01095   
+}
+01096   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第24页  共60页
+src/lib/api.ts 第207行 至 src/lib/api.ts 第256行
+01097   
+async function pollTask(taskId: string, timeoutMs = 360_000): Promise<FusionResult> {
+01098   
+  const start = Date.now();
+01099   
+  while (Date.now() - start < timeoutMs) {
+01100   
+    await new Promise((r) => setTimeout(r, 2000));
+01101   
+    const resp = await apiFetch(`/api/fusion/${taskId}`);
+01102   
+    const json = await resp.json();
+01103   
+    if (json.code !== 0) throw new Error(json.message || "查询失败");
+01104   
+    const data: FusionResult = json.data;
+01105   
+    if (data.status === "SUCCESS" || data.status === "FAILED") return data;
+01106   
+  }
+01107   
+  throw new Error("生成超时");
+01108   
+}
+01109   
+01110   
+function savePendingGeneration(value: PendingGeneration) {
+01111   
+  browserStorage()?.setItem(PENDING_GENERATION_KEY, JSON.stringify(value));
+01112   
+}
+01113   
+01114   
+function readPendingGeneration(): PendingGeneration | null {
+01115   
+  try {
+01116   
+    const raw = browserStorage()?.getItem(PENDING_GENERATION_KEY);
+01117   
+    if (!raw) return null;
+01118   
+    const value = JSON.parse(raw) as Partial<PendingGeneration>;
+01119   
+    if (!value.taskId || !value.templateId || !value.createdAt) throw new Error("invalid pending generation");
+01120   
+    if (Date.now() - Date.parse(value.createdAt) > 24 * 60 * 60 * 1000) throw new Error("expired pending generation");
+01121   
+    return value as PendingGeneration;
+01122   
+  } catch {
+01123   
+    browserStorage()?.removeItem(PENDING_GENERATION_KEY);
+01124   
+    return null;
+01125   
+  }
+01126   
+}
+01127   
+01128   
+function clearPendingGeneration(taskId?: string) {
+01129   
+  const pending = readPendingGeneration();
+01130   
+  if (!taskId || pending?.taskId === taskId) browserStorage()?.removeItem(PENDING_GENERATION_KEY);
+01131   
+}
+01132   
+01133   
+export async function resumePendingCreation(): Promise<(CreationResult & { templateId: string }) | null> {
+01134   
+  if (USE_MOCK) return null;
+01135   
+  const pending = readPendingGeneration();
+01136   
+  if (!pending) return null;
+01137   
+  const result = await pollTask(pending.taskId);
+01138   
+  clearPendingGeneration(pending.taskId);
+01139   
+  if (result.status === "SUCCESS" && result.videoUrl) {
+01140   
+    return { kind: "video", url: result.videoUrl, assetId: result.assetId, templateId: pending.templateId };
+01141   
+  }
+01142   
+  throw new Error("上次生成任务未成功，请重新制作");
+01143   
+}
+01144   
+01145   
+/**
+01146   
+ * 生成换脸结果。返回 { kind: "video"|"image", url }
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第25页  共60页
+src/lib/api.ts 第257行 至 src/lib/api.ts 第306行
+01147   
+ * 真实API返回视频URL；演示模式返回本地合成图。
+01148   
+ */
+01149   
+export async function generateFusion(
+01150   
+  template: Template,
+01151   
+  photoDataUrl: string
+01152   
+): Promise<CreationResult> {
+01153   
+  if (!USE_MOCK) {
+01154   
+    try {
+01155   
+      await ensureFaceConsent();
+01156   
+      const photoUrl = await uploadPhoto(photoDataUrl);
+01157   
+      const { taskId } = await createTask(template.id, photoUrl);
+01158   
+      savePendingGeneration({ taskId, templateId: template.id, createdAt: new Date().toISOString() });
+01159   
+      const result = await pollTask(taskId);
+01160   
+      clearPendingGeneration(taskId);
+01161   
+      if (result.status === "SUCCESS" && result.videoUrl) {
+01162   
+        return { kind: "video", url: result.videoUrl, assetId: result.assetId };
+01163   
+      }
+01164   
+      throw new Error("生成失败");
+01165   
+    } catch (e) {
+01166   
+      console.error("真实服务生成失败:", e);
+01167   
+      throw e;
+01168   
+    }
+01169   
+  }
+01170   
+  const url = await compositeFace(template, photoDataUrl);
+01171   
+  return { kind: "image", url };
+01172   
+}
+01173   
+01174   
+export interface CreationResult {
+01175   
+  kind: "video" | "image";
+01176   
+  url: string;
+01177   
+  assetId?: string;
+01178   
+}
+01179   
+01180   
+export interface RefreshedAssetUrl {
+01181   
+  url: string;
+01182   
+  contentType?: string;
+01183   
+  ext?: string;
+01184   
+}
+01185   
+01186   
+export async function refreshAssetUrl(assetId: string): Promise<RefreshedAssetUrl> {
+01187   
+  const response = await apiFetch(`/api/assets/${encodeURIComponent(assetId)}/url`);
+01188   
+  const json = await response.json().catch(() => ({}));
+01189   
+  if (!response.ok || json.code !== 0 || !json.data?.url) {
+01190   
+    throw new Error(json.message || "作品链接已失效，请返回作品页重试");
+01191   
+  }
+01192   
+  return {
+01193   
+    url: json.data.url as string,
+01194   
+    contentType: typeof json.data.contentType === "string" ? json.data.contentType : undefined,
+01195   
+    ext: typeof json.data.ext === "string" ? json.data.ext : undefined,
+01196   
+  };
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第26页  共60页
+src/lib/api.ts 第307行 至 src/lib/api.ts 第356行
+01197   
+}
+01198   
+01199   
+async function runPhotoFeature(path: string, payload: Record<string, unknown>): Promise<CreationResult> {
+01200   
+  const response = await apiFetch(path, {
+01201   
+    method: "POST",
+01202   
+    headers: { "Content-Type": "application/json" },
+01203   
+    body: JSON.stringify(payload),
+01204   
+  });
+01205   
+  const json = await response.json().catch(() => ({}));
+01206   
+  if (!response.ok || json.code !== 0 || !json.data?.url) {
+01207   
+    throw new Error(json.message || "影像服务暂时不可用");
+01208   
+  }
+01209   
+  return { kind: "image", url: json.data.url, assetId: json.data.assetId };
+01210   
+}
+01211   
+01212   
+export async function generateCreation(template: Template, photoDataUrl: string): Promise<CreationResult> {
+01213   
+  if (USE_MOCK) {
+01214   
+    const url = await compositeFace(template, photoDataUrl);
+01215   
+    return { kind: "image", url };
+01216   
+  }
+01217   
+01218   
+  await ensureFaceConsent();
+01219   
+01220   
+  if (template.mode === "video-fusion") {
+01221   
+    return generateFusion(template, photoDataUrl);
+01222   
+  }
+01223   
+01224   
+  const imageUrl = await uploadPhoto(photoDataUrl);
+01225   
+  switch (template.mode) {
+01226   
+    case "photo-restore":
+01227   
+      return runPhotoFeature("/api/photo/restore", { imageUrl, colorize: true });
+01228   
+    case "photo-age":
+01229   
+      return runPhotoFeature("/api/photo/age", { imageUrl, age: template.targetAge || 30 });
+01230   
+    case "photo-anime":
+01231   
+      return runPhotoFeature("/api/photo/anime", { imageUrl, style: template.animeStyle || "watercolor" });
+01232   
+    case "photo-bg":
+01233   
+      return runPhotoFeature("/api/photo/photobg", { imageUrl, bgId: template.bgId || "westlake" });
+01234   
+    case "photo-effect":
+01235   
+      return runPhotoFeature("/api/photo/effect", { imageUrl, effectId: template.effectId });
+01236   
+    default:
+01237   
+      throw new Error("暂不支持这个创作类型");
+01238   
+  }
+01239   
+}
+01240   
+01241   
+export interface PlayProfile {
+01242   
+  name?: string;
+01243   
+  birthDate?: string;
+01244   
+  birthTime?: string;
+01245   
+  date?: string;
+01246   
+}
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第27页  共60页
+src/lib/api.ts 第357行 至 src/lib/api.ts 第406行
+01247   
+01248   
+export interface PlayAnalysis {
+01249   
+  reply: string;
+01250   
+  facts: Record<string, unknown> | null;
+01251   
+  provider: string;
+01252   
+}
+01253   
+01254   
+export interface PublicCompliance {
+01255   
+  status: "approved" | "pending_company_approval";
+01256   
+  operatorName?: string | null;
+01257   
+  appRecordNumber?: string | null;
+01258   
+  icpFilingNumber?: string | null;
+01259   
+  privacyPolicyUrl: string | null;
+01260   
+  userAgreementUrl: string | null;
+01261   
+  thirdPartyListUrl: string | null;
+01262   
+  supportContact: string | null;
+01263   
+  pipiaReference: string | null;
+01264   
+  retention?: {
+01265   
+    sourceHours: number;
+01266   
+    resultHours: number;
+01267   
+    supplierPolicy: string;
+01268   
+  } | null;
+01269   
+  consentVersions: { basic: string; faceProcessing: string };
+01270   
+  aiServices: Array<{
+01271   
+    provider: string;
+01272   
+    model: string;
+01273   
+    filingReference: string;
+01274   
+    purpose: string;
+01275   
+    region: string;
+01276   
+    capabilities?: string[];
+01277   
+  }>;
+01278   
+}
+01279   
+01280   
+export async function getPublicCompliance(): Promise<PublicCompliance> {
+01281   
+  const response = await fetch(`${API_BASE}/api/public/compliance`, { cache: "no-store" });
+01282   
+  const json = await response.json().catch(() => ({}));
+01283   
+  if (!response.ok || json.code !== 0 || !json.data) throw new Error(json.message || "合规信息暂时不可用");
+01284   
+  return json.data as PublicCompliance;
+01285   
+}
+01286   
+01287   
+export interface CapabilityStatus {
+01288   
+  id: string;
+01289   
+  ready: boolean;
+01290   
+  status: "verified" | "blocked_pending_evidence";
+01291   
+  sampleCount: number;
+01292   
+  acceptanceTarget: number;
+01293   
+}
+01294   
+01295   
+export async function getCapabilities(): Promise<CapabilityStatus[]> {
+01296   
+  const response = await fetch(`${API_BASE}/api/capabilities`, { cache: "no-store" });
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第28页  共60页
+src/lib/api.ts 第407行 至 src/lib/api.ts 第455行
+01297   
+  const json = await response.json().catch(() => ({}));
+01298   
+  if (!response.ok || json.code !== 0 || !Array.isArray(json.data)) {
+01299   
+    throw new Error(json.message || "功能可用状态暂时无法确认");
+01300   
+  }
+01301   
+  return json.data as CapabilityStatus[];
+01302   
+}
+01303   
+01304   
+export type SafetyReportCategory = "likeness" | "minor" | "rights" | "ai_label" | "harmful" | "other";
+01305   
+01306   
+export async function submitSafetyReport({
+01307   
+  category,
+01308   
+  description,
+01309   
+  contact,
+01310   
+  templateId,
+01311   
+}: {
+01312   
+  category: SafetyReportCategory;
+01313   
+  description: string;
+01314   
+  contact?: string;
+01315   
+  templateId?: string;
+01316   
+}): Promise<{ ticketId: string }> {
+01317   
+  const response = await apiFetch("/api/reports", {
+01318   
+    method: "POST",
+01319   
+    headers: { "Content-Type": "application/json" },
+01320   
+    body: JSON.stringify({ category, description, contact, templateId }),
+01321   
+  });
+01322   
+  const json = await response.json().catch(() => ({}));
+01323   
+  if (!response.ok || json.code !== 0 || !json.data?.ticketId) throw new Error(json.message || "提交失败，请稍后重试")
+01323.1 
+;
+01324   
+  return { ticketId: String(json.data.ticketId) };
+01325   
+}
+01326   
+01327   
+export async function analyzePlay({
+01328   
+  scene,
+01329   
+  input,
+01330   
+  profile,
+01331   
+}: {
+01332   
+  scene: string;
+01333   
+  input: string;
+01334   
+  profile?: PlayProfile;
+01335   
+}): Promise<PlayAnalysis> {
+01336   
+  const response = await apiFetch("/api/play/analyze", {
+01337   
+    method: "POST",
+01338   
+    headers: { "Content-Type": "application/json" },
+01339   
+    body: JSON.stringify({ scene, input, profile }),
+01340   
+  });
+01341   
+  const json = await response.json().catch(() => ({}));
+01342   
+  if (!response.ok || json.code !== 0 || !json.data?.reply) {
+01343   
+    throw new Error(json.message || "玩法服务暂时不可用");
+01344   
+  }
+01345   
+  return json.data as PlayAnalysis;
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第29页  共60页
+src/lib/api.ts 第456行 至 src/lib/api.ts 第502行
+01346   
+}
+01347   
+01348   
+export async function getServerEntitlements(): Promise<number> {
+01349   
+  const response = await apiFetch("/api/account/entitlements");
+01350   
+  const json = await response.json().catch(() => ({}));
+01351   
+  if (!response.ok || json.code !== 0) throw new Error(json.message || "无法读取剩余次数");
+01352   
+  return Number(json.data?.totalRemaining || 0);
+01353   
+}
+01354   
+01355   
+export async function listServerWorks(): Promise<Work[]> {
+01356   
+  const response = await apiFetch("/api/works");
+01357   
+  const json = await response.json().catch(() => ({}));
+01358   
+  if (!response.ok || json.code !== 0 || !Array.isArray(json.data)) throw new Error(json.message || "无法读取作品列表"
+01358.1 
+);
+01359   
+  return json.data.map((item: { assetId: string; url: string; kind: "video" | "image"; createdAt: string }) => ({
+01360   
+    id: item.assetId,
+01361   
+    templateName: "我的作品",
+01362   
+    image: item.url,
+01363   
+    kind: item.kind,
+01364   
+    createdAt: Date.parse(item.createdAt) || Date.now(),
+01365   
+  }));
+01366   
+}
+01367   
+01368   
+export interface ErasureResult {
+01369   
+  partial: boolean;
+01370   
+  supplierPending: unknown[];
+01371   
+}
+01372   
+01373   
+export async function deleteServerAsset(assetId: string): Promise<ErasureResult> {
+01374   
+  const response = await apiFetch(`/api/assets/${encodeURIComponent(assetId)}`, { method: "DELETE" });
+01375   
+  const json = await response.json().catch(() => ({}));
+01376   
+  if (!response.ok) throw new Error(json.message || "作品删除失败");
+01377   
+  return { partial: json.code === "ERASURE_PARTIAL", supplierPending: json.data?.supplierDeletion?.status === "confirm
+01377.1 
+ed" ? [] : [json.data?.supplierDeletion].filter(Boolean) };
+01378   
+}
+01379   
+01380   
+export async function withdrawFaceConsent(): Promise<ErasureResult> {
+01381   
+  const response = await apiFetch("/api/consents/face_processing/withdraw", { method: "POST" });
+01382   
+  const json = await response.json().catch(() => ({}));
+01383   
+  if (!response.ok) throw new Error(json.message || "撤回授权失败");
+01384   
+  return { partial: json.code === "ERASURE_PARTIAL", supplierPending: Array.isArray(json.data?.supplierPending) ? json
+01384.1 
+.data.supplierPending : [] };
+01385   
+}
+01386   
+01387   
+export async function deleteServerAccount(): Promise<ErasureResult> {
+01388   
+  const response = await apiFetch("/api/account", { method: "DELETE" });
+01389   
+  const json = await response.json().catch(() => ({}));
+01390   
+  if (!response.ok) throw new Error(json.message || "账号注销失败");
+01391   
+  sessionStorageBackend()?.removeItem(SESSION_KEY);
+01392   
+  browserStorage()?.removeItem("ly_works");
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+前30页  第30页  共60页
+src/lib/api.ts 第503行 至 src/lib/composite.ts 第47行
+01393   
+  return { partial: json.code === "ERASURE_PARTIAL", supplierPending: Array.isArray(json.data?.supplierPending) ? json
+01393.1 
+.data.supplierPending : [] };
+01394   
+}
+01395   
+import type { Template } from "@/data/templates";
+01396   
+01397   
+function loadImage(src: string): Promise<HTMLImageElement> {
+01398   
+  return new Promise((resolve, reject) => {
+01399   
+    const img = new Image();
+01400   
+    img.crossOrigin = "anonymous";
+01401   
+    img.onload = () => resolve(img);
+01402   
+    img.onerror = reject;
+01403   
+    img.src = src;
+01404   
+  });
+01405   
+}
+01406   
+01407   
+/**
+01408   
+ * 换脸合成引擎（演示版）：
+01409   
+ * 将用户照片的中心人脸区域，以羽化椭圆蒙版融合进模板封面的脸部锚点，
+01410   
+ * 并叠加肤色适配、内阴影与 AI 水印，模拟真实换脸效果。
+01411   
+ */
+01412   
+export async function compositeFace(
+01413   
+  template: Template,
+01414   
+  photoSrc: string
+01415   
+): Promise<string> {
+01416   
+  const [cover, photo] = await Promise.all([
+01417   
+    loadImage(template.cover),
+01418   
+    loadImage(photoSrc),
+01419   
+  ]);
+01420   
+01421   
+  const W = cover.width;
+01422   
+  const H = cover.height;
+01423   
+  const canvas = document.createElement("canvas");
+01424   
+  canvas.width = W;
+01425   
+  canvas.height = H;
+01426   
+  const ctx = canvas.getContext("2d")!;
+01427   
+01428   
+  // 1. 绘制模板底图
+01429   
+  ctx.drawImage(cover, 0, 0);
+01430   
+01431   
+  // 2. 计算脸部锚点
+01432   
+  const cx = template.anchor.fx * W;
+01433   
+  const cy = template.anchor.fy * H;
+01434   
+  const rw = template.anchor.fr * W * 0.78; // 椭圆半宽
+01435   
+  const rh = template.anchor.fr * W * 1.08; // 椭圆半高
+01436   
+01437   
+  // 3. 从用户照片中裁剪中心方形区域（假定人脸居中）
+01438   
+  const side = Math.min(photo.width, photo.height);
+01439   
+  const sx = (photo.width - side) / 2;
+01440   
+  const sy = (photo.height - side) / 2 - side * 0.06; // 略向上取，对准面部
+01441   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第31页  共60页
+server/index.js 第1176行 至 server/index.js 第1221行
+08630   
+          taskId,
+08631   
+          swapUrl: r.videoUrl,
+08632   
+          videoUrl: tpl.videoUrl,
+08633   
+          maskKey: tpl.maskKey,
+08634   
+          ownerId: meta.ownerId,
+08635   
+          base: requestBase(c),
+08636   
+          provider: meta.provider,
+08637   
+        }).catch((e) => {
+08638   
+            logSecurity("error", "fusion.occlusion_repair_failed", { taskId, error: safeError(e) });
+08639   
+            throw e;
+08640   
+          })
+08641   
+      );
+08642   
+    }
+08643   
+    const done = await Promise.race([
+08644   
+      repairs.get(taskId).then((v) => ({ v })),
+08645   
+      new Promise((s) => setTimeout(() => s(null), 25_000)),
+08646   
+    ]);
+08647   
+    if (!done) {
+08648   
+      // 修复中（1080p 约 0.5x 时长），前端继续轮询
+08649   
+      return c.json({ code: 0, data: { status: "RUNNING", repairing: true } });
+08650   
+    }
+08651   
+    await updateTask(taskId, { status: "SUCCESS", outputObjectId: done.v.assetId, completedAt: Date.now() });
+08652   
+    return c.json({ code: 0, data: { status: "SUCCESS", videoUrl: done.v.url, assetId: done.v.assetId, repaired: true,
+08652.1 
+ metadata: done.v.metadata } });
+08653   
+  } catch (e) {
+08654   
+    await updateTask(taskId, { status: "FAILED", failedAt: Date.now(), failureCode: safeError(e).code || "GENERATION_F
+08654.1 
+AILED" }).catch((saveError) => {
+08655   
+      logSecurity("error", "fusion.failure_state_persist_failed", { taskId, error: safeError(saveError) });
+08656   
+    });
+08657   
+    refundPrepared({ userId: meta.ownerId, billingRef: meta.billingRef }, "generation_failed");
+08658   
+    logSecurity("error", "fusion.query_failed", { taskId, error: safeError(e) });
+08659   
+    if (["OUTPUT_CONTENT_BLOCKED", "OUTPUT_REVIEW_REQUIRED"].includes(e.message)) {
+08660   
+      return c.json({ code: e.message, message: "生成结果未通过内容安全检查" }, 422);
+08661   
+    }
+08662   
+    return c.json({ code: 500, message: "查询失败" }, 500);
+08663   
+  }
+08664   
+});
+08665   
+08666   
+function billingReadiness() {
+08667   
+  const blockers = [];
+08668   
+  if (PRODUCTION && PAYMENT_MODE !== "live") blockers.push("PAYMENT_MODE=live and company merchant configuration are r
+08668.1 
+equired for public paid launch");
+08669   
+  if (PAYMENT_MODE === "live" && !PAYMENT_WEBHOOK_SECRET) blockers.push("PAYMENT_WEBHOOK_SECRET is required for signed
+08669.1 
+ payment callbacks");
+08670   
+  if (PAYMENT_MODE === "live" && !process.env.PAYMENT_PROVIDER) blockers.push("PAYMENT_PROVIDER is not configured");
+08671   
+  return { ready: blockers.length === 0, mode: PAYMENT_MODE, blockers };
+08672   
+}
+08673   
+08674   
+function approvedPublicUrl(value) {
+08675   
+  try {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第32页  共60页
+server/index.js 第1222行 至 server/index.js 第1267行
+08676   
+    const url = new URL(String(value || "").trim());
+08677   
+    if (url.protocol !== "https:" || url.username || url.password || url.hash) return null;
+08678   
+    return url.toString();
+08679   
+  } catch {
+08680   
+    return null;
+08681   
+  }
+08682   
+}
+08683   
+08684   
+function approvedPublicOrigin(value) {
+08685   
+  try {
+08686   
+    const url = new URL(String(value || "").trim());
+08687   
+    if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash || (url.pathname && url.pa
+08687.1 
+thname !== "/")) return null;
+08688   
+    return url.origin;
+08689   
+  } catch {
+08690   
+    return null;
+08691   
+  }
+08692   
+}
+08693   
+08694   
+function publicComplianceConfig() {
+08695   
+  let aiServices = [];
+08696   
+  const allowedCapabilities = new Set(["video-fusion", "photo-restore", "photo-fusion", "idphoto", "photo-age", "photo
+08696.1 
+-effect", "photo-anime", "photo-bg", "video-matting", "llm-chat", "play-analyze"]);
+08697   
+  try {
+08698   
+    const parsed = JSON.parse(process.env.AI_SERVICE_DISCLOSURES_JSON || "[]");
+08699   
+    if (Array.isArray(parsed)) {
+08700   
+      aiServices = parsed.map((item) => ({
+08701   
+        provider: String(item?.provider || "").trim(),
+08702   
+        model: String(item?.model || "").trim(),
+08703   
+        filingReference: String(item?.filingReference || "").trim(),
+08704   
+        purpose: String(item?.purpose || "").trim(),
+08705   
+        region: String(item?.region || "").trim(),
+08706   
+        capabilities: Array.isArray(item?.capabilities)
+08707   
+          ? [...new Set(item.capabilities.map((value) => String(value || "").trim()).filter((value) => allowedCapabili
+08707.1 
+ties.has(value)))]
+08708   
+          : [],
+08709   
+      })).filter((item) => item.provider && item.model && item.filingReference && item.purpose && item.region && item.
+08709.1 
+capabilities.length > 0);
+08710   
+    }
+08711   
+  } catch {
+08712   
+    aiServices = [];
+08713   
+  }
+08714   
+  const data = {
+08715   
+    operatorName: String(process.env.OPERATOR_NAME || "").trim() || null,
+08716   
+    appRecordNumber: String(process.env.APP_RECORD_NO || "").trim() || null,
+08717   
+    icpFilingNumber: String(process.env.ICP_RECORD_NO || "").trim() || null,
+08718   
+    privacyPolicyUrl: approvedPublicUrl(process.env.PRIVACY_POLICY_URL),
+08719   
+    userAgreementUrl: approvedPublicUrl(process.env.USER_AGREEMENT_URL),
+08720   
+    thirdPartyListUrl: approvedPublicUrl(process.env.THIRD_PARTY_LIST_URL),
+08721   
+    supportContact: String(process.env.SUPPORT_CONTACT || "").trim() || null,
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第33页  共60页
+server/index.js 第1268行 至 server/index.js 第1306行
+08722   
+    pipiaReference: String(process.env.PIPIA_REFERENCE || "").trim() || null,
+08723   
+    consentVersions: { basic: BASIC_CONSENT_VERSION, faceProcessing: FACE_CONSENT_VERSION },
+08724   
+    retention: process.env.RETENTION_SUPPLIER_POLICY ? {
+08725   
+      sourceHours: Number((boundedInteger(process.env.INPUT_RETENTION_SECONDS, 86_400, 60, 31_536_000) / 3600).toFixed
+08725.1 
+(2)),
+08726   
+      resultHours: Number((boundedInteger(process.env.OUTPUT_RETENTION_SECONDS, 86_400, 60, 31_536_000) / 3600).toFixe
+08726.1 
+d(2)),
+08727   
+      reportSensitiveDays: boundedInteger(process.env.REPORT_RETENTION_DAYS, 180, 1, 3650),
+08728   
+      supplierPolicy: String(process.env.RETENTION_SUPPLIER_POLICY).slice(0, 500),
+08729   
+    } : null,
+08730   
+    aiServices,
+08731   
+  };
+08732   
+  const missing = [];
+08733   
+  if (!data.privacyPolicyUrl) missing.push("PRIVACY_POLICY_URL must be an approved HTTPS document");
+08734   
+  if (!data.userAgreementUrl) missing.push("USER_AGREEMENT_URL must be an approved HTTPS document");
+08735   
+  if (!data.thirdPartyListUrl) missing.push("THIRD_PARTY_LIST_URL must be an approved HTTPS document");
+08736   
+  if (!data.supportContact) missing.push("SUPPORT_CONTACT must identify the company support channel");
+08737   
+  if (!data.pipiaReference) missing.push("PIPIA_REFERENCE must identify the approved personal information impact asses
+08737.1 
+sment");
+08738   
+  if (!data.operatorName) missing.push("OPERATOR_NAME must identify the legal service operator");
+08739   
+  const releaseChannel = String(process.env.RELEASE_CHANNEL || "wechat-mini-program").toLowerCase();
+08740   
+  if (PRODUCTION && releaseChannel === "android-app" && !data.appRecordNumber) missing.push("APP_RECORD_NO must identi
+08740.1 
+fy the Android app filing");
+08741   
+  if (PRODUCTION && releaseChannel === "android-app" && !data.icpFilingNumber) missing.push("ICP_RECORD_NO must identi
+08741.1 
+fy the Android API domain filing");
+08742   
+  if (!data.retention) missing.push("RETENTION_SUPPLIER_POLICY and bounded retention periods are required");
+08743   
+  if (data.aiServices.length === 0) missing.push("AI_SERVICE_DISCLOSURES_JSON must publish the approved provider/model
+08743.1 
+/filing facts");
+08744   
+  for (const capability of ["video-fusion", "photo-restore", "photo-age", "photo-effect", "photo-anime", "photo-bg"]) 
+08744.1 
+{
+08745   
+    if (!data.aiServices.some((item) => item.capabilities.includes(capability))) missing.push(`AI service disclosure i
+08745.1 
+s missing capability: ${capability}`);
+08746   
+  }
+08747   
+  return { ...data, status: missing.length ? "pending_company_approval" : "approved", blockers: PRODUCTION ? missing :
+08747.1 
+ [] };
+08748   
+}
+08749   
+08750   
+function generationDisclosureReady(purpose) {
+08751   
+  const capability = String(purpose || "")
+08752   
+    .replace(/^photo-effect:.+$/, "photo-effect")
+08753   
+    .replace(/^photo-anime:.+$/, "photo-anime")
+08754   
+    .replace(/^photo-bg:.+$/, "photo-bg");
+08755   
+  const compliance = publicComplianceConfig();
+08756   
+  return compliance.status === "approved" && compliance.aiServices.some((service) => service.capabilities.includes(cap
+08756.1 
+ability));
+08757   
+}
+08758   
+08759   
+function licenseReadiness() {
+08760   
+  const configuredIds = String(process.env.LICENSED_ASSET_IDS || "").split(",").map((idValue) => idValue.trim()).filte
+08760.1 
+r(Boolean);
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第34页  共60页
+server/index.js 第1307行 至 server/index.js 第1349行
+08761   
+  const blockers = PRODUCTION && configuredIds.length === 0 ? ["LICENSED_ASSET_IDS must be supplied from the company a
+08761.1 
+sset authorization ledger"] : [];
+08762   
+  return { ready: blockers.length === 0, licensedAssetIds: configuredIds, blockers };
+08763   
+}
+08764   
+08765   
+function taskStorageReadiness() {
+08766   
+  const status = taskStoreStatus();
+08767   
+  const blockers = [...status.blockers];
+08768   
+  if (PRODUCTION && status.requestedBackend !== "oss") blockers.push("TASKS_BACKEND=oss is required for production tas
+08768.1 
+k persistence");
+08769   
+  return { ...status, ready: blockers.length === 0, blockers };
+08770   
+}
+08771   
+08772   
+function launchReadiness() {
+08773   
+  const releaseChannel = String(process.env.RELEASE_CHANNEL || "wechat-mini-program").toLowerCase();
+08774   
+  const storage = storageConfig();
+08775   
+  const statuses = {
+08776   
+    auth: authReadiness(),
+08777   
+    realName: realNameReadiness(),
+08778   
+    storage,
+08779   
+    contentSafety: contentSafetyReadiness(),
+08780   
+    aiMarking: markingReadiness(),
+08781   
+    billing: billingReadiness(),
+08782   
+    licenses: licenseReadiness(),
+08783   
+    supplierDeletion: supplierDeletionReadiness(),
+08784   
+    monitoring: monitoringReadiness(),
+08785   
+    publicCompliance: publicComplianceConfig(),
+08786   
+    tasks: taskStorageReadiness(),
+08787   
+    complianceLedger: complianceStoreReadiness(),
+08788   
+    capabilities: capabilityReadiness({
+08789   
+      videoTemplates: readyVideoTemplates.length,
+08790   
+      photoTemplates: Object.values(PHOTO_TEMPLATES).filter((v) => v.imageTemplateId || v.imgUrl).length,
+08791   
+    }),
+08792   
+  };
+08793   
+  const blockers = Object.values(statuses).flatMap((status) => [
+08794   
+    ...(status.blockers || []),
+08795   
+    ...(status.readiness?.blockers || []),
+08796   
+  ]);
+08797   
+  if (PRODUCTION && storage.backend === "file") blockers.push("OBJECT_STORAGE_BACKEND=oss is required for production p
+08797.1 
+ersistence");
+08798   
+  if (PRODUCTION && !storage.signingSecretConfigured) blockers.push("OBJECT_SIGNING_SECRET or AUTH_SESSION_SECRET is r
+08798.1 
+equired for signed objects");
+08799   
+  if (PRODUCTION && !configuredPublicBase()) blockers.push("PUBLIC_BASE_URL must be an origin-only HTTPS URL so provid
+08799.1 
+ers can fetch signed input objects");
+08800   
+  const corsOrigin = String(process.env.CORS_ORIGIN || "");
+08801   
+  if (PRODUCTION && (!corsOrigin || corsOrigin === "*" || corsOrigin.split(",").some((origin) => !approvedPublicOrigin
+08801.1 
+(origin)))) blockers.push("CORS_ORIGIN must be an explicit HTTPS origin allowlist in production");
+08802   
+  if (PRODUCTION && !String(process.env.OUTBOUND_HOST_ALLOWLIST || "").trim()) blockers.push("OUTBOUND_HOST_ALLOWLIST 
+08802.1 
+must list the reviewed supplier and object-storage hostnames");
+08803   
+  if (PRODUCTION && String(process.env.REPORT_DATA_ENCRYPTION_KEY || "").length < 32) blockers.push("REPORT_DATA_ENCRY
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第35页  共60页
+server/index.js 第1349行 至 server/index.js 第1381行
+08803.1 
+PTION_KEY must be a separate 32+ character production secret");
+08804   
+  if (PRODUCTION && (!Number.isSafeInteger(Number(process.env.REPORT_RETENTION_DAYS)) || Number(process.env.REPORT_RET
+08804.1 
+ENTION_DAYS) < 1 || Number(process.env.REPORT_RETENTION_DAYS) > 3650)) blockers.push("REPORT_RETENTION_DAYS must expli
+08804.2 
+citly be between 1 and 3650 in production");
+08805   
+  if (PRODUCTION && !/^[a-f0-9]{64}$/i.test(String(process.env.BASIC_CONSENT_NOTICE_SHA256 || ""))) blockers.push("BAS
+08805.1 
+IC_CONSENT_NOTICE_SHA256 must pin the approved basic-consent notice");
+08806   
+  if (PRODUCTION && !/^[a-f0-9]{64}$/i.test(String(process.env.FACE_CONSENT_NOTICE_SHA256 || ""))) blockers.push("FACE
+08806.1 
+_CONSENT_NOTICE_SHA256 must pin the approved face-processing notice");
+08807   
+  if (PRODUCTION && !Number.isSafeInteger(Number(process.env.PROVIDER_DAILY_CALL_LIMIT)) || PRODUCTION && Number(proce
+08807.1 
+ss.env.PROVIDER_DAILY_CALL_LIMIT) < 1) blockers.push("PROVIDER_DAILY_CALL_LIMIT must be an explicit positive productio
+08807.2 
+n budget");
+08808   
+  if (PRODUCTION && !Number.isSafeInteger(Number(process.env.USER_DAILY_GENERATION_LIMIT)) || PRODUCTION && Number(pro
+08808.1 
+cess.env.USER_DAILY_GENERATION_LIMIT) < 1) blockers.push("USER_DAILY_GENERATION_LIMIT must be an explicit positive per
+08808.2 
+-user production budget");
+08809   
+  if (PRODUCTION && !process.env.RETENTION_SUPPLIER_POLICY) blockers.push("RETENTION_SUPPLIER_POLICY must document pro
+08809.1 
+vider copy deletion capability");
+08810   
+  if (PRODUCTION && !process.env.SERVICE_PROVIDER_CODE) blockers.push("SERVICE_PROVIDER_CODE must be supplied for impl
+08810.1 
+icit AI metadata");
+08811   
+  if (PRODUCTION && !process.env.AI_MODEL_FILING_REFERENCE) blockers.push("AI_MODEL_FILING_REFERENCE must identify the
+08811.1 
+ public model/service filing record");
+08812   
+  if (PRODUCTION && releaseChannel === "wechat-mini-program" && !process.env.MINIPROGRAM_APPID) blockers.push("MINIPRO
+08812.1 
+GRAM_APPID is a company credential required for the formal mini-program package");
+08813   
+  if (PRODUCTION && releaseChannel === "wechat-mini-program" && !process.env.MINIPROGRAM_RECORD_NO) blockers.push("MIN
+08813.1 
+IPROGRAM_RECORD_NO is required for the formal mini-program package");
+08814   
+  if (PRODUCTION && releaseChannel === "android-app" && !process.env.APP_PACKAGE_NAME) blockers.push("APP_PACKAGE_NAME
+08814.1 
+ is required for the Android release");
+08815   
+  if (PRODUCTION && releaseChannel === "android-app" && !process.env.APP_RECORD_NO) blockers.push("APP_RECORD_NO is re
+08815.1 
+quired for the Android release");
+08816   
+  if (PRODUCTION && releaseChannel === "android-app" && !process.env.ICP_RECORD_NO) blockers.push("ICP_RECORD_NO is re
+08816.1 
+quired for the Android API domain");
+08817   
+  if (PRODUCTION && PAYMENT_MODE === "live" && process.env.PAYMENT_ADAPTER_VERIFIED !== "true") blockers.push("PAYMENT
+08817.1 
+_ADAPTER_VERIFIED=true requires signed sandbox callback and reconciliation evidence");
+08818   
+  return {
+08819   
+    status: PRODUCTION ? (blockers.length ? "NO-GO" : "GO") : "CLOSED_TEST",
+08820   
+    publicLaunchAllowed: PRODUCTION && blockers.length === 0,
+08821   
+    environment: DEPLOY_ENV,
+08822   
+    blockers: [...new Set(blockers)],
+08823   
+    checks: statuses,
+08824   
+    checkedAt: new Date().toISOString(),
+08825   
+  };
+08826   
+}
+08827   
+08828   
+app.get("/health", (c) => c.json({
+08829   
+  ok: true,
+08830   
+  status: "live",
+08831   
+  version: "2026-09-05-security-r2",
+08832   
+}));
+08833   
+08834   
+app.get("/api/readiness", (c) => {
+08835   
+  if (PRODUCTION) {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第36页  共60页
+server/index.js 第1382行 至 server/index.js 第1424行
+08836   
+    const denied = internalOnly(c);
+08837   
+    if (denied) return denied;
+08838   
+  }
+08839   
+  return c.json({ code: 0, data: launchReadiness() });
+08840   
+});
+08841   
+08842   
+app.get("/api/public/compliance", (c) => {
+08843   
+  const { blockers: _blockers, ...publicData } = publicComplianceConfig();
+08844   
+  return c.json({ code: 0, data: publicData });
+08845   
+});
+08846   
+08847   
+app.get("/api/capabilities", (c) => c.json({
+08848   
+  code: 0,
+08849   
+  data: capabilityRegistry({
+08850   
+    videoTemplates: readyVideoTemplates.length,
+08851   
+    photoTemplates: Object.values(PHOTO_TEMPLATES).filter((v) => v.imageTemplateId || v.imgUrl).length,
+08852   
+  }),
+08853   
+}));
+08854   
+08855   
+/* ================= 聚合 AI 功能（2026-08-03 新增） =================
+08856   
+ * 1. POST /api/photo/restore  老照片修复（人脸增强 + 可选上色）—— 阿里 viapi
+08857   
+ * 2. POST /api/photo/fusion   照片换脸（模板合照）—— 阿里 viapi
+08858   
+ * 3. POST /api/photo/idphoto  证件照（抠图 + 换底/尺寸/排版）—— 阿里 viapi + 本地合成
+08859   
+ * 4. POST /api/photo/age      减龄/变老 —— 腾讯 ft（阿里检测人脸框）
+08860   
+ * 5. POST /api/video/matting  视频抠像换背景（异步）—— 阿里 videoseg + 本地合成
+08861   
+ * 所有供应商返回的临时 URL 一律转存私有对象存储后返回短时签名链接。 */
+08862   
+08863   
+// 功能清单（前端首页菜单用）
+08864   
+app.get("/api/features", (c) => c.json({
+08865   
+  code: 0,
+08866   
+  data: [
+08867   
+    { key: "video-fusion", name: "视频换脸", ready: readyVideoTemplates.length > 0, templates: readyVideoTemplates.map
+08867.1 
+(([id, value]) => ({ id, name: value.name })) },
+08868   
+    { key: "photo-restore", name: "老照片修复", ready: true },
+08869   
+    { key: "photo-fusion", name: "照片换脸", ready: Object.values(PHOTO_TEMPLATES).some((v) => v.imageTemplateId || v.
+08869.1 
+imgUrl), templates: Object.entries(PHOTO_TEMPLATES).filter(([, v]) => v.imageTemplateId || v.imgUrl).map(([k, v]) => (
+08869.2 
+{ id: k, name: v.name, imgUrl: v.imgUrl || null })) },
+08870   
+    { key: "idphoto", name: "证件照", ready: true, bgs: ["white", "red", "blue"], sizes: ["1寸", "2寸", "小2寸"] },
+08871   
+    { key: "photo-age", name: "减龄/变老", ready: true },
+08872   
+    { key: "photo-effects", name: "一键照片效果", ready: seededit.available() || qwenImage.available() || wanx.availab
+08872.1 
+le(), count: listPhotoEffects().length },
+08873   
+    { key: "photo-anime", name: "艺术画像", ready: true, styles: Object.entries(ANIME_STYLES).map(([id, value]) => ({ 
+08873.1 
+id, name: value.name })) },
+08874   
+    { key: "photo-bg", name: "旅行换景", ready: true, bgs: Object.entries(PHOTO_BGS).map(([id, value]) => ({ id, name:
+08874.1 
+ value.name })) },
+08875   
+    { key: "video-matting", name: "视频抠像换背景", ready: true, bgs: Object.entries(MATTING_BGS).filter(([, v]) => v.
+08875.1 
+bgUrl).map(([k, v]) => ({ id: k, name: v.name })) },
+08876   
+  ],
+08877   
+}));
+08878   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第37页  共60页
+server/index.js 第1425行 至 server/index.js 第1472行
+08879   
+/* ================= 内容安全、申诉与紧急下架 ================= */
+08880   
+app.post("/api/moderation/check", async (c) => {
+08881   
+  const result = authenticated(c);
+08882   
+  if (result.response) return result.response;
+08883   
+  if (contentSafetyConfig().mode !== "local_rules") return c.json({ code: "CONTENT_SAFETY_NOT_CONFIGURED", message: "
+08883.1 
+外部内容安全供应商尚未完成能力接入" }, 503);
+08884   
+  const body = await c.req.json().catch(() => ({}));
+08885   
+  const direction = ["input", "output"].includes(body.direction) ? body.direction : "input";
+08886   
+  let assetId = body.assetId ? String(body.assetId) : null;
+08887   
+  if (body.objectReference) {
+08888   
+    const object = requireInputObject(c, body.objectReference, result.auth.userId);
+08889   
+    if (object.error) return object.error;
+08890   
+    assetId = object.id;
+08891   
+  } else if (assetId) {
+08892   
+    const object = requireInputObject(c, assetId, result.auth.userId);
+08893   
+    if (object.error) return object.error;
+08894   
+    assetId = object.id;
+08895   
+  }
+08896   
+  const moderation = moderationFor(c, result.auth.userId, {
+08897   
+    text: String(body.text || "").slice(0, 4000),
+08898   
+    metadata: body.metadata && typeof body.metadata === "object" ? body.metadata : {},
+08899   
+    direction,
+08900   
+    assetId,
+08901   
+    taskId: body.taskId ? String(body.taskId) : undefined,
+08902   
+  });
+08903   
+  return c.json({ code: 0, data: moderation });
+08904   
+});
+08905   
+08906   
+app.get("/api/moderation/:moderationId", (c) => {
+08907   
+  const result = authenticated(c);
+08908   
+  if (result.response) return result.response;
+08909   
+  const item = store.getModeration(c.req.param("moderationId"));
+08910   
+  if (!item) return c.json({ code: "NOT_FOUND", message: "审核记录不存在" }, 404);
+08911   
+  if (item.userId !== result.auth.userId) return c.json({ code: "FORBIDDEN", message: "无权查看该审核记录" }, 403);
+08912   
+  return c.json({ code: 0, data: item });
+08913   
+});
+08914   
+08915   
+app.post("/api/moderation/:moderationId/appeal", async (c) => {
+08916   
+  const result = authenticated(c);
+08917   
+  if (result.response) return result.response;
+08918   
+  const item = store.getModeration(c.req.param("moderationId"));
+08919   
+  if (!item) return c.json({ code: "NOT_FOUND", message: "审核记录不存在" }, 404);
+08920   
+  if (item.userId !== result.auth.userId) return c.json({ code: "FORBIDDEN", message: "无权申诉该审核记录" }, 403);
+08921   
+  const body = await c.req.json().catch(() => ({}));
+08922   
+  store.recordAudit({ userId: result.auth.userId, action: "moderation.appeal_submitted", resourceType: "moderation", r
+08922.1 
+esourceId: item.id, details: { reason: String(body.reason || "").slice(0, 500) } });
+08923   
+  return c.json({ code: 0, data: { moderationId: item.id, status: "queued_for_manual_review" } }, 202);
+08924   
+});
+08925   
+08926   
+app.post("/api/internal/moderation/:moderationId/decision", async (c) => {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第38页  共60页
+server/index.js 第1473行 至 server/index.js 第1519行
+08927   
+  const denied = internalOnly(c);
+08928   
+  if (denied) return denied;
+08929   
+  const body = await c.req.json().catch(() => ({}));
+08930   
+  const item = store.getModeration(c.req.param("moderationId"));
+08931   
+  if (!item) return c.json({ code: "NOT_FOUND", message: "审核记录不存在" }, 404);
+08932   
+  const updated = store.decideModeration(item.id, { decision: body.decision, reviewerId: String(body.reviewerId || "in
+08932.1 
+ternal"), reason: String(body.reason || "").slice(0, 500) });
+08933   
+  return c.json({ code: 0, data: updated });
+08934   
+});
+08935   
+08936   
+app.post("/api/internal/takedown", async (c) => {
+08937   
+  const denied = internalOnly(c);
+08938   
+  if (denied) return denied;
+08939   
+  const body = await c.req.json().catch(() => ({}));
+08940   
+  const assetId = String(body.assetId || "");
+08941   
+  if (!assetId) return c.json({ code: "INVALID_ASSET", message: "缺少作品 ID" }, 400);
+08942   
+  try {
+08943   
+    const deleted = await objectStore.delete(assetId, { reason: "emergency_takedown" });
+08944   
+    store.recordAudit({ action: "asset.emergency_takedown", resourceType: "object", resourceId: assetId, details: { re
+08944.1 
+ason: String(body.reason || "").slice(0, 500), deleted } });
+08945   
+    return c.json({ code: 0, data: deleted });
+08946   
+  } catch (error) {
+08947   
+    alertMetric("takedown.failed", { assetId, error: safeError(error) });
+08948   
+    return c.json({ code: "TAKEDOWN_FAILED", message: "紧急下架失败" }, 503);
+08949   
+  }
+08950   
+});
+08951   
+08952   
+/* ---- 一键照片效果：专用能力独立调用；生成式效果使用已验收的新模型。 ---- */
+08953   
+app.post("/api/photo/effect", async (c) => {
+08954   
+  const ip = clientAddress(c);
+08955   
+  if (!rateLimit(ip + ":effect", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+08956   
+  const { imageUrl, effectId } = await c.req.json().catch(() => ({}));
+08957   
+  const effect = getPhotoEffect(String(effectId || ""));
+08958   
+  if (!imageUrl || !effect) return c.json({ code: 400, message: "请选择有效的照片效果" }, 400);
+08959   
+  const prepared = await prepareGeneration(c, { inputUrl: imageUrl, purpose: `photo-effect:${effect.id}`, text: effect
+08959.1 
+.prompt || "", metadata: { effectId: effect.id } });
+08960   
+  if (prepared.response) return prepared.response;
+08961   
+08962   
+  try {
+08963   
+    let tmpUrl;
+08964   
+    let usedProvider;
+08965   
+    let providerMeta = {};
+08966   
+08967   
+    if (effect.type === "age") {
+08968   
+      const rect = await viapi.detectFaceRect(prepared.inputUrl);
+08969   
+      if (!rect) {
+08970   
+        refundPrepared(prepared, "face_not_detected");
+08971   
+        return c.json({ code: 400, message: "未检测到人脸，请换一张正脸清晰照片" }, 400);
+08972   
+      }
+08973   
+      tmpUrl = await changeAgePic({ imageUrl: prepared.inputUrl, age: effect.age, faceRect: rect });
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第39页  共60页
+server/index.js 第1520行 至 server/index.js 第1568行
+08974   
+      usedProvider = "tencent-ft";
+08975   
+    } else if (effect.type === "enhance") {
+08976   
+      tmpUrl = await viapi.enhanceFace(prepared.inputUrl);
+08977   
+      usedProvider = "aliyun-viapi";
+08978   
+    } else if (effect.type === "colorize") {
+08979   
+      tmpUrl = await viapi.colorizeImage(prepared.inputUrl);
+08980   
+      usedProvider = "aliyun-viapi";
+08981   
+    } else if (effect.type === "wanx") {
+08982   
+      let result;
+08983   
+      if (wanx.available()) {
+08984   
+        result = await wanx.editImage({
+08985   
+          imageUrl: prepared.inputUrl,
+08986   
+          prompt: effect.prompt,
+08987   
+          functionName: effect.functionName,
+08988   
+        });
+08989   
+        tmpUrl = result.url;
+08990   
+        usedProvider = "aliyun-wanx2.1";
+08991   
+        providerMeta = { taskId: result.taskId, requestId: result.requestId, usage: result.usage };
+08992   
+      } else {
+08993   
+        refundPrepared(prepared, "provider_not_configured");
+08994   
+        return c.json({ code: 503, message: "高清放大服务尚未配置" }, 503);
+08995   
+      }
+08996   
+    } else if (effect.type === "generative") {
+08997   
+      let seedError;
+08998   
+      if (seededit.available()) {
+08999   
+        try {
+09000   
+          tmpUrl = await seededit.editImage({ imageUrl: prepared.inputUrl, prompt: effect.prompt });
+09001   
+          usedProvider = "volc-seedream-4.0";
+09002   
+        } catch (error) {
+09003   
+          seedError = error;
+09004   
+          logSecurity("warn", "photo_effect.primary_failed_using_fallback", { effectId: effect.id, error: safeError(er
+09004.1 
+ror) });
+09005   
+        }
+09006   
+      }
+09007   
+      if (!tmpUrl && qwenImage.available()) {
+09008   
+        const result = await qwenImage.editImage({ imageUrl: prepared.inputUrl, prompt: effect.prompt });
+09009   
+        tmpUrl = result.url;
+09010   
+        usedProvider = `aliyun-${result.model}`;
+09011   
+        providerMeta = { requestId: result.requestId, usage: result.usage };
+09012   
+      }
+09013   
+      if (!tmpUrl) {
+09014   
+        if (seedError) throw seedError;
+09015   
+        refundPrepared(prepared, "provider_not_configured");
+09016   
+        return c.json({ code: 503, message: "AI 图片编辑服务尚未配置" }, 503);
+09017   
+      }
+09018   
+    } else {
+09019   
+      return c.json({ code: 400, message: "这个照片效果已停止使用" }, 400);
+09020   
+    }
+09021   
+09022   
+    const out = await persistGenerationOutput(c, {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第40页  共60页
+server/index.js 第1569行 至 server/index.js 第1615行
+09023   
+      tmpUrl,
+09024   
+      ownerId: prepared.userId,
+09025   
+      purpose: `output/photo-effect/${effect.id}`,
+09026   
+      kind: "image",
+09027   
+      provider: usedProvider,
+09028   
+      model: providerMeta.model || null,
+09029   
+      base: requestBase(c),
+09030   
+    });
+09031   
+    return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, effectId: effect.id, provider: usedProvider, 
+09031.1 
+metadata: out.metadata, ...providerMeta } });
+09032   
+  } catch (error) {
+09033   
+    refundPrepared(prepared, "generation_failed");
+09034   
+    logSecurity("error", "photo_effect.generate_failed", { effectId: effect.id, requestId: requestId(c), error: safeEr
+09034.1 
+ror(error) });
+09035   
+    const message = String(error?.message || "");
+09036   
+    if (message.includes("not authorized") || message.includes("AuthFailure") || message.includes("未配置")) {
+09037   
+      return c.json({ code: 503, message: "该效果正在开通中，请稍后再试" }, 503);
+09038   
+    }
+09039   
+    return c.json({ code: 500, message: "照片生成服务繁忙，请稍后再试" }, 500);
+09040   
+  }
+09041   
+});
+09042   
+09043   
+/* ---- 1. 老照片修复 ---- */
+09044   
+app.post("/api/photo/restore", async (c) => {
+09045   
+  const ip = clientAddress(c);
+09046   
+  if (!rateLimit(ip + ":feat", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09047   
+  const { imageUrl, colorize } = await c.req.json().catch(() => ({}));
+09048   
+  if (!imageUrl) return c.json({ code: 400, message: "参数错误" }, 400);
+09049   
+  const prepared = await prepareGeneration(c, { inputUrl: imageUrl, purpose: "photo-restore", metadata: { colorize: Bo
+09049.1 
+olean(colorize) } });
+09050   
+  if (prepared.response) return prepared.response;
+09051   
+  try {
+09052   
+    let url = await viapi.enhanceFace(prepared.inputUrl);
+09053   
+    if (colorize) url = await viapi.colorizeImage(url); // 先增强后上色，串行管线
+09054   
+    const out = await persistGenerationOutput(c, {
+09055   
+      tmpUrl: url,
+09056   
+      ownerId: prepared.userId,
+09057   
+      purpose: "output/photo-restore",
+09058   
+      kind: "image",
+09059   
+      provider: "aliyun-viapi",
+09060   
+      model: colorize ? "EnhanceFace+ColorizeImage" : "EnhanceFace",
+09061   
+      base: requestBase(c),
+09062   
+    });
+09063   
+    return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09064   
+  } catch (e) {
+09065   
+    refundPrepared(prepared, "generation_failed");
+09066   
+    logSecurity("error", "photo_restore.failed", { requestId: requestId(c), error: safeError(e) });
+09067   
+    return c.json({ code: 500, message: "修复服务繁忙，请稍后再试" }, 500);
+09068   
+  }
+09069   
+});
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第41页  共60页
+server/index.js 第1616行 至 server/index.js 第1663行
+09070   
+09071   
+/* ---- 2. 照片换脸（模板合照）---- */
+09072   
+app.post("/api/photo/fusion", async (c) => {
+09073   
+  const ip = clientAddress(c);
+09074   
+  if (!rateLimit(ip + ":feat", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09075   
+  const { templateId, userPhotoUrl } = await c.req.json().catch(() => ({}));
+09076   
+  const tpl = PHOTO_TEMPLATES[templateId];
+09077   
+  if ((!tpl?.imageTemplateId && !(PHOTO_PROVIDER === "bailian" && tpl?.imgUrl)) || !userPhotoUrl) {
+09078   
+    return c.json({ code: 400, message: "参数错误" }, 400);
+09079   
+  }
+09080   
+  if (!licensedTemplate(templateId)) return c.json({ code: 503, message: "该模板尚未完成授权登记" }, 503);
+09081   
+  const prepared = await prepareGeneration(c, { inputUrl: userPhotoUrl, purpose: "photo-fusion", metadata: { templateI
+09081.1 
+d } });
+09082   
+  if (prepared.response) return prepared.response;
+09083   
+  try {
+09084   
+    // 百炼为生成式照片换脸；模板地址来自已登记的公司模板清单。
+09085   
+    if (PHOTO_PROVIDER === "bailian" && bailian.available() && tpl.imgUrl) {
+09086   
+      const result = await bailian.faceSwap({ userPhoto: prepared.inputUrl, template: tpl.imgUrl });
+09087   
+      const out = await persistGenerationOutput(c, {
+09088   
+        tmpUrl: result.url,
+09089   
+        ownerId: prepared.userId,
+09090   
+        purpose: "output/photo-fusion",
+09091   
+        kind: "image",
+09092   
+        provider: "bailian",
+09093   
+        model: result.model || null,
+09094   
+        base: requestBase(c),
+09095   
+      });
+09096   
+      return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, provider: "bailian", requestId: result.requ
+09096.1 
+estId, usage: result.usage, metadata: out.metadata } });
+09097   
+    }
+09098   
+    const url = await viapi.mergeImageFace({ templateId: tpl.imageTemplateId, imageUrl: prepared.inputUrl });
+09099   
+    const out = await persistGenerationOutput(c, {
+09100   
+      tmpUrl: url,
+09101   
+      ownerId: prepared.userId,
+09102   
+      purpose: "output/photo-fusion",
+09103   
+      kind: "image",
+09104   
+      provider: "aliyun-viapi",
+09105   
+      model: "MergeImageFace",
+09106   
+      base: requestBase(c),
+09107   
+    });
+09108   
+    return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09109   
+  } catch (e) {
+09110   
+    refundPrepared(prepared, "generation_failed");
+09111   
+    logSecurity("error", "photo_fusion.failed", { requestId: requestId(c), error: safeError(e) });
+09112   
+    return c.json({ code: 500, message: "生成服务繁忙，请稍后再试" }, 500);
+09113   
+  }
+09114   
+});
+09115   
+09116   
+/* ---- 3. 证件照（换底/尺寸/排版）---- */
+09117   
+app.post("/api/photo/idphoto", async (c) => {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第42页  共60页
+server/index.js 第1664行 至 server/index.js 第1712行
+09118   
+  const ip = clientAddress(c);
+09119   
+  if (!rateLimit(ip + ":feat", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09120   
+  const { imageUrl, bg = "white", size = "1寸", layout6 = false } = await c.req.json().catch(() => ({}));
+09121   
+  if (!imageUrl || !["white", "red", "blue"].includes(bg) || !["1寸", "2寸", "小2寸"].includes(size)) {
+09122   
+    return c.json({ code: 400, message: "参数错误" }, 400);
+09123   
+  }
+09124   
+  const prepared = await prepareGeneration(c, { inputUrl: imageUrl, purpose: "idphoto", metadata: { background: bg, si
+09124.1 
+ze, layout6: Boolean(layout6) } });
+09125   
+  if (prepared.response) return prepared.response;
+09126   
+  let alphaPath;
+09127   
+  let outPath;
+09128   
+  try {
+09129   
+    // 抠图 → 下载 alpha PNG → 本地合成 → 上传
+09130   
+    const alphaTmp = await viapi.segmentHDBody(prepared.inputUrl);
+09131   
+    const id = crypto.randomUUID();
+09132   
+    alphaPath = await fetchToLocal(alphaTmp, `idphoto-alpha-${id}.png`);
+09133   
+    outPath = path.join(WORK_DIR, `idphoto-${id}.jpg`);
+09134   
+    const args = ["idphoto-compose.py", alphaPath, outPath, "--bg", bg, "--size", size];
+09135   
+    if (layout6) args.push("--layout6");
+09136   
+    await run(process.env.PYTHON_PATH || "python", args, { cwd: __dirname });
+09137   
+    const out = await persistLocalGenerationOutput(c, outPath, {
+09138   
+      ownerId: prepared.userId,
+09139   
+      purpose: "output/idphoto",
+09140   
+      kind: "image",
+09141   
+      provider: "aliyun-viapi+local",
+09142   
+      model: "SegmentHDBody+idphoto-compose",
+09143   
+      taskId: null,
+09144   
+      base: requestBase(c),
+09145   
+    });
+09146   
+    return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09147   
+  } catch (e) {
+09148   
+    refundPrepared(prepared, "generation_failed");
+09149   
+    logSecurity("error", "idphoto.failed", { requestId: requestId(c), error: safeError(e) });
+09150   
+    return c.json({ code: 500, message: "生成服务繁忙，请稍后再试" }, 500);
+09151   
+  } finally {
+09152   
+    if (alphaPath) fs.rmSync(alphaPath, { force: true });
+09153   
+    if (outPath) fs.rmSync(outPath, { force: true });
+09154   
+  }
+09155   
+});
+09156   
+09157   
+/* ---- 4. 减龄/变老 ---- */
+09158   
+app.post("/api/photo/age", async (c) => {
+09159   
+  const ip = clientAddress(c);
+09160   
+  if (!rateLimit(ip + ":feat", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09161   
+  const { imageUrl, age } = await c.req.json().catch(() => ({}));
+09162   
+  const ageNum = Number(age);
+09163   
+  if (!imageUrl || !Number.isInteger(ageNum) || ageNum < 1 || ageNum > 120) {
+09164   
+    return c.json({ code: 400, message: "参数错误（age 须为 1-120 的整数）" }, 400);
+09165   
+  }
+09166   
+  const prepared = await prepareGeneration(c, { inputUrl: imageUrl, purpose: "photo-age", metadata: { targetAge: ageNu
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第43页  共60页
+server/index.js 第1712行 至 server/index.js 第1754行
+09166.1 
+m } });
+09167   
+  if (prepared.response) return prepared.response;
+09168   
+  try {
+09169   
+    const rect = await viapi.detectFaceRect(prepared.inputUrl);
+09170   
+    if (!rect) {
+09171   
+      refundPrepared(prepared, "face_not_detected");
+09172   
+      return c.json({ code: 400, message: "未检测到人脸，请换一张正脸清晰照片" }, 400);
+09173   
+    }
+09174   
+    const url = await changeAgePic({ imageUrl: prepared.inputUrl, age: ageNum, faceRect: rect });
+09175   
+    const out = await persistGenerationOutput(c, {
+09176   
+      tmpUrl: url,
+09177   
+      ownerId: prepared.userId,
+09178   
+      purpose: "output/photo-age",
+09179   
+      kind: "image",
+09180   
+      provider: "tencent-ft",
+09181   
+      model: "ChangeAgePic",
+09182   
+      base: requestBase(c),
+09183   
+    });
+09184   
+    return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09185   
+  } catch (e) {
+09186   
+    refundPrepared(prepared, "generation_failed");
+09187   
+    logSecurity("error", "photo_age.failed", { requestId: requestId(c), error: safeError(e) });
+09188   
+    const msg = String(e?.message || "");
+09189   
+    if (msg.includes("开通") || msg.includes("计费") || msg.includes("AuthFailure")) {
+09190   
+      return c.json({ code: 503, message: "年龄变换服务开通中，请稍后再试" }, 503);
+09191   
+    }
+09192   
+    return c.json({ code: 500, message: "生成服务繁忙，请稍后再试" }, 500);
+09193   
+  }
+09194   
+});
+09195   
+09196   
+/* ---- 4b. 人物动漫化 / 素描 ---- */
+09197   
+/* ---- 4b. 漫画脸 / 风格重绘（优先方舟生成式，未配置则回退老接口） ---- */
+09198   
+const ANIME_STYLES = {
+09199   
+  anime:      { name: "日系动漫", prompt: "把这张照片变成精美的日系动漫风格插画，保持人物的五官特征、发型和姿势不变，
+09199.1 
+肤色自然通透，画质细腻，动漫海报质感" },
+09200   
+  comic:      { name: "漫画风格", prompt: "把这张照片转化为精致现代漫画风格，严格保留人物身份、五官、脸型、肤色、发型
+09200.1 
+和姿势，使用清晰自然的线条、克制高级的配色和电影感光影，保持成年人的真实年龄与成熟气质，不要儿童化，不要夸张大眼，不添
+09200.2 
+加文字" },
+09201   
+  cartoon3d:  { name: "3D 卡通",  prompt: "把这张照片变成 3D 卡通动画风格（类似皮克斯动画电影质感），保持人物五官特征
+09201.1 
+和姿势不变，材质细腻，光影柔和" },
+09202   
+  watercolor: { name: "水彩画",   prompt: "把这张照片变成清新水彩画风格，保持人物五官特征和姿势不变，色彩通透，笔触自
+09202.1 
+然，像画师手绘的作品" },
+09203   
+  sketch:     { name: "素描画像", prompt: "把这张照片变成铅笔素描画像，保持人物五官特征和姿势不变，线条细腻有明暗层次
+09203.1 
+，像专业画家的速写作品" },
+09204   
+  portrait:   { name: "AI头像",    prompt: "把这张照片制作成高级自然的个人头像和专业棚拍肖像，严格保留人物身份、五官、
+09204.1 
+脸型、肤色、发型和真实年龄，采用干净中性背景、柔和专业布光和头肩构图，保留真实皮肤纹理，不过度磨皮，不添加文字" },
+09205   
+};
+09206   
+09207   
+app.post("/api/photo/anime", async (c) => {
+09208   
+  const ip = clientAddress(c);
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第44页  共60页
+server/index.js 第1755行 至 server/index.js 第1802行
+09209   
+  if (!rateLimit(ip + ":feat", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09210   
+  const { imageUrl, style = "anime" } = await c.req.json().catch(() => ({}));
+09211   
+  const st = ANIME_STYLES[style];
+09212   
+  if (!imageUrl || !st) return c.json({ code: 400, message: "参数错误" }, 400);
+09213   
+  const prepared = await prepareGeneration(c, { inputUrl: imageUrl, purpose: `photo-anime:${style}`, text: st.prompt, 
+09213.1 
+metadata: { style } });
+09214   
+  if (prepared.response) return prepared.response;
+09215   
+  try {
+09216   
+    if (seededit.available()) {
+09217   
+      const tmp = await seededit.editImage({ imageUrl: prepared.inputUrl, prompt: st.prompt });
+09218   
+      const out = await persistGenerationOutput(c, {
+09219   
+        tmpUrl: tmp,
+09220   
+        ownerId: prepared.userId,
+09221   
+        purpose: "output/photo-anime",
+09222   
+        kind: "image",
+09223   
+        provider: "volc-seedream-4.0",
+09224   
+        model: "Seedream",
+09225   
+        base: requestBase(c),
+09226   
+      });
+09227   
+      return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09228   
+    }
+09229   
+    // 回退：老接口仅支持 anime / sketch
+09230   
+    if (style !== "anime" && style !== "sketch") {
+09231   
+      return c.json({ code: 503, message: "该风格正在升级中，请先试试日系动漫" }, 503);
+09232   
+    }
+09233   
+    const url = style === "anime" ? await viapi.generateAnime(prepared.inputUrl) : await viapi.generateSketch(prepared
+09233.1 
+.inputUrl);
+09234   
+    const out = await persistGenerationOutput(c, {
+09235   
+      tmpUrl: url,
+09236   
+      ownerId: prepared.userId,
+09237   
+      purpose: "output/photo-anime",
+09238   
+      kind: "image",
+09239   
+      provider: "aliyun-viapi",
+09240   
+      model: style === "anime" ? "GenerateHumanAnimeStyle" : "GenerateHumanSketchStyle",
+09241   
+      base: requestBase(c),
+09242   
+    });
+09243   
+    return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09244   
+  } catch (e) {
+09245   
+    refundPrepared(prepared, "generation_failed");
+09246   
+    logSecurity("error", "photo_anime.failed", { requestId: requestId(c), error: safeError(e) });
+09247   
+    const msg = String(e?.message || "");
+09248   
+    if (msg.includes("开通") || msg.includes("AuthFailure") || msg.includes("not authorized")) {
+09249   
+      return c.json({ code: 503, message: "该功能开通中，请稍后再试" }, 503);
+09250   
+    }
+09251   
+    return c.json({ code: 500, message: "生成服务繁忙，请稍后再试" }, 500);
+09252   
+  }
+09253   
+});
+09254   
+09255   
+/* ---- 4c. 照片换背景（优先方舟生成式重绘：人物光影自然融入场景；未配置则回退抠图合成） ---- */
+09256   
+const PHOTO_BGS = {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第45页  共60页
+server/index.js 第1803行 至 server/index.js 第1847行
+09257   
+  greatwall: { name: "万里长城", file: "assets/bg-greatwall.jpg",
+09258   
+    prompt: "把照片的背景替换成万里长城的实景，保持人物完全不变，人物边缘自然，光线、色调与长城场景协调融合，像实地拍
+09258.1 
+摄的纪念照" },
+09259   
+  westlake:  { name: "西湖美景", file: "assets/bg-westlake.jpg",
+09260   
+    prompt: "把照片的背景替换成杭州西湖的实景（湖水、垂柳、远山、游船），保持人物完全不变，光线自然融合，像实地拍摄的
+09260.1 
+纪念照" },
+09261   
+  beach:     { name: "三亚海滩", file: "assets/bg-beach.jpg",
+09262   
+    prompt: "把照片的背景替换成三亚海滩的实景（蓝天、白云、沙滩、椰子树），保持人物完全不变，光线自然融合，像实地拍摄
+09262.1 
+的纪念照" },
+09263   
+};
+09264   
+09265   
+app.post("/api/photo/photobg", async (c) => {
+09266   
+  const ip = clientAddress(c);
+09267   
+  if (!rateLimit(ip + ":feat", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09268   
+  const { imageUrl, bgId, customPrompt } = await c.req.json().catch(() => ({}));
+09269   
+  const bg = PHOTO_BGS[bgId];
+09270   
+  if (!imageUrl || (!bg && bgId !== "custom")) return c.json({ code: 400, message: "参数错误" }, 400);
+09271   
+  const customText = String(customPrompt || "").replace(/[\\"']/g, "").trim().slice(0, 60);
+09272   
+  if (bgId === "custom" && !customText) return c.json({ code: 400, message: "请先描述想去的地方" }, 400);
+09273   
+  const prepared = await prepareGeneration(c, { inputUrl: imageUrl, purpose: `photo-bg:${bgId}`, text: customText, met
+09273.1 
+adata: { backgroundId: bgId } });
+09274   
+  if (prepared.response) return prepared.response;
+09275   
+  let alphaPath;
+09276   
+  let outPath;
+09277   
+  try {
+09278   
+    if (seededit.available()) {
+09279   
+      let prompt;
+09280   
+      if (bgId === "custom") {
+09281   
+        prompt = `把照片的背景替换成「${customText}」的实景，保持人物完全不变，人物边缘自然，光线、色调与新场景协调融
+09281.1 
+合，像实地拍摄的纪念照`;
+09282   
+      } else {
+09283   
+        prompt = bg.prompt;
+09284   
+      }
+09285   
+      const tmp = await seededit.editImage({ imageUrl: prepared.inputUrl, prompt });
+09286   
+      const out = await persistGenerationOutput(c, {
+09287   
+        tmpUrl: tmp,
+09288   
+        ownerId: prepared.userId,
+09289   
+        purpose: "output/photo-bg",
+09290   
+        kind: "image",
+09291   
+        provider: "volc-seedream-4.0",
+09292   
+        model: "Seedream",
+09293   
+        base: requestBase(c),
+09294   
+      });
+09295   
+      return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09296   
+    }
+09297   
+    if (bgId === "custom") {
+09298   
+      refundPrepared(prepared, "provider_not_configured");
+09299   
+      return c.json({ code: 503, message: "自定义场景正在升级中，请先选下方景点" }, 503);
+09300   
+    }
+09301   
+    // 回退：抠人像 + 本地合成
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第46页  共60页
+server/index.js 第1848行 至 server/index.js 第1885行
+09302   
+    const alphaTmp = await viapi.segmentHDBody(prepared.inputUrl);
+09303   
+    const id = crypto.randomUUID();
+09304   
+    alphaPath = await fetchToLocal(alphaTmp, `photobg-alpha-${id}.png`);
+09305   
+    outPath = path.join(WORK_DIR, `photobg-${id}.jpg`);
+09306   
+    await run(process.env.PYTHON_PATH || "python", ["photo-bg-compose.py", alphaPath, path.join(__dirname, bg.file), o
+09306.1 
+utPath], { cwd: __dirname });
+09307   
+    const out = await persistLocalGenerationOutput(c, outPath, {
+09308   
+      ownerId: prepared.userId,
+09309   
+      purpose: "output/photo-bg",
+09310   
+      kind: "image",
+09311   
+      provider: "aliyun-viapi+local",
+09312   
+      model: "SegmentHDBody+photo-bg-compose",
+09313   
+      base: requestBase(c),
+09314   
+    });
+09315   
+    return c.json({ code: 0, data: { url: out.url, assetId: out.assetId, metadata: out.metadata } });
+09316   
+  } catch (e) {
+09317   
+    refundPrepared(prepared, "generation_failed");
+09318   
+    logSecurity("error", "photo_background.failed", { requestId: requestId(c), error: safeError(e) });
+09319   
+    return c.json({ code: 500, message: "生成服务繁忙，请稍后再试" }, 500);
+09320   
+  } finally {
+09321   
+    if (alphaPath) fs.rmSync(alphaPath, { force: true });
+09322   
+    if (outPath) fs.rmSync(outPath, { force: true });
+09323   
+  }
+09324   
+});
+09325   
+09326   
+/* ---- 6. LLM 对话（发现页各玩法共用；优先 DeepSeek，未配置则尝试混元） ---- */
+09327   
+import * as hunyuan from "./providers/hunyuan.js";
+09328   
+import * as deepseek from "./providers/deepseek.js";
+09329   
+const llm = LLM_PROVIDER === "hunyuan" ? hunyuan : deepseek;
+09330   
+const LLM_SCENES = {
+09331   
+  blessing:  "你是一位深受中老年用户喜爱的祝福语写作助手。用户会告诉你节日或场合（如春节、生日、寿宴、重阳节、搬家、添
+09331.1 
+孙等），你要写出3条不同风格的祝福语：一条传统喜庆、一条温馨感人、一条幽默轻松。每条50-100字，用词吉祥得体，适合发到家
+09331.2 
+族微信群。",
+09332   
+  moments:   "你是一位朋友圈文案高手，专门为中老年用户写朋友圈配文。根据用户描述的照片内容或心情，写3条文案：一条诗意
+09332.1 
+、一条接地气、一条带热门话题感。每条不超过80字，可适当用 emoji。",
+09333   
+  share_caption: "你是乐颜秀的成片分享文案助手。用户会提供作品类型、希望的文案感觉和作品内容。严格只输出四部分且不要增
+09333.1 
+加候选版本：1. 朋友圈版一条，自然真诚；2. 视频号版一条，简洁有画面感；3. 亲友群版一条，亲切不营销；4. 三个简短话题标签
+09333.2 
+。每条不超过70字，最多使用2个恰当的emoji，不写夸张流量话术，不虚构人物地点，不出现AI换脸字样。",
+09334   
+  health:    "你是一位亲切的养生顾问，用通俗易懂的语言为中老年朋友解答健康养生问题，包括饮食、运动、作息、常见慢性病的
+09334.1 
+日常调理。回答实用具体，分点列出，最后提醒『具体诊疗请遵医嘱』。不推荐任何药品和保健品。",
+09335   
+  recipe:    "你是一位家常菜大厨。用户告诉你想吃的菜或手上的食材，你给出详细做法：用料用量、步骤分点、关键技巧。语言亲
+09335.1 
+切，像跟邻居聊天。优先推荐适合中老年人口味和健康的做法。",
+09336   
+  travel:    "你是一位贴心的旅游规划师，专门为中老年人规划旅行。给出行程节奏舒缓、交通便利、适合拍照的景点建议，注明注
+09336.1 
+意事项（如台阶多不多、厕所是否方便、最佳游览时间）。",
+09337   
+  naming:    "你是一位起名大师，精通诗词典籍和姓名文化。用户会说明给谁起名（如孙子孙女、宠物、微信群、店铺）以及姓氏或
+09337.1 
+偏好，你给出5个名字，每个附上出处和寓意解释。",
+09338   
+  couplet:   "你是一位对联创作高手。根据用户给的场合（春节、寿宴、乔迁、开业等）创作3副对联，上联下联对仗工整，附横批
+09338.1 
+，并简单解释含义。",
+09339   
+  dream:     "你是一位温和的解梦助手，结合民俗文化和心理学常识，用轻松正面的方式为用户解读梦境。只作娱乐参考，末尾提醒
+09339.1 
+不必当真、保持好心情最重要。",
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第47页  共60页
+server/index.js 第1886行 至 server/index.js 第1923行
+09340   
+  poem:      "你是一位诗词爱好者，既会赏析经典诗词，也会按用户需求创作通俗易懂的格律诗、打油诗。用户给出主题后，创作一
+09340.1 
+首并逐句解释。",
+09341   
+  life:      "你是一位生活妙招达人，分享厨房清洁、衣物护理、省钱窍门、手机使用技巧等实用小知识。回答分点、具体、马上能
+09341.1 
+用。",
+09342   
+  chat:      "你是一位温暖耐心的聊天伙伴，陪中老年用户唠家常。语言亲切接地气，多倾听多回应，适当讲些有趣的小事逗用户开
+09342.1 
+心。",
+09343   
+  future_wife: "你是一位轻松有趣的缘分名字测试助手。根据用户提供的姓名、生日和自我描述，生成3个『未来老婆名字彩蛋』，
+09343.1 
+每个包含名字、缘分关键词、可能相遇的生活场景和一句温暖建议。必须明确这是基于文字联想的娱乐测试，不能声称能真实预测婚姻
+09343.2 
+或具体个人。语气浪漫但不油腻，不制造焦虑。",
+09344   
+  wealth: "你是一位娱乐向财运测试助手。根据用户信息给出今日财运氛围、容易遇到的机会、需要留意的消费习惯和一个可执行的
+09344.1 
+存钱小建议。不要推荐股票、基金、彩票、虚拟货币或任何具体投资，不承诺发财，不诱导消费。结尾明确『仅供娱乐，不构成投资建
+09344.2 
+议』。",
+09345   
+  wuxing: "你是一位传统文化五行解读助手。服务端会提供由历法库计算的公历、农历、八字、五行和纳音数据。只能基于这些数据
+09345.1 
+做通俗解释，不得篡改计算结果。说明五行出现次数只是一种民俗观察，不能直接等同于命运好坏。输出五行概览、性格联想、生活配
+09345.2 
+色/环境建议和一句提醒，并明确仅供传统文化娱乐参考。",
+09346   
+  daily_fortune: "你是一位今日运势娱乐解读助手。服务端会提供当天的农历、宜、忌和财神方位。结合用户描述，给出今日关键词
+09346.1 
+、事业/家庭/心情三个维度、一个宜做的小事和一个避坑提醒。不要作医疗、法律、投资或灾祸预测，不使用恐吓语气，明确仅供娱乐
+09346.2 
+。",
+09347   
+  character_fortune: "你是一位传统测字文化解读助手。用户会输入一个汉字。请从字形结构、字义联想和积极心理暗示三个角度展
+09347.1 
+开，给出事业、人缘、心境三个小结和一句行动建议。不得声称能预测灾祸、寿命或确定未来，明确这是汉字文化娱乐解读。",
+09348   
+};
+09349   
+09350   
+const PLAY_SCENES = new Set(Object.keys(LLM_SCENES));
+09351   
+09352   
+function parseSolarDate(dateText, timeText = "12:00") {
+09353   
+  const dm = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateText || ""));
+09354   
+  const tm = /^(\d{2}):(\d{2})$/.exec(String(timeText || "12:00"));
+09355   
+  if (!dm || !tm) throw new Error("日期或时间格式不正确");
+09356   
+  const [year, month, day, hour, minute] = [dm[1], dm[2], dm[3], tm[1], tm[2]].map(Number);
+09357   
+  if (year < 1900 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31 || hour > 23 || minute > 59) {
+09358   
+    throw new Error("日期或时间超出可计算范围");
+09359   
+  }
+09360   
+  const check = new Date(Date.UTC(year, month - 1, day));
+09361   
+  if (check.getUTCFullYear() !== year || check.getUTCMonth() !== month - 1 || check.getUTCDate() !== day) {
+09362   
+    throw new Error("请输入有效日期");
+09363   
+  }
+09364   
+  return Solar.fromYmdHms(year, month, day, hour, minute, 0).getLunar();
+09365   
+}
+09366   
+09367   
+function shanghaiToday() {
+09368   
+  const parts = new Intl.DateTimeFormat("en-CA", {
+09369   
+    timeZone: "Asia/Shanghai",
+09370   
+    year: "numeric",
+09371   
+    month: "2-digit",
+09372   
+    day: "2-digit",
+09373   
+  }).formatToParts(new Date());
+09374   
+  const value = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+09375   
+  return `${value.year}-${value.month}-${value.day}`;
+09376   
+}
+09377   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第48页  共60页
+server/index.js 第1924行 至 server/index.js 第1971行
+09378   
+function buildPlayFacts(scene, profile = {}) {
+09379   
+  if (scene !== "wuxing" && scene !== "daily_fortune") return null;
+09380   
+  const date = scene === "daily_fortune" ? (profile.date || shanghaiToday()) : profile.birthDate;
+09381   
+  if (!date) throw new Error("请填写出生日期");
+09382   
+  const lunar = parseSolarDate(date, scene === "wuxing" ? profile.birthTime : "12:00");
+09383   
+  const common = {
+09384   
+    solarDate: date,
+09385   
+    lunarDate: lunar.toString(),
+09386   
+    zodiac: lunar.getYearShengXiao(),
+09387   
+  };
+09388   
+  if (scene === "daily_fortune") {
+09389   
+    return {
+09390   
+      ...common,
+09391   
+      yi: lunar.getDayYi().slice(0, 8),
+09392   
+      ji: lunar.getDayJi().slice(0, 8),
+09393   
+      wealthDirection: lunar.getPositionCaiDesc(),
+09394   
+    };
+09395   
+  }
+09396   
+  return {
+09397   
+    ...common,
+09398   
+    birthTime: profile.birthTime || "12:00",
+09399   
+    bazi: lunar.getBaZi(),
+09400   
+    wuxing: lunar.getBaZiWuXing(),
+09401   
+    nayin: lunar.getBaZiNaYin(),
+09402   
+  };
+09403   
+}
+09404   
+09405   
+app.post("/api/llm/chat", async (c) => {
+09406   
+  const ip = clientAddress(c);
+09407   
+  if (!rateLimit(ip + ":llm", 30)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09408   
+  const authResult = authenticated(c);
+09409   
+  if (authResult.response) return authResult.response;
+09410   
+  const { scene, messages } = await c.req.json().catch(() => ({}));
+09411   
+  const sys = LLM_SCENES[scene];
+09412   
+  if (!sys || !Array.isArray(messages) || !messages.length) return c.json({ code: 400, message: "参数错误" }, 400);
+09413   
+  const history = messages.filter((m) => m && (m.role === "user" || m.role === "assistant") && m.content).slice(-10);
+09414   
+  const moderation = moderationFor(c, authResult.auth.userId, { text: history.map((m) => m.content).join("\n"), direct
+09414.1 
+ion: "input", metadata: { scene } });
+09415   
+  if (moderation.decision !== "allow") return c.json({ code: "CONTENT_BLOCKED", message: "输入内容未通过内容安全检查",
+09415.1 
+ moderationId: moderation.record.id }, 422);
+09416   
+  const budget = recordNonGenerationProviderCall(c, authResult.auth.userId, "llm-chat");
+09417   
+  if (budget.error) return budget.error;
+09418   
+  try {
+09419   
+    const reply = await llm.chat([{ role: "system", content: sys }, ...history]);
+09420   
+    return c.json({ code: 0, data: { reply } });
+09421   
+  } catch (e) {
+09422   
+    logSecurity("error", "llm.chat_failed", { requestId: requestId(c), error: safeError(e) });
+09423   
+    return c.json({ code: 500, message: "AI 助手繁忙，请稍后再试" }, 500);
+09424   
+  }
+09425   
+});
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第49页  共60页
+server/index.js 第1972行 至 server/index.js 第2019行
+09426   
+09427   
+app.post("/api/play/analyze", async (c) => {
+09428   
+  const ip = clientAddress(c);
+09429   
+  if (!rateLimit(ip + ":play", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09430   
+  const authResult = authenticated(c);
+09431   
+  if (authResult.response) return authResult.response;
+09432   
+  const body = await c.req.json().catch(() => ({}));
+09433   
+  const scene = String(body.scene || "");
+09434   
+  const input = String(body.input || "").trim().slice(0, 1200);
+09435   
+  const profile = body.profile && typeof body.profile === "object" ? body.profile : {};
+09436   
+  const hasProfile = Object.values(profile).some((value) => String(value || "").trim());
+09437   
+  if (!PLAY_SCENES.has(scene) || (!input && !hasProfile && scene !== "daily_fortune")) {
+09438   
+    return c.json({ code: 400, message: "请补充测试信息" }, 400);
+09439   
+  }
+09440   
+  const moderation = moderationFor(c, authResult.auth.userId, { text: input, direction: "input", metadata: { scene, pr
+09440.1 
+ofile } });
+09441   
+  if (moderation.decision !== "allow") return c.json({ code: "CONTENT_BLOCKED", message: "输入内容未通过内容安全检查",
+09441.1 
+ moderationId: moderation.record.id }, 422);
+09442   
+  let facts = null;
+09443   
+  try {
+09444   
+    facts = buildPlayFacts(scene, profile);
+09445   
+  } catch (error) {
+09446   
+    return c.json({ code: 400, message: error.message || "资料格式不正确" }, 400);
+09447   
+  }
+09448   
+09449   
+  const budget = recordNonGenerationProviderCall(c, authResult.auth.userId, "play-analyze");
+09450   
+  if (budget.error) return budget.error;
+09451   
+09452   
+  const userContent = [
+09453   
+    profile.name ? `用户称呼：${String(profile.name).slice(0, 30)}` : "",
+09454   
+    profile.birthDate ? `出生日期：${String(profile.birthDate).slice(0, 10)}` : "",
+09455   
+    profile.birthTime ? `出生时间：${String(profile.birthTime).slice(0, 5)}` : "",
+09456   
+    input ? `用户补充：${input}` : "用户没有补充描述",
+09457   
+    facts ? `历法库计算结果（不得修改）：${JSON.stringify(facts)}` : "",
+09458   
+  ].filter(Boolean).join("\n");
+09459   
+09460   
+  try {
+09461   
+    const reply = await llm.chat([
+09462   
+      { role: "system", content: LLM_SCENES[scene] },
+09463   
+      { role: "user", content: userContent },
+09464   
+    ]);
+09465   
+    return c.json({ code: 0, data: { reply, facts, provider: LLM_PROVIDER } });
+09466   
+  } catch (error) {
+09467   
+    logSecurity("error", "play.analyze_failed", { requestId: requestId(c), error: safeError(error) });
+09468   
+    return c.json({ code: 500, message: "玩法服务繁忙，请稍后再试" }, 500);
+09469   
+  }
+09470   
+});
+09471   
+09472   
+/* ---- 5. 视频抠像换背景（异步）---- */
+09473   
+const mattings = new Map(); // taskId → Promise<{videoUrl}>
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第50页  共60页
+server/index.js 第2020行 至 server/index.js 第2068行
+09474   
+09475   
+app.post("/api/video/matting", async (c) => {
+09476   
+  const ip = clientAddress(c);
+09477   
+  if (!rateLimit(ip + ":feat", 20)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09478   
+  const { videoUrl, bgId, bgUrl: customBg } = await c.req.json().catch(() => ({}));
+09479   
+  if (!videoUrl || (!bgId && !customBg)) return c.json({ code: 400, message: "参数错误" }, 400);
+09480   
+  const prepared = await prepareGeneration(c, { inputUrl: videoUrl, purpose: "video-matting", metadata: { backgroundId
+09480.1 
+: bgId || "custom" } });
+09481   
+  if (prepared.response) return prepared.response;
+09482   
+  let bgUrl = MATTING_BGS[bgId]?.bgUrl;
+09483   
+  let bgObjectId = null;
+09484   
+  if (customBg) {
+09485   
+    const background = requireInputObject(c, customBg, prepared.userId);
+09486   
+    if (background.error) {
+09487   
+      refundPrepared(prepared, "background_not_owned");
+09488   
+      return background.error;
+09489   
+    }
+09490   
+    bgUrl = await objectStore.signedUrl(background.id, { ownerId: prepared.userId, base: requestBase(c) });
+09491   
+    bgObjectId = background.id;
+09492   
+  }
+09493   
+  if (!bgUrl) {
+09494   
+    refundPrepared(prepared, "background_not_configured");
+09495   
+    return c.json({ code: 400, message: "背景素材尚未配置" }, 400);
+09496   
+  }
+09497   
+  try {
+09498   
+    const { taskId } = await viapi.segmentVideoBody(prepared.inputUrl);
+09499   
+    tasks[taskId] = {
+09500   
+      type: "matting",
+09501   
+      ownerId: prepared.userId,
+09502   
+      inputObjectId: prepared.input.id,
+09503   
+      backgroundObjectId: bgObjectId,
+09504   
+      videoUrl: prepared.inputUrl,
+09505   
+      bgUrl,
+09506   
+      billingRef: prepared.billingRef,
+09507   
+      provider: "aliyun-viapi",
+09508   
+      status: "QUEUED",
+09509   
+      createdAt: Date.now(),
+09510   
+    };
+09511   
+    await saveTask(taskId, tasks[taskId], tasks);
+09512   
+    return c.json({ code: 0, data: { taskId } });
+09513   
+  } catch (e) {
+09514   
+    refundPrepared(prepared, "task_create_failed");
+09515   
+    logSecurity("error", "video_matting.create_failed", { requestId: requestId(c), error: safeError(e) });
+09516   
+    return c.json({ code: 500, message: "生成服务繁忙，请稍后再试" }, 500);
+09517   
+  }
+09518   
+});
+09519   
+09520   
+app.get("/api/video/matting/:taskId", async (c) => {
+09521   
+  const taskId = c.req.param("taskId");
+09522   
+  const authResult = authenticated(c);
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第51页  共60页
+server/index.js 第2069行 至 server/index.js 第2114行
+09523   
+  if (authResult.response) return authResult.response;
+09524   
+  const meta = tasks[taskId];
+09525   
+  if (!meta || meta.type !== "matting") return c.json({ code: 404, message: "任务不存在" }, 404);
+09526   
+  if (meta.ownerId !== authResult.auth.userId) return c.json({ code: "FORBIDDEN", message: "无权查询该任务" }, 403);
+09527   
+  if (meta.outputObjectId) {
+09528   
+    const existing = objectStore.get(meta.outputObjectId);
+09529   
+    if (!existing) return c.json({ code: 410, message: "作品已过保存期" }, 410);
+09530   
+    return c.json({ code: 0, data: { status: "SUCCESS", assetId: existing.id, videoUrl: await objectStore.signedUrl(ex
+09530.1 
+isting.id, { ownerId: meta.ownerId, base: requestBase(c) }), composed: true, metadata: existing.metadata } });
+09531   
+  }
+09532   
+  try {
+09533   
+    const r = await viapi.queryMattingTask(taskId);
+09534   
+    if (r.status === "FAILED") {
+09535   
+      await updateTask(taskId, { status: "FAILED", failedAt: Date.now() });
+09536   
+      refundPrepared({ userId: meta.ownerId, billingRef: meta.billingRef }, "provider_failed");
+09537   
+      return c.json({ code: 0, data: r });
+09538   
+    }
+09539   
+    if (r.status !== "SUCCESS") return c.json({ code: 0, data: r });
+09540   
+    if (!r.videoUrl) throw new Error("供应商未返回抠像结果");
+09541   
+    // 抠像完成 → maskedmerge 合成到新背景
+09542   
+    if (!mattings.has(taskId)) {
+09543   
+      mattings.set(
+09544   
+        taskId,
+09545   
+        composeMatting({ taskId, maskUrl: r.videoUrl, videoUrl: meta.videoUrl, bgUrl: meta.bgUrl, ownerId: meta.ownerI
+09545.1 
+d, base: requestBase(c), provider: meta.provider })
+09546   
+          .catch((e) => {
+09547   
+            logSecurity("error", "video_matting.compose_failed", { taskId, error: safeError(e) });
+09548   
+            throw e;
+09549   
+          })
+09550   
+      );
+09551   
+    }
+09552   
+    const done = await Promise.race([
+09553   
+      mattings.get(taskId).then((v) => ({ v })),
+09554   
+      new Promise((s) => setTimeout(() => s(null), 25_000)),
+09555   
+    ]);
+09556   
+    if (!done) return c.json({ code: 0, data: { status: "RUNNING", composing: true } });
+09557   
+    await updateTask(taskId, { status: "SUCCESS", outputObjectId: done.v.assetId, completedAt: Date.now() });
+09558   
+    return c.json({ code: 0, data: { status: "SUCCESS", videoUrl: done.v.url, assetId: done.v.assetId, composed: true,
+09558.1 
+ metadata: done.v.metadata } });
+09559   
+  } catch (e) {
+09560   
+    await updateTask(taskId, { status: "FAILED", failedAt: Date.now(), failureCode: safeError(e).code || "GENERATION_F
+09560.1 
+AILED" }).catch((saveError) => {
+09561   
+      logSecurity("error", "video_matting.failure_state_persist_failed", { taskId, error: safeError(saveError) });
+09562   
+    });
+09563   
+    refundPrepared({ userId: meta.ownerId, billingRef: meta.billingRef }, "generation_failed");
+09564   
+    logSecurity("error", "video_matting.query_failed", { taskId, error: safeError(e) });
+09565   
+    return c.json({ code: 500, message: "查询失败" }, 500);
+09566   
+  }
+09567   
+});
+09568   
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第52页  共60页
+server/index.js 第2115行 至 server/index.js 第2158行
+09569   
+/* ---- 图片输入上传：对象默认私有，后续处理只接受当前用户的对象引用 ---- */
+09570   
+app.post("/api/upload", async (c) => {
+09571   
+  const ip = clientAddress(c);
+09572   
+  if (!rateLimit(ip + ":up", 30)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09573   
+  const authResult = authenticated(c);
+09574   
+  if (authResult.response) return authResult.response;
+09575   
+  const consentResponse = requireFaceConsent(c, authResult.auth.userId);
+09576   
+  if (consentResponse) return consentResponse;
+09577   
+  const { image } = await c.req.json().catch(() => ({}));
+09578   
+  let decoded;
+09579   
+  try {
+09580   
+    decoded = decodeImageDataUrl(image);
+09581   
+  } catch (error) {
+09582   
+    const tooLarge = ["MEDIA_TOO_LARGE", "IMAGE_DIMENSIONS_TOO_LARGE"].includes(error?.code);
+09583   
+    return c.json({ code: error?.code || "INVALID_IMAGE", message: tooLarge ? "图片文件或像素尺寸超过限制" : "图片内容
+09583.1 
+无效或与声明类型不一致" }, tooLarge ? 413 : 400);
+09584   
+  }
+09585   
+  if (PRODUCTION && !contentSafetyReadiness().ready) return c.json({ code: "CONTENT_SAFETY_NOT_READY", message: "图片
+09585.1 
+安全审核服务暂不可用" }, 503);
+09586   
+  const mediaDigest = crypto.createHash("sha256").update(decoded.buffer).digest("hex");
+09587   
+  const moderation = moderationFor(c, authResult.auth.userId, { direction: "input", metadata: { contentType: decoded.m
+09587.1 
+ime, width: decoded.width, height: decoded.height, mediaDigest } });
+09588   
+  if (moderation.decision !== "allow") return c.json({ code: "CONTENT_REVIEW_REQUIRED", message: "图片需要人工审核后才
+09588.1 
+能使用", moderationId: moderation.record.id }, 422);
+09589   
+  const consent = store.activeConsent(authResult.auth.userId, "face_processing", FACE_CONSENT_VERSION);
+09590   
+  try {
+09591   
+    const asset = await objectStore.putBuffer(decoded.buffer, {
+09592   
+      ownerId: authResult.auth.userId,
+09593   
+      contentType: decoded.mime,
+09594   
+      ext: decoded.ext,
+09595   
+      purpose: "input/face-image",
+09596   
+      metadata: { consentVersion: FACE_CONSENT_VERSION, consentRecordId: consent?.id || null, moderationId: moderation
+09596.1 
+.record.id, mediaDigest, width: decoded.width, height: decoded.height, mediaVerified: true },
+09597   
+      retainSeconds: Number(process.env.INPUT_RETENTION_SECONDS || 86_400),
+09598   
+    });
+09599   
+    const url = await objectStore.signedUrl(asset.id, { ownerId: authResult.auth.userId, base: requestBase(c) });
+09600   
+    return c.json({ code: 0, data: { assetId: asset.id, url, expiresAt: asset.expiresAt, metadata: asset.metadata } })
+09600.1 
+;
+09601   
+  } catch (error) {
+09602   
+    logSecurity("error", "upload.image_failed", { requestId: requestId(c), error: safeError(error) });
+09603   
+    return c.json({ code: "UPLOAD_FAILED", message: "图片暂时无法保存" }, 503);
+09604   
+  }
+09605   
+});
+09606   
+09607   
+app.post("/api/upload/video", async (c) => {
+09608   
+  const ip = clientAddress(c);
+09609   
+  if (!rateLimit(ip + ":video-up", 10)) return c.json({ code: 429, message: "操作太频繁，请稍后再试" }, 429);
+09610   
+  const authResult = authenticated(c);
+09611   
+  if (authResult.response) return authResult.response;
+09612   
+  const consentResponse = requireFaceConsent(c, authResult.auth.userId);
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第53页  共60页
+server/index.js 第2159行 至 server/index.js 第2202行
+09613   
+  if (consentResponse) return consentResponse;
+09614   
+  const { video } = await c.req.json().catch(() => ({}));
+09615   
+  let decoded;
+09616   
+  try {
+09617   
+    decoded = decodeVideoDataUrl(video);
+09618   
+  } catch (error) {
+09619   
+    const tooLarge = error?.code === "MEDIA_TOO_LARGE";
+09620   
+    return c.json({ code: error?.code || "INVALID_VIDEO", message: tooLarge ? "视频超过大小限制" : "视频内容无效或与声
+09620.1 
+明类型不一致" }, tooLarge ? 413 : 400);
+09621   
+  }
+09622   
+  if (PRODUCTION && !contentSafetyReadiness().ready) return c.json({ code: "CONTENT_SAFETY_NOT_READY", message: "视频
+09622.1 
+安全审核服务暂不可用" }, 503);
+09623   
+  const mediaDigest = crypto.createHash("sha256").update(decoded.buffer).digest("hex");
+09624   
+  const moderation = moderationFor(c, authResult.auth.userId, { direction: "input", metadata: { contentType: decoded.m
+09624.1 
+ime, container: decoded.container, mediaDigest } });
+09625   
+  if (moderation.decision !== "allow") return c.json({ code: "CONTENT_REVIEW_REQUIRED", message: "视频需要人工审核后才
+09625.1 
+能使用", moderationId: moderation.record.id }, 422);
+09626   
+  const consent = store.activeConsent(authResult.auth.userId, "face_processing", FACE_CONSENT_VERSION);
+09627   
+  try {
+09628   
+    const asset = await objectStore.putBuffer(decoded.buffer, {
+09629   
+      ownerId: authResult.auth.userId,
+09630   
+      contentType: decoded.mime,
+09631   
+      ext: decoded.ext,
+09632   
+      purpose: "input/video",
+09633   
+      metadata: { consentVersion: FACE_CONSENT_VERSION, consentRecordId: consent?.id || null, moderationId: moderation
+09633.1 
+.record.id, mediaDigest, container: decoded.container, mediaVerified: true },
+09634   
+      retainSeconds: Number(process.env.INPUT_RETENTION_SECONDS || 86_400),
+09635   
+    });
+09636   
+    const url = await objectStore.signedUrl(asset.id, { ownerId: authResult.auth.userId, base: requestBase(c) });
+09637   
+    return c.json({ code: 0, data: { assetId: asset.id, url, expiresAt: asset.expiresAt, metadata: asset.metadata } })
+09637.1 
+;
+09638   
+  } catch (error) {
+09639   
+    logSecurity("error", "upload.video_failed", { requestId: requestId(c), error: safeError(error) });
+09640   
+    return c.json({ code: "UPLOAD_FAILED", message: "视频暂时无法保存" }, 503);
+09641   
+  }
+09642   
+});
+09643   
+09644   
+/* ---- 网页版测试页：有 React 构建产物时优先使用。 ---- */
+09645   
+const pagePath = fs.existsSync(path.join(__dirname, "web", "index.html"))
+09646   
+  ? path.join(__dirname, "web", "index.html")
+09647   
+  : path.join(__dirname, "testpage.html");
+09648   
+const TEST_PAGE = fs.readFileSync(pagePath, "utf8");
+09649   
+09650   
+app.get("/", (c) => c.html(TEST_PAGE));
+09651   
+09652   
+export { app, launchReadiness };
+09653   
+09654   
+if (START_REQUESTED) {
+09655   
+  if (startupBlocked) {
+09656   
+    logSecurity("error", "startup.blocked", { blockers: startupReadiness.blockers });
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第54页  共60页
+server/index.js 第2203行 至 android/app/src/main/java/com/yibohuaxia/leyanxiu/DeviceIdentityPlugin.java 第43行
+09657   
+    process.exitCode = 1;
+09658   
+  } else {
+09659   
+    const port = Number(process.env.PORT || 80);
+09660   
+    serve({ fetch: app.fetch, port });
+09661   
+    console.log(`  乐颜秀接入服务已启动 :${port}（渠道：${PROVIDER}）`);
+09662   
+  }
+09663   
+}
+09664   
+package com.yibohuaxia.leyanxiu;
+09665   
+09666   
+import android.security.keystore.KeyGenParameterSpec;
+09667   
+import android.security.keystore.KeyProperties;
+09668   
+import android.util.Base64;
+09669   
+import com.getcapacitor.JSObject;
+09670   
+import com.getcapacitor.Plugin;
+09671   
+import com.getcapacitor.PluginCall;
+09672   
+import com.getcapacitor.PluginMethod;
+09673   
+import com.getcapacitor.annotation.CapacitorPlugin;
+09674   
+import java.nio.charset.StandardCharsets;
+09675   
+import java.security.KeyPair;
+09676   
+import java.security.KeyPairGenerator;
+09677   
+import java.security.KeyStore;
+09678   
+import java.security.PrivateKey;
+09679   
+import java.security.Signature;
+09680   
+import java.security.interfaces.ECPublicKey;
+09681   
+import java.security.spec.ECGenParameterSpec;
+09682   
+09683   
+@CapacitorPlugin(name = "DeviceIdentity")
+09684   
+public class DeviceIdentityPlugin extends Plugin {
+09685   
+    private static final String ANDROID_KEYSTORE = "AndroidKeyStore";
+09686   
+    private static final String KEY_ALIAS = "leyanxiu_device_identity_p256_v1";
+09687   
+    private static final int MAX_CHALLENGE_BYTES = 4096;
+09688   
+09689   
+    @PluginMethod
+09690   
+    public void getPublicKey(PluginCall call) {
+09691   
+        execute(() -> {
+09692   
+            try {
+09693   
+                KeyPair pair = getOrCreateKeyPair();
+09694   
+                ECPublicKey publicKey = (ECPublicKey) pair.getPublic();
+09695   
+                JSObject result = new JSObject();
+09696   
+                result.put("algorithm", "ES256");
+09697   
+                result.put("keyId", KEY_ALIAS);
+09698   
+                result.put("publicKeySpki", base64Url(publicKey.getEncoded()));
+09699   
+                call.resolve(result);
+09700   
+            } catch (Exception error) {
+09701   
+                call.reject("设备身份密钥不可用", "DEVICE_KEY_UNAVAILABLE", error);
+09702   
+            }
+09703   
+        });
+09704   
+    }
+09705   
+09706   
+    @PluginMethod
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第55页  共60页
+android/app/src/main/java/com/yibohuaxia/leyanxiu/DeviceIdentityPlugin.java 第44行 至 android/app/src/main/java/com/yibohuaxia/leyanx
+09707   
+    public void signChallenge(PluginCall call) {
+09708   
+        execute(() -> {
+09709   
+            try {
+09710   
+                String challenge = call.getString("challenge", "");
+09711   
+                byte[] challengeBytes = challenge.getBytes(StandardCharsets.UTF_8);
+09712   
+                if (challengeBytes.length < 16 || challengeBytes.length > MAX_CHALLENGE_BYTES) {
+09713   
+                    throw new IllegalArgumentException("Challenge must contain 16-4096 UTF-8 bytes");
+09714   
+                }
+09715   
+                KeyPair pair = getOrCreateKeyPair();
+09716   
+                Signature signer = Signature.getInstance("SHA256withECDSA");
+09717   
+                signer.initSign(pair.getPrivate());
+09718   
+                signer.update(challengeBytes);
+09719   
+                JSObject result = new JSObject();
+09720   
+                result.put("algorithm", "ES256");
+09721   
+                result.put("keyId", KEY_ALIAS);
+09722   
+                result.put("signature", base64Url(signer.sign()));
+09723   
+                result.put("encoding", "base64url-der");
+09724   
+                call.resolve(result);
+09725   
+            } catch (Exception error) {
+09726   
+                call.reject("设备身份签名失败", "DEVICE_SIGN_FAILED", error);
+09727   
+            }
+09728   
+        });
+09729   
+    }
+09730   
+09731   
+    private KeyPair getOrCreateKeyPair() throws Exception {
+09732   
+        KeyStore keyStore = KeyStore.getInstance(ANDROID_KEYSTORE);
+09733   
+        keyStore.load(null);
+09734   
+        if (keyStore.containsAlias(KEY_ALIAS)) {
+09735   
+            KeyStore.PrivateKeyEntry entry = (KeyStore.PrivateKeyEntry) keyStore.getEntry(KEY_ALIAS, null);
+09736   
+            return new KeyPair(entry.getCertificate().getPublicKey(), (PrivateKey) entry.getPrivateKey());
+09737   
+        }
+09738   
+09739   
+        KeyPairGenerator generator = KeyPairGenerator.getInstance(KeyProperties.KEY_ALGORITHM_EC, ANDROID_KEYSTORE);
+09740   
+        KeyGenParameterSpec specification = new KeyGenParameterSpec.Builder(
+09741   
+            KEY_ALIAS,
+09742   
+            KeyProperties.PURPOSE_SIGN | KeyProperties.PURPOSE_VERIFY
+09743   
+        )
+09744   
+            .setAlgorithmParameterSpec(new ECGenParameterSpec("secp256r1"))
+09745   
+            .setDigests(KeyProperties.DIGEST_SHA256)
+09746   
+            .setUserAuthenticationRequired(false)
+09747   
+            .setInvalidatedByBiometricEnrollment(false)
+09748   
+            .build();
+09749   
+        generator.initialize(specification);
+09750   
+        return generator.generateKeyPair();
+09751   
+    }
+09752   
+09753   
+    private static String base64Url(byte[] bytes) {
+09754   
+        return Base64.encodeToString(bytes, Base64.URL_SAFE | Base64.NO_PADDING | Base64.NO_WRAP);
+09755   
+    }
+09756   
+}
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第56页  共60页
+android/app/src/main/java/com/yibohuaxia/leyanxiu/GalleryMediaStorePlugin.java 第1行 至 android/app/src/main/java/com/yibohuaxia/leya
+09757   
+package com.yibohuaxia.leyanxiu;
+09758   
+09759   
+import android.Manifest;
+09760   
+import android.content.ContentResolver;
+09761   
+import android.content.ContentValues;
+09762   
+import android.media.MediaScannerConnection;
+09763   
+import android.net.Uri;
+09764   
+import android.os.Build;
+09765   
+import android.os.Environment;
+09766   
+import android.provider.MediaStore;
+09767   
+import com.getcapacitor.JSObject;
+09768   
+import com.getcapacitor.PermissionState;
+09769   
+import com.getcapacitor.Plugin;
+09770   
+import com.getcapacitor.PluginCall;
+09771   
+import com.getcapacitor.PluginMethod;
+09772   
+import com.getcapacitor.annotation.CapacitorPlugin;
+09773   
+import com.getcapacitor.annotation.Permission;
+09774   
+import com.getcapacitor.annotation.PermissionCallback;
+09775   
+import java.io.File;
+09776   
+import java.io.FileInputStream;
+09777   
+import java.io.FileOutputStream;
+09778   
+import java.io.IOException;
+09779   
+import java.io.InputStream;
+09780   
+import java.io.OutputStream;
+09781   
+import java.util.ArrayList;
+09782   
+import java.util.List;
+09783   
+import java.util.Locale;
+09784   
+09785   
+@CapacitorPlugin(
+09786   
+    name = "MediaStore",
+09787   
+    permissions = {
+09788   
+        @Permission(
+09789   
+            strings = { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+09790   
+            alias = GalleryMediaStorePlugin.LEGACY_STORAGE
+09791   
+        )
+09792   
+    }
+09793   
+)
+09794   
+public class GalleryMediaStorePlugin extends Plugin {
+09795   
+    static final String LEGACY_STORAGE = "legacyStorage";
+09796   
+    private static final String ALBUM_NAME = "乐颜秀";
+09797   
+09798   
+    @PluginMethod
+09799   
+    public void save(PluginCall call) {
+09800   
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P
+09801   
+            && getPermissionState(LEGACY_STORAGE) != PermissionState.GRANTED) {
+09802   
+            requestPermissionForAlias(LEGACY_STORAGE, call, "legacyStorageCallback");
+09803   
+            return;
+09804   
+        }
+09805   
+        saveWithGrantedPermission(call);
+09806   
+    }
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第57页  共60页
+android/app/src/main/java/com/yibohuaxia/leyanxiu/GalleryMediaStorePlugin.java 第51行 至 android/app/src/main/java/com/yibohuaxia/ley
+09807   
+09808   
+    @PermissionCallback
+09809   
+    private void legacyStorageCallback(PluginCall call) {
+09810   
+        if (getPermissionState(LEGACY_STORAGE) != PermissionState.GRANTED) {
+09811   
+            call.reject("需要存储权限才能在此 Android 版本保存作品", "PERMISSION_DENIED");
+09812   
+            return;
+09813   
+        }
+09814   
+        saveWithGrantedPermission(call);
+09815   
+    }
+09816   
+09817   
+    private void saveWithGrantedPermission(PluginCall call) {
+09818   
+        execute(() -> {
+09819   
+            try {
+09820   
+                File source = validatedSource(call.getString("sourceUri", ""));
+09821   
+                String kind = call.getString("kind", "").trim().toLowerCase(Locale.ROOT);
+09822   
+                if (!kind.equals("image") && !kind.equals("video")) {
+09823   
+                    throw new IllegalArgumentException("Unsupported media kind");
+09824   
+                }
+09825   
+                String displayName = sanitizedDisplayName(call.getString("displayName", ""));
+09826   
+                String mimeType = validatedMimeType(call.getString("mimeType", ""), kind);
+09827   
+                SaveResult saved = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+09828   
+                    ? saveScoped(source, displayName, mimeType, kind)
+09829   
+                    : saveLegacy(source, displayName, mimeType, kind);
+09830   
+                call.resolve(resultFor(saved.uri, saved.path, saved.displayName));
+09831   
+            } catch (SecurityException error) {
+09832   
+                call.reject("系统拒绝写入相册，请检查应用权限", "MEDIASTORE_PERMISSION", error);
+09833   
+            } catch (Exception error) {
+09834   
+                call.reject("作品保存失败", "MEDIASTORE_SAVE_FAILED", error);
+09835   
+            }
+09836   
+        });
+09837   
+    }
+09838   
+09839   
+    private SaveResult saveScoped(File source, String displayName, String mimeType, String kind) throws IOException {
+09840   
+        ContentResolver resolver = getContext().getContentResolver();
+09841   
+        String topLevel = kind.equals("image") ? Environment.DIRECTORY_PICTURES : Environment.DIRECTORY_MOVIES;
+09842   
+        Uri collection = kind.equals("image")
+09843   
+            ? MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+09844   
+            : MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY);
+09845   
+09846   
+        ContentValues values = new ContentValues();
+09847   
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, displayName);
+09848   
+        values.put(MediaStore.MediaColumns.MIME_TYPE, mimeType);
+09849   
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, topLevel + "/" + ALBUM_NAME);
+09850   
+        values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+09851   
+09852   
+        Uri destination = resolver.insert(collection, values);
+09853   
+        if (destination == null) throw new IOException("MediaStore refused the new item");
+09854   
+        try {
+09855   
+            try (InputStream input = new FileInputStream(source);
+09856   
+                 OutputStream output = resolver.openOutputStream(destination, "w")) {
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第58页  共60页
+android/app/src/main/java/com/yibohuaxia/leyanxiu/GalleryMediaStorePlugin.java 第101行 至 android/app/src/main/java/com/yibohuaxia/le
+09857   
+                if (output == null) throw new IOException("Unable to open MediaStore output stream");
+09858   
+                copy(input, output);
+09859   
+            }
+09860   
+            ContentValues ready = new ContentValues();
+09861   
+            ready.put(MediaStore.MediaColumns.IS_PENDING, 0);
+09862   
+            resolver.update(destination, ready, null, null);
+09863   
+            String path = topLevel + "/" + ALBUM_NAME + "/" + displayName;
+09864   
+            return new SaveResult(destination.toString(), path, displayName);
+09865   
+        } catch (IOException | RuntimeException error) {
+09866   
+            resolver.delete(destination, null, null);
+09867   
+            throw error;
+09868   
+        }
+09869   
+    }
+09870   
+09871   
+    @SuppressWarnings("deprecation")
+09872   
+    private SaveResult saveLegacy(File source, String displayName, String mimeType, String kind) throws IOException {
+09873   
+        String topLevel = kind.equals("image") ? Environment.DIRECTORY_PICTURES : Environment.DIRECTORY_MOVIES;
+09874   
+        File directory = new File(Environment.getExternalStoragePublicDirectory(topLevel), ALBUM_NAME);
+09875   
+        if (!directory.isDirectory() && !directory.mkdirs()) {
+09876   
+            throw new IOException("Unable to create the public media folder");
+09877   
+        }
+09878   
+        File destination = uniqueFile(directory, displayName);
+09879   
+        try (InputStream input = new FileInputStream(source);
+09880   
+             OutputStream output = new FileOutputStream(destination)) {
+09881   
+            copy(input, output);
+09882   
+        }
+09883   
+        MediaScannerConnection.scanFile(
+09884   
+            getContext(),
+09885   
+            new String[] { destination.getAbsolutePath() },
+09886   
+            new String[] { mimeType },
+09887   
+            null
+09888   
+        );
+09889   
+        String path = topLevel + "/" + ALBUM_NAME + "/" + destination.getName();
+09890   
+        return new SaveResult(Uri.fromFile(destination).toString(), path, destination.getName());
+09891   
+    }
+09892   
+09893   
+    private File validatedSource(String value) throws IOException {
+09894   
+        Uri uri = Uri.parse(value);
+09895   
+        if (!"file".equalsIgnoreCase(uri.getScheme()) || uri.getPath() == null) {
+09896   
+            throw new IllegalArgumentException("Only app-owned temporary files can be published");
+09897   
+        }
+09898   
+        File source = new File(uri.getPath()).getCanonicalFile();
+09899   
+        if (!source.isFile() || !isAppOwned(source)) {
+09900   
+            throw new SecurityException("Source is outside app-controlled storage");
+09901   
+        }
+09902   
+        return source;
+09903   
+    }
+09904   
+09905   
+    private boolean isAppOwned(File source) throws IOException {
+09906   
+        List<File> roots = new ArrayList<>();
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第59页  共60页
+android/app/src/main/java/com/yibohuaxia/leyanxiu/GalleryMediaStorePlugin.java 第151行 至 android/app/src/main/java/com/yibohuaxia/le
+09907   
+        roots.add(getContext().getCacheDir());
+09908   
+        roots.add(getContext().getFilesDir());
+09909   
+        if (getContext().getExternalCacheDir() != null) roots.add(getContext().getExternalCacheDir());
+09910   
+        File[] externalFiles = getContext().getExternalFilesDirs(null);
+09911   
+        if (externalFiles != null) {
+09912   
+            for (File root : externalFiles) if (root != null) roots.add(root);
+09913   
+        }
+09914   
+        String sourcePath = source.getCanonicalPath();
+09915   
+        for (File root : roots) {
+09916   
+            String rootPath = root.getCanonicalPath();
+09917   
+            if (sourcePath.equals(rootPath) || sourcePath.startsWith(rootPath + File.separator)) return true;
+09918   
+        }
+09919   
+        return false;
+09920   
+    }
+09921   
+09922   
+    private static String sanitizedDisplayName(String value) {
+09923   
+        String cleaned = value == null ? "" : value
+09924   
+            .replaceAll("[\\\\/:*?\"<>|\\p{Cntrl}]", "-")
+09925   
+            .trim();
+09926   
+        if (cleaned.isEmpty() || cleaned.equals(".") || cleaned.equals("..")) {
+09927   
+            throw new IllegalArgumentException("Invalid display name");
+09928   
+        }
+09929   
+        return cleaned.length() > 96 ? cleaned.substring(cleaned.length() - 96) : cleaned;
+09930   
+    }
+09931   
+09932   
+    private static String validatedMimeType(String value, String kind) {
+09933   
+        String mimeType = value == null ? "" : value.split(";", 2)[0].trim().toLowerCase(Locale.ROOT);
+09934   
+        String expectedPrefix = kind + "/";
+09935   
+        if (!mimeType.startsWith(expectedPrefix) || mimeType.length() <= expectedPrefix.length()) {
+09936   
+            throw new IllegalArgumentException("Media MIME type does not match its kind");
+09937   
+        }
+09938   
+        return mimeType;
+09939   
+    }
+09940   
+09941   
+    private static File uniqueFile(File directory, String displayName) {
+09942   
+        File candidate = new File(directory, displayName);
+09943   
+        if (!candidate.exists()) return candidate;
+09944   
+        int dot = displayName.lastIndexOf('.');
+09945   
+        String stem = dot > 0 ? displayName.substring(0, dot) : displayName;
+09946   
+        String suffix = dot > 0 ? displayName.substring(dot) : "";
+09947   
+        for (int index = 1; index < 10_000; index++) {
+09948   
+            candidate = new File(directory, stem + " (" + index + ")" + suffix);
+09949   
+            if (!candidate.exists()) return candidate;
+09950   
+        }
+09951   
+        throw new IllegalStateException("Unable to allocate a unique media name");
+09952   
+    }
+09953   
+09954   
+    private static void copy(InputStream input, OutputStream output) throws IOException {
+09955   
+        byte[] buffer = new byte[64 * 1024];
+09956   
+        int count;
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行
+
+
+乐颜秀AI影像创作软件 V1.0 源程序
+后30页  第60页  共60页
+android/app/src/main/java/com/yibohuaxia/leyanxiu/GalleryMediaStorePlugin.java 第201行 至 android/app/src/main/java/com/yibohuaxia/le
+09957   
+        while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+09958   
+        output.flush();
+09959   
+    }
+09960   
+09961   
+    private static JSObject resultFor(String uri, String path, String displayName) {
+09962   
+        JSObject result = new JSObject();
+09963   
+        result.put("uri", uri);
+09964   
+        result.put("path", path);
+09965   
+        result.put("displayName", displayName);
+09966   
+        return result;
+09967   
+    }
+09968   
+09969   
+    private static final class SaveResult {
+09970   
+        final String uri;
+09971   
+        final String path;
+09972   
+        final String displayName;
+09973   
+09974   
+        SaveResult(String uri, String path, String displayName) {
+09975   
+            this.uri = uri;
+09976   
+            this.path = path;
+09977   
+            this.displayName = displayName;
+09978   
+        }
+09979   
+    }
+09980   
+}
+09981   
+package com.yibohuaxia.leyanxiu;
+09982   
+09983   
+import android.content.pm.ApplicationInfo;
+09984   
+import android.os.Bundle;
+09985   
+import android.webkit.WebSettings;
+09986   
+import android.webkit.WebView;
+09987   
+import com.getcapacitor.BridgeActivity;
+09988   
+09989   
+public class MainActivity extends BridgeActivity {
+09990   
+    @Override
+09991   
+    protected void onCreate(Bundle savedInstanceState) {
+09992   
+        registerPlugin(GalleryMediaStorePlugin.class);
+09993   
+        registerPlugin(DeviceIdentityPlugin.class);
+09994   
+        super.onCreate(savedInstanceState);
+09995   
+        if (getBridge() == null) return;
+09996   
+09997   
+        WebSettings settings = getBridge().getWebView().getSettings();
+09998   
+        settings.setMediaPlaybackRequiresUserGesture(false);
+09999   
+10000   
+        boolean isDebuggable = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+10001   
+        WebView.setWebContentsDebuggingEnabled(isDebuggable);
+10002   
+        settings.setMixedContentMode(
+10003   
+            isDebuggable ? WebSettings.MIXED_CONTENT_ALWAYS_ALLOW : WebSettings.MIXED_CONTENT_NEVER_ALLOW
+10004   
+        );
+10005   
+    }
+10006   
+}
+著作权人：REDACTED_COMPANY_NAME
+源程序总量：10006行

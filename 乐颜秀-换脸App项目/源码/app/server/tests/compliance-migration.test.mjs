@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+test('offline migration validates restore and refuses overwrite; readiness rejects tampered evidence',async()=>{
+ const dir=fs.mkdtempSync(path.join(os.tmpdir(),'lyx-migration-'));
+ const source=path.join(dir,'source.json'), database=path.join(dir,'ledger.db'), backup=path.join(dir,'backup.db'), report=path.join(dir,'report.json');
+ fs.writeFileSync(source,JSON.stringify({schemaVersion:1,users:{},sessions:{},orders:{},entitlements:{},ledger:[]}));
+ const script=new URL('../scripts/compliance-sqlite-migrate.mjs',import.meta.url);
+ const args=[fileURLToPath(script), '--source',source,'--database',database,'--backup',backup,'--report',report];
+ execFileSync(process.execPath,args);
+ assert.throws(()=>execFileSync(process.execPath,args,{stdio:'pipe'}));
+ const {sqliteProductionEvidence}=await import('../compliance-sqlite.js');
+ const env={COMPLIANCE_SQLITE_FILE:database,COMPLIANCE_SQLITE_VOLUME:'single_host_persistent',COMPLIANCE_SQLITE_EVIDENCE_FILE:report,COMPLIANCE_SQLITE_EVIDENCE_SHA256:crypto.createHash('sha256').update(fs.readFileSync(report)).digest('hex')};
+ assert.equal(sqliteProductionEvidence(env).ready,true);
+ fs.appendFileSync(report,' ');
+ assert.equal(sqliteProductionEvidence(env).ready,false);
+ fs.rmSync(dir,{recursive:true});
+});

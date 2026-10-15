@@ -1,0 +1,8 @@
+{
+  "description": "乐颜秀原版五栏目小程序适配",
+  "projectname": "leyanxiu-mini-product",
+  "appid": "REDACTED_APP_IDENTIFIER",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "./",
+  "setting": { "urlCheck": true, "es6": true, "minified": true }
+}

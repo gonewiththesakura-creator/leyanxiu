@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 22% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 22% 12%;
+    --primary: 311 88% 61%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 16% 93%;
+    --secondary-foreground: 222 22% 12%;
+    --muted: 220 16% 93%;
+    --muted-foreground: 220 10% 42%;
+    --accent: 211 100% 96%;
+    --accent-foreground: 211 100% 38%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 14% 88%;
+    --input: 220 14% 88%;
+    --ring: 311 88% 61%;
+    --radius: 0.9rem;
+  }
+  * { @apply border-border; }
+  html { background: hsl(var(--background)); }
+  body {
+    @apply bg-background text-foreground;
+    margin: 0;
+    min-width: 320px;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: 0;
+  }
+  button {
+    min-height: 44px;
+    font: inherit;
+    letter-spacing: 0;
+  }
+}

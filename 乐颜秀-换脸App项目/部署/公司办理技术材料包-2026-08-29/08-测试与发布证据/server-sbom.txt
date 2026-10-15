@@ -1,0 +1,4 @@
+> leyanxiu-server@0.1.0 sbom
+> node scripts/sbom.mjs
+
+SBOM written: D:\Documents\kimi\workspace\乐颜秀-换脸App项目\源码\app\server\sbom.cdx.json

@@ -1,0 +1,24 @@
+<view class="page">
+  <view class="heading">退款审核</view>
+  <view class="notice">{{notice}}</view>
+  <button bindtap="login" loading="{{busy}}" disabled="{{busy}}">重新登录并验证权限</button>
+  <block wx:if="{{operator}}">
+    <button class="secondary" bindtap="refresh" disabled="{{busy}}">刷新原退款状态</button>
+    <view class="notice" wx:if="{{pending}}">有一项审核尚未确认。请刷新原退款状态，暂勿重复提交。</view>
+    <view class="card" wx:for="{{records}}" wx:key="id">
+      <text selectable class="url">退款单 {{item.id}}</text>
+      <view>¥{{item.amount}} · {{item.statusLabel}}</view>
+      <button class="secondary" bindtap="select" data-id="{{item.id}}" disabled="{{busy}}">查看并核对</button>
+    </view>
+    <view class="card" wx:if="{{selected}}">
+      <view class="title">退款 ¥{{selected.amount}}</view>
+      <text selectable class="url">订单 {{selected.orderId}}</text>
+      <text selectable class="url">退款单 {{selected.id}}</text>
+      <view class="notice">{{selected.statusLabel}}</view>
+      <block wx:if="{{selected.reviewable}}">
+        <button bindtap="review" data-decision="approve" disabled="{{busy || pending}}">通过审核</button>
+        <button class="secondary" bindtap="review" data-decision="reject" disabled="{{busy || pending}}">拒绝申请并恢复冻结权益</button>
+      </block>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,9 @@
+<view class="page" style="padding-top:{{top}}px">
+  <view class="header"><text class="title">视频玩法</text><view class="header-actions"><view class="history" bindtap="openMine" aria-label="我的作品">◷</view><view class="credits" bindtap="openPayments"><text class="gift">♧</text> 套餐</view></view></view>
+  <view class="banner-wrap"><swiper class="banners" circular autoplay interval="4600" duration="450" bindchange="bannerChanged">
+    <swiper-item wx:for="{{banners}}" wx:key="id"><view class="banner" bindtap="preview" data-id="{{item.templateId}}"><image src="{{item.image}}" mode="aspectFill"/><view class="banner-scrim"/><view class="banner-content"><text class="kicker">{{item.kicker}}</text><text class="banner-title">{{item.title}}</text><text class="banner-action">{{item.action}} ›</text><text class="banner-note">模板预览 · 创作暂未开放</text></view></view></swiper-item>
+  </swiper><view class="dots"><view wx:for="{{banners}}" wx:key="id" class="dot {{index===bannerIndex?'selected':''}}"/></view></view>
+  <scroll-view class="categories" scroll-x enhanced show-scrollbar="{{false}}"><view class="category-row"><view wx:for="{{categories}}" wx:key="*this" class="category {{category===item?'active':''}}" bindtap="selectCategory" data-category="{{item}}">{{item}}</view></view></scroll-view>
+  <view class="grid"><view wx:for="{{templates}}" wx:key="id" class="card" data-id="{{item.id}}" bindtap="preview"><view class="cover-wrap"><image class="cover" src="{{item.cover}}" mode="aspectFill"/><view class="card-scrim"/><text wx:if="{{item.isNew}}" class="new">上新</text><text class="play">▶</text><text class="card-action">{{item.action}}</text><text class="preview-label">模板预览 · 创作暂未开放</text></view><text class="name">{{item.name}}</text></view></view>
+  <view wx:if="{{!templates.length}}" class="empty">这个分类正在准备中</view>
+</view>

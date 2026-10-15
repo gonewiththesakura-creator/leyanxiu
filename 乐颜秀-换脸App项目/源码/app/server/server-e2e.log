@@ -1,0 +1,12 @@
+✔ 任务台账：阿里云 OSS（0 条存量）
+✔ 乐颜秀接入服务已启动 :3210（渠道：aliyun）
+动漫化失败: Error: 方舟图像编辑错误 404: {"error":{"code":"ModelNotOpen","message":"Your account 2105674352 has not activated the model doubao-seedream-4-0-250828. Please activate the model service in the Ark Console. Request id: 021785987165365c6daa9fbd24a3705b1bff284c771edd09f5dc2","param":"","type":"Not Found"}}
+    at Module.editImage (file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/providers/seededit.js:42:13)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/index.js:325:19
+    at async dispatch (file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/node_modules/hono/dist/compose.js:22:17)
+    at async cors2 (file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/node_modules/hono/dist/middleware/cors/index.js:76:5)
+    at async dispatch (file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/node_modules/hono/dist/compose.js:22:17)
+    at async file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/node_modules/hono/dist/hono-base.js:306:25
+    at async responseViaResponseObject (file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/node_modules/@hono/node-server/dist/index.mjs:487:13)
+    at async Server.<anonymous> (file:///C:/Users/REDACTED_USER/Documents/kimi/workspace/%E4%B9%90%E9%A2%9C%E7%A7%80-%E6%8D%A2%E8%84%B8App%E9%A1%B9%E7%9B%AE/%E6%BA%90%E7%A0%81/app/server/node_modules/@hono/node-server/dist/index.mjs:630:14)

@@ -1,0 +1,54 @@
+<view class="page">
+  <view class="heading">服务与帮助</view>
+  <view class="notice">{{notice}}</view>
+  <button class="secondary" bindtap="refresh" disabled="{{busy || loading}}" loading="{{loading}}">刷新服务信息</button>
+  <button wx:if="{{refundOperator}}" class="secondary" bindtap="openRefundOperations" disabled="{{busy || loading}}">运营退款审核</button>
+  <view class="card">
+    <view class="title">运营方与服务说明</view>
+    <view class="detail">运营方：{{operator || '尚未公开'}}</view>
+    <view class="detail">客服渠道：{{support || '尚未公开'}}</view>
+    <view class="detail">{{supportSource === 'server' ? '以上为服务端已公开的客服渠道。' : '以上为本小程序已确认的公开客服邮箱；接口不可用时仍可联系。'}}</view>
+    <button class="secondary" bindtap="copySupport" disabled="{{!support}}">复制公开客服信息</button>
+    <view class="detail">协议链接可复制到浏览器阅读，请核对完整网址。</view>
+    <view wx:for="{{documents}}" wx:key="id" class="document">
+      <view>{{item.title}}</view>
+      <text selectable class="url">{{item.url || '尚未公开，暂不可用'}}</text>
+      <button class="secondary" data-id="{{item.id}}" bindtap="copyDocument" disabled="{{!item.available}}">复制链接</button>
+    </view>
+    <button class="secondary" bindtap="openPrivacy">微信隐私保护指引</button>
+  </view>
+  <view class="card">
+    <view class="title">处理方与保存期</view>
+    <view wx:if="{{!suppliers.length}}" class="detail">第三方处理信息尚未完整公开。</view>
+    <view wx:for="{{suppliers}}" wx:key="index" class="document">
+      <view>{{item.provider}} / {{item.model}}</view>
+      <view class="detail">用途：{{item.purpose}}；区域：{{item.region}}</view>
+      <view class="detail">公开备案信息：{{item.filingReference}}</view>
+    </view>
+    <view class="detail">原图在线使用期最长 {{sourceHours || '待公开'}} 小时；作品在线使用期最长 {{resultHours || '待公开'}} 小时。到期不再提供新的查看或下载链接，并进入后台清理。</view>
+    <view class="detail">处理方规则：{{supplierPolicy || '尚未公开'}}</view>
+  </view>
+  <view class="card">
+    <view class="title">投诉与问题反馈</view>
+    <view class="detail">只需选择类型并描述问题。联系方式选填；请勿填写密码、验证码或上传无关人脸和证件信息。</view>
+    <picker mode="selector" range="{{categories}}" range-key="name" value="{{categoryIndex}}" bindchange="categoryChanged" disabled="{{busy}}"><view class="field">{{categories[categoryIndex].name}} ▾</view></picker>
+    <textarea class="field" maxlength="2000" value="{{description}}" bindinput="descriptionChanged" disabled="{{busy}}" placeholder="请填写 10 至 2000 字的问题说明" />
+    <input class="field" maxlength="200" value="{{contact}}" bindinput="contactChanged" disabled="{{busy}}" placeholder="便于回复的联系方式（选填）" />
+    <button bindtap="submitReport" disabled="{{busy || loading || receipt.state === 'unconfirmed'}}" loading="{{busy}}">提交反馈</button>
+  </view>
+  <view class="card">
+    <view class="title">申请注销账号</view>
+    <view class="detail">提交人工处理申请，先核对剩余权益、未完成订单、退款和制作任务。申请不等于注销完成，不自动清空权益；依法需要保留的交易与安全记录按规则保存。</view>
+    <button class="secondary" bindtap="requestDeletion" disabled="{{busy || loading || receipt.state === 'unconfirmed'}}">申请注销</button>
+  </view>
+  <view class="notice" wx:if="{{reportNotice}}">{{reportNotice}}</view>
+  <view class="card" wx:if="{{receipt}}">
+    <view class="title">{{receipt.kind === 'account_deletion' ? '注销申请' : '投诉反馈'}}回执</view>
+    <block wx:if="{{receipt.state === 'submitted'}}">
+      <text selectable>{{receipt.ticketId}}</text>
+      <view class="detail">{{receipt.createdAt}}</view>
+      <view class="detail">已收到，待处理。{{receipt.kind === 'account_deletion' ? '这不是注销完成证明。' : '这不表示问题已解决。'}}</view>
+    </block>
+    <view wx:else class="detail">结果尚未确认。请联系公开客服核实，暂勿重复提交。</view>
+  </view>
+</view>

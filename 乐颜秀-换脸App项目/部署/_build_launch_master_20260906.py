@@ -1,0 +1,819 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from docx import Document
+from docx.enum.section import WD_SECTION
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT, WD_TABLE_ALIGNMENT
+from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
+from docx.shared import Cm, Pt, RGBColor
+
+
+ROOT = Path(__file__).resolve().parent
+OUT = ROOT / "乐颜秀App上线对抗式审查与提交总控-2026-09-06.docx"
+
+NAVY = "17324D"
+BLUE = "2864DC"
+CYAN = "0F8B8D"
+GREEN = "19734A"
+AMBER = "8A5A00"
+RED = "A33232"
+INK = "17212B"
+MUTED = "5F6B76"
+LINE = "D9E0E7"
+PALE_BLUE = "EAF2FF"
+PALE_GREEN = "E7F5ED"
+PALE_AMBER = "FFF5D6"
+PALE_RED = "FCEBEC"
+PALE_GRAY = "F4F6F8"
+WHITE = "FFFFFF"
+
+FONT_LATIN = "Aptos"
+FONT_CJK = "Microsoft YaHei"
+TABLE_WIDTH = 10100
+
+
+def set_run(run, size=10.0, color=INK, bold=False, italic=False):
+    run.font.name = FONT_LATIN
+    run._element.get_or_add_rPr().rFonts.set(qn("w:ascii"), FONT_LATIN)
+    run._element.get_or_add_rPr().rFonts.set(qn("w:hAnsi"), FONT_LATIN)
+    run._element.get_or_add_rPr().rFonts.set(qn("w:eastAsia"), FONT_CJK)
+    run.font.size = Pt(size)
+    run.font.color.rgb = RGBColor.from_string(color)
+    run.bold = bold
+    run.italic = italic
+
+
+def shade(cell, fill):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    node = tc_pr.find(qn("w:shd"))
+    if node is None:
+        node = OxmlElement("w:shd")
+        tc_pr.append(node)
+    node.set(qn("w:fill"), fill)
+
+
+def cell_border(cell, color=LINE, size="5"):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    borders = tc_pr.first_child_found_in("w:tcBorders")
+    if borders is None:
+        borders = OxmlElement("w:tcBorders")
+        tc_pr.append(borders)
+    for edge in ("top", "left", "bottom", "right", "insideH", "insideV"):
+        node = borders.find(qn(f"w:{edge}"))
+        if node is None:
+            node = OxmlElement(f"w:{edge}")
+            borders.append(node)
+        node.set(qn("w:val"), "single")
+        node.set(qn("w:sz"), size)
+        node.set(qn("w:color"), color)
+
+
+def cell_margins(cell, top=80, bottom=80, start=110, end=110):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    tc_mar = tc_pr.first_child_found_in("w:tcMar")
+    if tc_mar is None:
+        tc_mar = OxmlElement("w:tcMar")
+        tc_pr.append(tc_mar)
+    for side, value in {"top": top, "bottom": bottom, "start": start, "end": end}.items():
+        node = tc_mar.find(qn(f"w:{side}"))
+        if node is None:
+            node = OxmlElement(f"w:{side}")
+            tc_mar.append(node)
+        node.set(qn("w:w"), str(value))
+        node.set(qn("w:type"), "dxa")
+
+
+def keep_row(row):
+    tr_pr = row._tr.get_or_add_trPr()
+    node = OxmlElement("w:cantSplit")
+    tr_pr.append(node)
+
+
+def repeat_header(row):
+    tr_pr = row._tr.get_or_add_trPr()
+    node = OxmlElement("w:tblHeader")
+    node.set(qn("w:val"), "true")
+    tr_pr.append(node)
+
+
+def set_width(cell, width):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    tc_w = tc_pr.first_child_found_in("w:tcW")
+    if tc_w is None:
+        tc_w = OxmlElement("w:tcW")
+        tc_pr.append(tc_w)
+    tc_w.set(qn("w:w"), str(width))
+    tc_w.set(qn("w:type"), "dxa")
+
+
+def geometry(table, widths):
+    assert sum(widths) == TABLE_WIDTH, (widths, sum(widths))
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+    tbl_pr = table._tbl.tblPr
+    tbl_w = tbl_pr.first_child_found_in("w:tblW")
+    if tbl_w is None:
+        tbl_w = OxmlElement("w:tblW")
+        tbl_pr.append(tbl_w)
+    tbl_w.set(qn("w:w"), str(TABLE_WIDTH))
+    tbl_w.set(qn("w:type"), "dxa")
+    layout = tbl_pr.first_child_found_in("w:tblLayout")
+    if layout is None:
+        layout = OxmlElement("w:tblLayout")
+        tbl_pr.append(layout)
+    layout.set(qn("w:type"), "fixed")
+    grid = table._tbl.tblGrid
+    for child in list(grid):
+        grid.remove(child)
+    for width in widths:
+        node = OxmlElement("w:gridCol")
+        node.set(qn("w:w"), str(width))
+        grid.append(node)
+    for row in table.rows:
+        for idx, cell in enumerate(row.cells):
+            set_width(cell, widths[idx])
+            cell_margins(cell)
+            cell_border(cell)
+            cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+
+
+def cell_text(cell, text, size=8.6, bold=False, color=INK, align=WD_ALIGN_PARAGRAPH.LEFT):
+    cell.text = ""
+    p = cell.paragraphs[0]
+    p.alignment = align
+    p.paragraph_format.space_before = Pt(0)
+    p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.line_spacing = 1.08
+    r = p.add_run(str(text))
+    set_run(r, size=size, color=color, bold=bold)
+
+
+def table(doc, headers, rows, widths, font_size=8.5, status_col=None):
+    t = doc.add_table(rows=1, cols=len(headers))
+    t.style = "Table Grid"
+    geometry(t, widths)
+    repeat_header(t.rows[0])
+    keep_row(t.rows[0])
+    for i, header in enumerate(headers):
+        shade(t.rows[0].cells[i], NAVY)
+        cell_text(t.rows[0].cells[i], header, size=8.7, bold=True, color=WHITE)
+    for values in rows:
+        row = t.add_row()
+        keep_row(row)
+        for i, value in enumerate(values):
+            fill = WHITE
+            color = INK
+            bold = False
+            if status_col is not None and i == status_col:
+                value_s = str(value)
+                bold = True
+                if any(x in value_s for x in ("阻断", "NO-GO", "未完成", "不可")):
+                    fill, color = PALE_RED, RED
+                elif any(x in value_s for x in ("待", "条件", "部分")):
+                    fill, color = PALE_AMBER, AMBER
+                elif any(x in value_s for x in ("完成", "通过", "GO")):
+                    fill, color = PALE_GREEN, GREEN
+            if fill != WHITE:
+                shade(row.cells[i], fill)
+            cell_text(row.cells[i], value, size=font_size, bold=bold, color=color)
+        geometry(t, widths)
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(1)
+    return t
+
+
+def para(doc, text="", size=10.0, color=INK, bold=False, italic=False, before=0, after=5, align=None):
+    p = doc.add_paragraph()
+    if align is not None:
+        p.alignment = align
+    p.paragraph_format.space_before = Pt(before)
+    p.paragraph_format.space_after = Pt(after)
+    p.paragraph_format.line_spacing = 1.18
+    r = p.add_run(text)
+    set_run(r, size=size, color=color, bold=bold, italic=italic)
+    return p
+
+
+def bullet(doc, text, level=0, color=INK, bold_prefix=None):
+    p = doc.add_paragraph(style="List Bullet" if level == 0 else "List Bullet 2")
+    p.paragraph_format.left_indent = Cm(0.6 + level * 0.45)
+    p.paragraph_format.first_line_indent = Cm(-0.25)
+    p.paragraph_format.space_after = Pt(3)
+    p.paragraph_format.line_spacing = 1.12
+    if bold_prefix and text.startswith(bold_prefix):
+        r1 = p.add_run(bold_prefix)
+        set_run(r1, size=9.5, color=color, bold=True)
+        r2 = p.add_run(text[len(bold_prefix):])
+        set_run(r2, size=9.5, color=color)
+    else:
+        r = p.add_run(text)
+        set_run(r, size=9.5, color=color)
+    return p
+
+
+def heading(doc, text, level=1):
+    p = doc.add_heading(text, level=level)
+    p.paragraph_format.keep_with_next = True
+    p.paragraph_format.space_before = Pt(8 if level == 1 else 5)
+    p.paragraph_format.space_after = Pt(5)
+    for r in p.runs:
+        set_run(r, size={1: 16, 2: 12.5, 3: 10.5}.get(level, 10), color=NAVY if level < 3 else BLUE, bold=True)
+    return p
+
+
+def callout(doc, title, body, kind="info"):
+    palette = {
+        "info": (PALE_BLUE, BLUE),
+        "good": (PALE_GREEN, GREEN),
+        "warn": (PALE_AMBER, AMBER),
+        "risk": (PALE_RED, RED),
+    }
+    fill, color = palette[kind]
+    t = doc.add_table(rows=1, cols=1)
+    geometry(t, [TABLE_WIDTH])
+    keep_row(t.rows[0])
+    c = t.cell(0, 0)
+    shade(c, fill)
+    c.text = ""
+    p = c.paragraphs[0]
+    p.paragraph_format.space_after = Pt(2)
+    r = p.add_run(title)
+    set_run(r, size=10.8, color=color, bold=True)
+    p2 = c.add_paragraph()
+    p2.paragraph_format.space_after = Pt(0)
+    p2.paragraph_format.line_spacing = 1.16
+    r2 = p2.add_run(body)
+    set_run(r2, size=9.5, color=INK)
+    doc.add_paragraph().paragraph_format.space_after = Pt(1)
+
+
+def page_break(doc):
+    p = doc.add_paragraph()
+    p.add_run().add_break(WD_BREAK.PAGE)
+
+
+def add_page_number(paragraph):
+    paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    r = paragraph.add_run("乐颜秀 App 上线总控  |  ")
+    set_run(r, size=8, color=MUTED)
+    r2 = paragraph.add_run()
+    begin = OxmlElement("w:fldChar")
+    begin.set(qn("w:fldCharType"), "begin")
+    instr = OxmlElement("w:instrText")
+    instr.set(qn("xml:space"), "preserve")
+    instr.text = " PAGE "
+    end = OxmlElement("w:fldChar")
+    end.set(qn("w:fldCharType"), "end")
+    r2._r.extend([begin, instr, end])
+    set_run(r2, size=8, color=MUTED)
+
+
+def add_url(doc, label, url):
+    p = doc.add_paragraph()
+    p.paragraph_format.space_after = Pt(3)
+    r = p.add_run(f"{label}：")
+    set_run(r, size=8.7, color=INK, bold=True)
+    r2 = p.add_run(url)
+    set_run(r2, size=8.3, color=BLUE)
+
+
+doc = Document()
+sec = doc.sections[0]
+sec.page_width = Cm(21.0)
+sec.page_height = Cm(29.7)
+sec.top_margin = Cm(1.45)
+sec.bottom_margin = Cm(1.45)
+sec.left_margin = Cm(1.55)
+sec.right_margin = Cm(1.55)
+sec.header_distance = Cm(0.65)
+sec.footer_distance = Cm(0.65)
+
+styles = doc.styles
+styles["Normal"].font.name = FONT_LATIN
+styles["Normal"]._element.rPr.rFonts.set(qn("w:eastAsia"), FONT_CJK)
+styles["Normal"].font.size = Pt(10)
+for style_name in ("Title", "Subtitle", "Heading 1", "Heading 2", "Heading 3"):
+    styles[style_name].font.name = FONT_LATIN
+    styles[style_name]._element.rPr.rFonts.set(qn("w:eastAsia"), FONT_CJK)
+
+header = sec.header.paragraphs[0]
+header.text = "亿博华夏 · 乐颜秀  |  INTERNAL CONTROLLED DOCUMENT"
+header.paragraph_format.space_after = Pt(0)
+for r in header.runs:
+    set_run(r, size=7.8, color=MUTED, bold=True)
+add_page_number(sec.footer.paragraphs[0])
+
+doc.core_properties.title = "乐颜秀 App 上线对抗式审查与提交总控"
+doc.core_properties.subject = "Android App 上线、合规、技术和公司责任总控"
+doc.core_properties.author = "乐颜秀项目组"
+doc.core_properties.keywords = "Android, App备案, ICP备案, AI标识, 人脸信息, 上架"
+
+# Cover
+para(doc, "RELEASE CONTROL / RED TEAM REVIEW", size=10, color=CYAN, bold=True, before=28, after=16)
+para(doc, "乐颜秀 App 上线", size=29, color=NAVY, bold=True, after=2)
+para(doc, "对抗式审查与提交总控", size=23, color=BLUE, bold=True, after=18)
+para(doc, "覆盖产品、Android、服务端、安全、隐私、人脸、AI 标识、备案、商店和公司材料", size=11.2, color=MUTED, after=24)
+
+table(doc, ["内部受控测试", "Android 正式提交", "公众生产开放"], [["有条件 GO", "NO-GO", "NO-GO"]], [3366, 3367, 3367], font_size=12, status_col=0)
+callout(
+    doc,
+    "本次总判断",
+    "最新 Debug APK 已可交给指定测试人员做界面与系统能力验证；正式 APK/AAB、公众付费和生产 AI 处理仍不得开放。当前 Android 正式提交有 4 个硬阻断，服务端生产检查有 42 个硬阻断。外部备案、测评和应用市场审核结果不能由代码替代。",
+    "risk",
+)
+
+para(doc, "文档版本", size=8.8, color=MUTED, bold=True, before=18, after=1)
+para(doc, "v2.0 · 2026-09-06 · 依据 2026-09-05/06 实际构建与检查结果", size=10, color=INK, after=7)
+para(doc, "适用范围", size=8.8, color=MUTED, bold=True, after=1)
+para(doc, "Android 首发准备，同时保留微信小程序差异项；不含未经公司批准的付费、公域内容发布和玄学玩法。", size=10, color=INK, after=7)
+para(doc, "证据基线", size=8.8, color=MUTED, bold=True, after=1)
+para(doc, "工作树 commit 705699261720e658089f5a762de1e30d27f49c75，状态 dirty / unreleased-local；Debug APK 为内部候选，不是商店提交包。", size=10, color=INK, after=7)
+para(doc, "重要边界：本文件是工程与申报项目管理意见，不替代主管机关、应用市场或受托律师的最终认定。", size=8.7, color=RED, bold=True, before=16, after=0)
+
+page_break(doc)
+heading(doc, "1. 管理层一页结论", 1)
+table(
+    doc,
+    ["决策对象", "当前结论", "能做什么", "明确不能做什么"],
+    [
+        ["最新 Debug APK", "有条件 GO", "指定人员安装；测试 UI、模板预览、相册/相机、保存、分享、返回键", "公开下载、收费、承诺真实 AI 全链路可用"],
+        ["Android 正式包", "NO-GO / 4 阻断", "仅做结构验证", "上传市场、公开分发、作为备案最终安装包"],
+        ["生产服务端", "NO-GO / 42 阻断", "本机 CLOSED_TEST；检查接口、失败关闭和证据结构", "真人数据、公众请求、真实扣费、对外 SLA"],
+        ["微信小程序", "独立审批轨道", "复用合规与后端底座", "用 App 备案或 APK 证据替代微信类目/隐私/域名审核"],
+        ["ICP 经营许可证", "按公司已确认口径暂不办理", "保存属地咨询结论并按自营模式控制边界", "把“不办许可证”写成“不需要任何 ICP/App 备案”"],
+    ],
+    [1500, 1750, 3300, 3550],
+    status_col=1,
+)
+
+heading(doc, "上线必须同时满足的五道门", 2)
+for text in [
+    "工程门：公司签名的 Release APK/AAB、正式 HTTPS 地址、正确包名版本、真机兼容与可回滚。",
+    "数据门：首次告知、人脸单独同意、处理者披露、最短保存、真实删除、PIPIA 与供应商副本处理。",
+    "AI 门：输入/输出内容安全、显式与隐式标识、模型/算法信息、公示、能力逐项验收。",
+    "经营门：域名 ICP 备案、Android App 备案、必要的算法/深度合成程序、版权/合同和客服机制。",
+    "运营门：实名、投诉举报、人工复核、未成年人策略、支付/退款/对账、监控与事件响应。",
+]:
+    bullet(doc, text)
+
+callout(doc, "第一性原理", "用户上传的是可识别真人照片，系统将其交给外部算法生成并允许保存传播。因此真正的最小闭环不是“按钮有响应”，而是：身份与授权可证明、数据只到批准的处理者、内容前后均受控、结果可标识、删除可验证、计费可审计、事故可止损。任一环节缺证据，都应失败关闭。", "info")
+
+heading(doc, "立即动作（D0）", 2)
+table(
+    doc,
+    ["序号", "动作", "责任方", "退出条件"],
+    [
+        ["1", "立即轮换对话中暴露过的阿里云主账号密码并启用 MFA；今后只给技术 RAM 子账号", "公司", "旧密码失效；MFA 开启；最小权限账号建成"],
+        ["2", "冻结公众发布与付费开关", "公司+技术", "生产 readiness 明确 publicLaunchAllowed=false"],
+        ["3", "确认包名 com.yibohuaxia.leyanxiu 并建立公司签名密钥", "公司", "离线备份、双人保管、指纹归档"],
+        ["4", "提供正式域名、备案计划、隐私/协议/第三方清单 URL", "公司", "三个 HTTPS 页面可公开访问且内容获批"],
+        ["5", "指定隐私、内容安全、客服、财务和数据事件负责人", "公司", "姓名、电话、值班与升级路径书面化"],
+    ],
+    [750, 4300, 1500, 3550],
+)
+
+page_break(doc)
+heading(doc, "2. 审查范围与事实基线", 1)
+heading(doc, "2.1 本轮纳入", 2)
+for text in [
+    "React/Vite 前端与纵向视频精选页：单次滑动只前进一个模板，模板按新上架优先；进入制作页先播放模板，不显示大块空白。",
+    "图片类入口：老照片修复、年龄变化、风格化、证件照/背景、AI 头像等；只有服务端 readiness 通过的入口才允许生成。",
+    "Capacitor Android 工程：包名、签名、权限、相册/相机、MediaStore、系统分享、返回键、生命周期、CSP 与 release 构建。",
+    "Hono 服务端：设备身份、任务归属、私有对象、短时 URL、保存期、AI 标识、供应商路由、内容安全、举报和发布闸门。",
+    "域名 ICP 备案、Android App 备案、人脸/个人信息、生成合成内容标识、模型/算法资料、应用市场材料与公司分工。",
+]:
+    bullet(doc, text)
+
+heading(doc, "2.2 本轮明确不宣称", 2)
+for text in [
+    "未宣称任何图片或视频效果已经通过真实生产验收。当前每项能力的独立有效样本为 0/30，故前端保持关闭。",
+    "未宣称自动有声播放可在所有 Android 设备实现。系统和 WebView 可能拦截，当前行为是先尝试有声，失败后静音播放并提供开声按钮。",
+    "未宣称服务器已部署到 REDACTED_COMPANY_INFRASTRUCTURE。本轮没有获得明确的生产部署确认，也没有使用用户在对话中暴露的主账号密码。",
+    "未宣称 ICP 经营许可证、App 备案、算法备案/登记、安全评估、软件著作权或商店审核已经获批。",
+    "未开放真实付费、虚构榜单、分享奖励、公众人物换脸、未成年人高风险素材或用户公域发布。",
+]:
+    bullet(doc, text, color=RED)
+
+heading(doc, "2.3 最小数据流", 2)
+table(
+    doc,
+    ["阶段", "数据/动作", "强制控制", "当前证据"],
+    [
+        ["选择", "相册/相机中的真人照片", "首次隐私同意前不联网；本地压缩；不申请全量相册权限", "代码与 Android 静态检查通过；待真机"],
+        ["授权", "人脸图片、模板、目的、处理者", "本人/已授权确认；单独同意；记录版本与实际供应商", "前后端结构完成；公司文本/正式处理者待定"],
+        ["上传", "压缩图、模板 ID、任务信息", "HTTPS、鉴权、私有对象、实际类型/尺寸检测、限流", "代码完成；正式 HTTPS/生产 OSS 审计待定"],
+        ["生成", "供应商输入和模型输出", "前审、供应商白名单、预算、任务幂等、后审", "路由/闸门完成；外部媒体审核适配器未完成"],
+        ["交付", "图片/视频结果", "可见 AI 生成标识、元数据、短时 URL、Range、保存/分享", "代码完成；GB 45438-2025 符合性报告待定"],
+        ["删除", "原图、结果、缓存、日志、供应商副本", "立即删除+TTL+重试+告警+回执", "本地机制完成；生产事务账本和供应商删除义务待定"],
+    ],
+    [1050, 2250, 3850, 2950],
+)
+
+page_break(doc)
+heading(doc, "3. 已完成的技术整改", 1)
+table(
+    doc,
+    ["域", "已落地", "验收状态", "剩余外部依赖"],
+    [
+        ["Android 容器", "Capacitor 8、竖屏、安全区、自定义图标/启动图、Android 7-15 最小权限", "静态通过", "多版本真机矩阵"],
+        ["构建", "debug/release 隔离；release 拒绝 HTTP/私网；签名仅由环境注入；强制全量重打包", "66 项内测检查通过", "公司 keystore 与正式 URL"],
+        ["身份", "Android Keystore 非导出 P-256；challenge/verify；过期、重放、错误签名测试", "服务端测试通过", "正式 HTTPS 真机验收；实名适配器"],
+        ["文件", "原生相册/相机、长边 2000px 压缩、MediaStore 保存、系统 Sharesheet", "静态通过", "相机、HEIC、低空间、图库真机测试"],
+        ["任务", "taskId 持久化；进程恢复查询原任务；查询/下载/删除按所有权鉴权", "自动测试通过", "生产存储与杀进程真机测试"],
+        ["媒体", "H.264/AAC fast-start 预览；Range 206/416；播放失败回退与声音按钮", "浏览器/静态通过", "Android 厂商机型音频策略实测"],
+        ["隐私", "首启同意前不建会话；人脸单独同意；实际处理者与保存期动态披露", "结构完成", "公司批准文本、PIPIA、合同"],
+        ["内容", "输入/输出钩子、举报端点、失败关闭、公众人物/未成年人等策略位置", "框架完成", "真实外部图片/视频审核适配器与对抗集"],
+        ["AI 标识", "图片/视频可见“AI生成”；普通元数据结构；不伪造国标符合性", "基础完成", "标准检测报告、服务者编码、模型备案引用"],
+        ["产品真实性", "未验收能力按 readiness 隐藏；移除虚构分享奖励和定向分享承诺", "通过", "逐能力 30 个有效样本"],
+        ["依赖与证据", "lint、单元测试、SBOM、release check、哈希与回滚结构", "通过", "干净 release tag、CI、第三方渗透/复测"],
+    ],
+    [1450, 3850, 1900, 2900],
+    status_col=2,
+)
+
+callout(doc, "不可混淆的 GO", "“Android development readiness: GO”只表示 Debug 工程与当前 APK 的 66 项静态/包体检查没有阻断，不表示后端生产、法律文本、供应商验收、真机兼容或商店审批通过。", "warn")
+
+heading(doc, "3.1 产品交互完成度", 2)
+for text in [
+    "精选页：全屏纵向模板，一次滚轮/手势只切换一个；最新模板排在前；当前卡片自动播放，离开后暂停。",
+    "制作页：进入后直接显示并播放所选模板；相册与拍照入口在模板上方/下方清晰呈现，不再以空白上传框占据首屏。",
+    "图片页：每个分支配效果预览图；年龄功能合并为一个“时光年龄”能力，避免 30/40/50 岁重复堆入口。",
+    "能力闸门：用户可先看真实预览，但只有后端返回 ready 的能力才能提交；核验中和未开放状态明确显示。",
+    "分享：不承诺分享奖励，不声称可直接投放到指定平台；原生使用系统分享，Web 使用复制文案和保存作品。",
+]:
+    bullet(doc, text)
+
+page_break(doc)
+heading(doc, "4. Android 包与正式提交闸门", 1)
+heading(doc, "4.1 最新内部测试包", 2)
+table(
+    doc,
+    ["字段", "值"],
+    [
+        ["文件", "leyanxiu-android-debug-v1.0-20260905.apk"],
+        ["包名", "com.yibohuaxia.leyanxiu（公司仍需书面冻结）"],
+        ["版本", "versionCode 1 / versionName 1.0.0"],
+        ["Android", "minSdk 24 / targetSdk 36"],
+        ["大小", "16,788,607 bytes"],
+        ["SHA-256", "000851B0D9D8C1A961B3162A38216373A976C03A4854C6B2EF4EC9A6491A2560"],
+        ["签名", "Android Debug，仅限指定人员内部测试"],
+        ["API", "http://REDACTED_COMPANY_INFRASTRUCTURE，仅 debug 网络策略允许；本轮未部署、未形成端到端证据"],
+    ],
+    [1900, 8200],
+)
+
+heading(doc, "4.2 正式提交的 4 个硬阻断", 2)
+table(
+    doc,
+    ["编号", "阻断项", "为什么", "完成标准"],
+    [
+        ["A-01", "公司 Release/Upload 签名", "Debug 证书不能形成公司持续升级链", "公司离线生成并双人保管 keystore；CI 安全注入；验签指纹归档"],
+        ["A-02", "正式公网 HTTPS API", "Release 已主动拒绝 HTTP、IP、localhost、私网和占位域", "已备案域名+有效证书；精确 CORS；从正式包真机调用通过"],
+        ["A-03", "正式隐私政策 HTTPS URL", "首启告知必须可访问、可版本化且与真实数据流一致", "公司/律师批准，公开页面稳定，构建时嵌入并截图"],
+        ["A-04", "正式用户协议 HTTPS URL", "商店和用户关系需要可追溯规则", "公司批准，公开页面稳定，构建时嵌入并截图"],
+    ],
+    [750, 2250, 3200, 3900],
+    status_col=1,
+)
+
+heading(doc, "4.3 真机必测矩阵", 2)
+table(
+    doc,
+    ["设备/场景", "必须覆盖", "合格线"],
+    [
+        ["Android 10 / 13 / 15", "冷启动、隐私拒绝/同意、相册/相机、返回键、安全区、深色/手势导航", "无崩溃、无越权权限、无内容遮挡"],
+        ["媒体", "模板首帧、自动播放回退、手动开声、拖动、切后台、来电/锁屏", "只播放当前模板；恢复逻辑可解释；无串音"],
+        ["文件", "48MP JPEG、HEIC、低内存、低空间、重复文件名", "不 OOM；保存类型正确；图库可见；错误可恢复"],
+        ["任务", "生成中杀进程、401/403/413/429/500/503、签名 URL 过期", "恢复原 taskId；不重复下单/扣费；错误清晰"],
+        ["升级", "同签名覆盖安装、版本递增、卸载重装", "数据迁移符合政策；设备身份隔离；可回滚"],
+    ],
+    [2200, 4700, 3200],
+    font_size=7.7,
+)
+
+page_break(doc)
+heading(doc, "5. 服务端生产 NO-GO：42 项阻断总表", 1)
+para(doc, "以下为 DEPLOY_ENV=production、RELEASE_CHANNEL=android-app 的实际自动检查结果。必须按生产事实填写，禁止用占位、伪造报告或测试域名消除阻断。", size=9.5, color=RED, bold=True, after=7)
+
+production_blockers = [
+    ("R-01", "发布基线", "工作树必须干净并提交后才能生产发布", "技术", "release tag、commit、构建哈希与回滚包一致"),
+    ("R-02", "身份", "Android 生产必须使用 AUTH_MODE=device_key", "技术", "生产配置+真机 challenge/verify"),
+    ("R-03", "身份", "device_key 只证明设备持有，仍缺独立实名核验", "公司+技术", "合规实名方案与用户绑定"),
+    ("R-04", "身份", "缺 REAL_NAME_AUTH_PROVIDER", "公司+技术", "签约提供商法定名称与配置"),
+    ("R-05", "身份", "实名验收证据未完成", "技术", "验收报告后方可置 VERIFIED=true"),
+    ("R-06", "身份", "实名适配器及逐用户绑定未实现", "技术", "接口、状态、审计、异常与删除全测"),
+    ("R-07", "秘密", "AUTH_SESSION_SECRET 少于 32 字符或未配置", "技术", "密钥管理系统注入并轮换"),
+    ("R-08", "存储", "生产对象存储必须为 OSS 私有桶", "技术", "OBJECT_STORAGE_BACKEND=oss；匿名访问 403"),
+    ("R-09", "任务", "生产任务持久化必须使用 OSS/耐久存储", "技术", "TASKS_BACKEND=oss；故障恢复通过"),
+    ("R-10", "账本", "缺事务型合规账本与备份恢复", "技术", "数据库事务、备份、恢复演练、审计不可抵赖"),
+    ("R-11", "网络", "PUBLIC_BASE_URL 不是正式 HTTPS origin", "公司+技术", "备案域名与有效证书"),
+    ("R-12", "网络", "CORS_ORIGIN 缺精确 HTTPS 白名单", "技术", "只允许批准来源"),
+    ("R-13", "网络", "OUTBOUND_HOST_ALLOWLIST 缺供应商/存储白名单", "技术", "实际主机逐项列出并审查"),
+    ("R-14", "举报", "缺独立 REPORT_DATA_ENCRYPTION_KEY", "技术", "32+ 字符独立密钥，受管轮换"),
+    ("R-15", "举报", "REPORT_RETENTION_DAYS 未明确", "公司+技术", "1-3650 天内批准值并实现清理"),
+    ("R-16", "同意", "基本同意文本哈希未固定", "公司+技术", "批准版本 SHA-256 入生产配置"),
+    ("R-17", "同意", "人脸单独同意文本哈希未固定", "公司+技术", "批准版本 SHA-256 入生产配置"),
+    ("R-18", "成本", "供应商每日调用预算未设置", "公司+技术", "正数预算、告警与总熔断"),
+    ("R-19", "权益", "用户每日生成上限未设置", "公司+技术", "服务端限额、幂等与申诉口径"),
+    ("R-20", "内容", "缺批准的内容政策版本", "公司", "CONTENT_POLICY_VERSION 对应审批文件"),
+    ("R-21", "内容", "真实外部媒体内容安全适配器未实现", "技术+供应商", "上传前/生成后图片视频检测+人工复核"),
+    ("R-22", "AI 标识", "生产必须启用 AI_MARKING_REQUIRED=true", "技术", "配置、导出与二次传播样本"),
+    ("R-23", "AI 标识", "缺 GB 45438-2025 符合性验证报告", "公司+技术", "真实检测报告及 SHA-256"),
+    ("R-24", "AI 标识", "缺服务者编码 SERVICE_PROVIDER_CODE", "公司", "主管/平台认可的真实编码"),
+    ("R-25", "算法", "缺 AI_MODEL_FILING_REFERENCE", "公司+供应商", "实际模型备案/登记引用"),
+    ("R-26", "版权", "缺 LICENSED_ASSET_IDS", "公司+运营", "上线资源全部映射授权台账"),
+    ("R-27", "App", "缺 APP_PACKAGE_NAME 生产配置", "技术", "与签名、备案、商店一致"),
+    ("R-28", "App 备案", "缺 APP_RECORD_NO", "公司", "Android App 备案号获批并展示"),
+    ("R-29", "ICP 备案", "缺 API 域名 ICP_RECORD_NO", "公司", "域名 ICP 备案获批并展示"),
+    ("R-30", "供应商", "缺供应商保存/删除策略", "公司+供应商", "合同/DPA 与技术回执一致"),
+    ("R-31", "公示", "缺隐私政策正式 HTTPS URL", "公司", "批准、公开、版本化"),
+    ("R-32", "公示", "缺用户协议正式 HTTPS URL", "公司", "批准、公开、版本化"),
+    ("R-33", "公示", "缺第三方共享清单 HTTPS URL", "公司", "SDK/云/模型逐项披露"),
+    ("R-34", "客服", "缺公司支持联系方式", "公司", "真实有效且有 SLA"),
+    ("R-35", "PIPIA", "缺批准的人脸处理影响评估引用", "公司+技术", "签字版评估与整改闭环"),
+    ("R-36", "主体", "缺 OPERATOR_NAME 法定运营主体", "公司", "与执照、备案、商店一致"),
+    ("R-37", "能力证据", "视频融合缺独立验收证据", "技术+产品", "30 个有效样本达标"),
+    ("R-38", "能力证据", "老照片修复缺独立验收证据", "技术+产品", "30 个有效样本达标"),
+    ("R-39", "能力证据", "年龄变化缺独立验收证据", "技术+产品", "30 个有效样本达标"),
+    ("R-40", "能力证据", "照片特效缺独立验收证据", "技术+产品", "30 个有效样本达标"),
+    ("R-41", "能力证据", "漫画/风格化缺独立验收证据", "技术+产品", "30 个有效样本达标"),
+    ("R-42", "能力证据", "证件照/背景缺独立验收证据", "技术+产品", "30 个有效样本达标"),
+]
+
+table(doc, ["编号", "领域", "阻断事实", "主责", "完成标准"], production_blockers, [650, 1150, 3650, 1500, 3150], font_size=7.7)
+
+heading(doc, "6. 公司、技术、供应商与外部机构分工", 1)
+heading(doc, "6.1 RACI 总表", 2)
+table(
+    doc,
+    ["事项", "A 最终负责", "R 执行", "C 必须会签", "I 留档/知会"],
+    [
+        ["首发范围、是否收费、是否公开传播", "公司负责人", "产品/运营", "技术、法务、财务", "客服"],
+        ["域名 ICP 备案、Android App 备案", "公司负责人", "行政/备案负责人", "接入商、技术", "法务"],
+        ["包名、版本、公司签名", "公司负责人", "技术", "安全员、商店管理员", "法务"],
+        ["隐私/协议/第三方清单/PIPIA", "公司负责人", "法务/隐私负责人", "技术、供应商", "客服"],
+        ["供应商合同、DPA、模型引用", "公司负责人", "采购/法务", "技术、供应商", "财务"],
+        ["内容安全策略与人工复核", "内容安全负责人", "审核运营+技术", "法务、客服", "管理层"],
+        ["版权/肖像/音乐/字体/模板台账", "公司负责人", "运营/法务", "技术", "财务"],
+        ["实名、鉴权、存储、删除、标识", "技术负责人", "技术", "公司/法务/供应商", "安全员"],
+        ["价格、支付、退款、对账", "财务负责人", "财务+技术", "产品、法务", "客服"],
+        ["真机、安全、能力样本与发布门", "技术负责人", "技术/测试", "产品、公司、安全员", "运营"],
+        ["最终 Go/No-Go", "公司负责人", "项目经理", "技术、法务、安全、运营", "全员"],
+    ],
+    [2650, 1750, 2100, 2200, 1400],
+    font_size=7.6,
+)
+
+heading(doc, "6.2 公司必须交付给技术的材料", 2)
+company_materials = [
+    ("C-01", "主体", "营业执照、统一社会信用代码、法定运营主体全称、注册地址、联系人"),
+    ("C-02", "渠道", "Android 首发商店清单、目标地区、包名冻结单、版本策略"),
+    ("C-03", "账号", "公司域名/云/商店/支付主账号；MFA；技术 RAM/子账号最小权限"),
+    ("C-04", "签名", "公司 keystore、alias、证书指纹、离线备份与双人保管流程；密码只进密钥管理"),
+    ("C-05", "备案", "域名 ICP 备案号、Android App 备案进度/号码、接入商与负责人"),
+    ("C-06", "ICP 许可边界", "已确认无需 ICP 经营许可证的官方咨询编号/书面答复及业务事实附件"),
+    ("C-07", "法律文本", "批准版隐私政策、用户协议、人脸单独同意、第三方清单、儿童/未成年人规则"),
+    ("C-08", "PIPIA", "人脸/敏感个人信息处理影响评估签字版、风险接受人和整改清单"),
+    ("C-09", "供应商", "实际供应商法定名称、合同、DPA、地域、保存期、训练使用、删除、转委托、SLA"),
+    ("C-10", "算法/模型", "实际模型名、版本、备案/登记引用、服务者编码和安全评估/平台处理结果"),
+    ("C-11", "版权", "每个模板/预览/音乐/字体/人像的资产 ID、授权链、期限、地区和商业用途"),
+    ("C-12", "运营", "内容安全、隐私、客服、退款、数据事件负责人及 SLA/值班表"),
+    ("C-13", "支付", "价格、次数/订阅、有效期、退款、开票、对账口径；未定前保持隐藏"),
+    ("C-14", "预算", "供应商每日/每用户限额、总熔断、告警接收人和停机授权人"),
+]
+table(doc, ["编号", "类别", "公司交付内容"], company_materials, [750, 1450, 7900], font_size=7.7)
+
+heading(doc, "6.3 代办、自办与专业机构", 2)
+table(
+    doc,
+    ["事项", "建议", "理由与边界"],
+    [
+        ["域名 ICP / App 备案", "公司+接入商自办", "阿里云等接入商平台就是正常通道；主体账号、手机和公章由公司掌握"],
+        ["ICP 经营许可证", "按已确认口径暂不办理", "保留官方业务界定证据；业务变成第三方平台/信息有偿发布时重新评估"],
+        ["隐私/PIPIA/合同", "技术出事实，律师复核", "律师不能代替真实数据流；技术不能替公司作风险承诺"],
+        ["渗透/标识符合性/必要测评", "专业第三方", "需要独立证据与复测；报告不能替代修复"],
+        ["应用市场提交", "公司+技术自办", "代运营可整理素材，但不得持有公司证书、MFA 或主账号"],
+    ],
+    [2450, 2200, 5450],
+)
+
+heading(doc, "7. Android App 与微信小程序差异", 1)
+table(
+    doc,
+    ["领域", "两端共同必须做", "Android App 特有/更重", "微信小程序特有"],
+    [
+        ["备案", "运营主体、域名与真实服务一致", "Android App 备案；包名、签名证书、分发平台信息；App 内展示备案号", "小程序备案；AppID、类目、主体、微信审核"],
+        ["包与签名", "版本可追溯", "公司签名 APK/AAB、证书保管、64 位/目标 SDK/厂商商店规则", "微信代码包、版本提交、体验版/审核版，无 APK keystore"],
+        ["网络", "HTTPS、最小域名、供应商白名单", "Android Manifest、Network Security Config、CSP、OEM 网络行为", "request/upload/download 合法域名和业务域名白名单"],
+        ["权限", "最小必要、告知和拒绝可用", "Manifest/运行时权限、相册选择器、MediaStore、系统分享", "微信隐私接口、scope 授权、平台能力声明"],
+        ["隐私", "PIPL、人脸单独同意、PIPIA、删除/注销、第三方清单", "首启原生/WebView 行为、各商店隐私标签/SDK 清单", "微信小程序用户隐私保护指引及平台隐私审核"],
+        ["支付", "订单、验签、退款、对账", "各 Android 商店/渠道支付政策；iOS 另有 IAP", "微信支付商户号、小程序交易规范"],
+        ["审核", "功能真实、客服可达、材料一致", "各手机厂商商店独立账号、素材、审核说明和真机兼容", "微信类目、内容与体验审核"],
+        ["AI/内容", "AI 标识、内容安全、算法/模型材料、版权", "导出到系统图库/分享后的标识与元数据更关键", "微信生态传播、分享卡片和平台内容规则"],
+    ],
+    [1350, 2850, 3150, 2750],
+    font_size=7.9,
+)
+callout(doc, "结论", "当前 Android 改造不能自动替代微信小程序审核，小程序既有备案也不能替代 Android App 备案。可以复用的是后端鉴权、私有存储、内容安全、删除、AI 标识、版权台账和法律文本事实底座。", "warn")
+
+heading(doc, "7.1 关于 ICP 的准确表述", 2)
+for text in [
+    "公司已经确认当前自营模式不办理增值电信业务经营许可证，本项目据此不把 B25 申证作为本轮技术阻断。",
+    "仍需完成正式 API/法律页面域名的非经营性互联网信息服务备案（通常称 ICP 备案），并取得与展示备案号。",
+    "Android App 还需按现行制度办理 App 备案；这与 ICP 经营许可证是不同事项。",
+    "若未来开放第三方入驻、信息有偿发布、用户公域内容平台、交易撮合或业务事实发生变化，必须重新做业务界定。",
+]:
+    bullet(doc, text)
+
+page_break(doc)
+heading(doc, "8. 图片与视频能力：从“入口很多”回到“每项可用”", 1)
+heading(doc, "8.1 上线能力分组", 2)
+table(
+    doc,
+    ["组", "首发候选", "当前处理", "验收要点"],
+    [
+        ["视频", "照片唱歌 / 照片跳舞 / 情感语录", "有模板动态预览；生成保持关闭", "身份保真、口型/动作、音画同步、版权、时长、成本"],
+        ["修复", "老照片修复 / 上色 / 清晰增强", "合并底层流程，提示词做轻量差异", "不改身份、不虚构五官、破损覆盖、肤色合理"],
+        ["时光", "时光年龄", "30/40/50/老年合并成一个年龄参数", "年龄单调性、身份一致、极端年龄保护"],
+        ["风格", "AI 头像 / 漫画 / 国风 / 水彩", "用同一编辑模型+受控提示词派生", "身份保真、风格稳定、无水印/文字污染"],
+        ["实用", "证件照 / 换背景 / 去背景", "本地合成+分割优先", "发丝边缘、尺寸/底色、透明通道、合规用途提示"],
+    ],
+    [1200, 2350, 3100, 3450],
+)
+
+heading(doc, "8.2 每项能力的硬验收", 2)
+table(
+    doc,
+    ["指标", "最低标准", "证据规则"],
+    [
+        ["样本", "每项至少 30 个互不重复、差异化有效样本", "原图、参数、供应商响应、结果哈希、人工评分可追溯"],
+        ["成功率", "≥95%（不以重试掩盖失败）", "失败原因分类；供应商错误和本地错误分开"],
+        ["身份/严重变形", "身份错配=0；严重变形=0", "双人复核；高风险样本另列"],
+        ["时延", "记录 P50/P95 和超时率", "使用真实网络与真实账号，禁止 demo 缓存冒充"],
+        ["成本", "记录单次均值、P95 和失败成本", "与账单核对；设置日预算/用户限额"],
+        ["内容安全", "输入与输出均检测，阻断有审计", "对抗样本、误杀、申诉、人工复核和下架记录"],
+        ["数据", "实际处理者、地域、保存/删除与合同一致", "删除回执、TTL 日志、供应商证据"],
+    ],
+    [1900, 3550, 4650],
+)
+callout(doc, "发布规则", "提示词可以衍生视觉效果，但不能把同一个未经验证的模型包装成十几个“已可用”功能。只有该入口自己的供应商、模板、参数和 30 个有效样本均过线，readiness 才允许从 blocked_pending_evidence 变为 ready。", "info")
+
+page_break(doc)
+heading(doc, "9. 测试证据与残余风险", 1)
+table(
+    doc,
+    ["检查", "结果", "证据/说明"],
+    [
+        ["前端 lint", "通过", "eslint .；0 error"],
+        ["前端构建", "通过", "TypeScript + Vite；1907 modules transformed"],
+        ["服务端测试", "通过", "8/8；设备签名、重放、媒体欺骗、能力样本、删除/支付闸门"],
+        ["服务端 lint", "通过", "54 个服务端文件语法检查"],
+        ["生产依赖审计", "通过", "npm 官方审计端点；前端与服务端均 0 已知漏洞"],
+        ["SBOM", "完成", "server/sbom.cdx.json"],
+        ["视觉 QA", "通过", "360×800、390×844、430×932 无横向溢出；精选连续两次 wheel 只前进一个模板"],
+        ["视频预览", "通过（浏览器）", "readyState=4，播放进度>1.5s；无空白制作页；自动有声受浏览器策略限制"],
+        ["Android 内测检查", "GO", "66 项 / 0 blocker / 2 warning；warning 为正式隐私/协议 URL"],
+        ["Android 正式提交", "NO-GO", "4 blocker：公司签名、正式 API、隐私 URL、协议 URL"],
+        ["服务端生产", "NO-GO", "42 blocker；详见第 5 章"],
+        ["工作树", "未满足发布", "dirty / unreleased-local；正式发版前必须提交、打 tag、可复现"],
+    ],
+    [2300, 1700, 6100],
+    status_col=1,
+)
+
+heading(doc, "9.1 尚未形成的证据", 2)
+for text in [
+    "没有在线 Android 真机，故相机、图库、系统分享、厂商 WebView 音频、杀进程恢复和升级链尚未实测。",
+    "没有部署本轮服务到 ECS，REDACTED_COMPANY_INFRASTRUCTURE 的在线生成链路不可作为已验收事实。",
+    "没有公司 Release keystore、正式 HTTPS 域名和批准版法律页面，因此没有可提交商店的签名包。",
+    "没有每项图片/视频能力的 30 个有效样本，也没有真实外部媒体内容安全供应商验收。",
+    "没有监管、接入商、应用市场或第三方检测机构的最终回执/报告。",
+]:
+    bullet(doc, text, color=RED)
+
+heading(doc, "9.2 对抗性用例（上线前必须跑）", 2)
+table(
+    doc,
+    ["攻击/失败", "预期"],
+    [
+        ["跨用户猜 taskId/assetId", "所有查询、下载、删除、重试返回 403 且记录审计"],
+        ["伪装扩展名、超大图、损坏视频、SSRF URL", "按实际媒体头/尺寸/来源拦截，不能进入供应商"],
+        ["挑战重放、过期挑战、错误公钥/签名", "认证拒绝，挑战单次消费，密钥指纹可审计"],
+        ["公众人物、未成年人、色情/诈骗/去标识", "上传前或生成后阻断，进入人工复核/申诉流程"],
+        ["供应商超时/重复回调/结果 URL 过期", "幂等，不重复扣费；刷新短时 URL；明确失败"],
+        ["用户删除后供应商副本失败", "状态为 pending/failed，重试告警，不向用户虚假宣称已删除"],
+        ["AI 标识被裁剪/转码/二次导出", "按批准方案保持显式和隐式标识，形成检测报告"],
+        ["预算耗尽/异常流量", "用户限额、日预算、全局熔断和人工恢复均生效"],
+    ],
+    [4300, 5800],
+)
+
+heading(doc, "10. 0 / 7 / 30 天执行计划", 1)
+table(
+    doc,
+    ["时间", "公司", "技术", "联合退出条件"],
+    [
+        ["D0", "轮换云主账号密码、启用 MFA；冻结包名/首发范围；指定 5 类负责人", "保持 publicLaunchAllowed=false；归档 APK/哈希/SBOM", "账号不再共享；责任人和范围签字"],
+        ["D1-D3", "提供域名、备案主体、签名、隐私/协议/第三方清单初稿", "配置 HTTPS、精确 CORS、device_key、私有 OSS、任务存储", "正式域名可达；匿名对象 403；签名包可验"],
+        ["D3-D7", "批准 PIPIA/保存期/内容政策；签供应商 DPA；建版权台账", "实名适配、事务账本、删除回执、媒体审核双检、生产监控", "关键接口自动测试+审计日志；生产检查显著收敛"],
+        ["D7-D14", "提供真实供应商/模型/备案材料和预算；组织产品验收", "每项 30 样本；真机矩阵；GB 标识方案送检；渗透修复", "核心能力逐项 ready；严重变形/错配=0"],
+        ["D14-D21", "提交/跟进域名 ICP 与 Android App 备案；准备商店账号/素材", "生成公司签名 AAB/APK；发布证据包；回滚/故障演练", "备案字段、包名、签名、法律页面一致"],
+        ["D21-D30", "最终法务/运营/财务签字；提交市场", "审核期稳定值守；按驳回原因修复并复测", "第 11 章所有闸门签字且 P0=0"],
+    ],
+    [1100, 2850, 3300, 2850],
+    font_size=8.1,
+)
+
+heading(doc, "10.1 生产配置交接（只交字段，不交秘密）", 2)
+table(
+    doc,
+    ["类别", "关键字段", "提供/配置方"],
+    [
+        ["发布", "DEPLOY_ENV, RELEASE_CHANNEL, RELEASE_TAG, APP_PACKAGE_NAME", "技术"],
+        ["网络", "PUBLIC_BASE_URL, CORS_ORIGIN, OUTBOUND_HOST_ALLOWLIST", "公司域名 + 技术配置"],
+        ["身份", "AUTH_MODE, AUTH_SESSION_SECRET, REAL_NAME_AUTH_PROVIDER/VERIFIED", "公司签约 + 技术密钥管理"],
+        ["存储", "OBJECT_STORAGE_BACKEND, TASKS_BACKEND, OSS bucket/region/role", "公司云资源 + 技术"],
+        ["合规", "OPERATOR_NAME, APP_RECORD_NO, ICP_RECORD_NO, PIPIA_REFERENCE", "公司"],
+        ["文本", "PRIVACY_POLICY_URL, USER_AGREEMENT_URL, THIRD_PARTY_LIST_URL, consent hashes", "公司批准 + 技术固化"],
+        ["AI", "AI_MARKING_REQUIRED, report, SERVICE_PROVIDER_CODE, model filing reference", "公司/供应商 + 技术"],
+        ["控制", "CONTENT_POLICY_VERSION, retention days, budgets, user limits", "公司批准 + 技术"],
+    ],
+    [1500, 5900, 2700],
+)
+para(doc, "严禁把云主账号密码、keystore 密码、API Secret 或会话密钥写入 Word、聊天记录、仓库或 APK。统一通过公司密钥管理/CI Secret 注入。", size=9.3, color=RED, bold=True, after=0)
+
+page_break(doc)
+heading(doc, "11. 最终 Go / No-Go 签字页", 1)
+callout(doc, "放行规则", "只有所有硬阻断清零、生产检查 publicLaunchAllowed=true、公司签名包通过真机与安全复测、外部必需回执到位，才允许进入正式商店提交。商店受理不等于生产开放；正式开放还需灰度、监控和回滚值守。", "risk")
+
+signoff_rows = [
+    ("G-01", "业务与渠道", "首发范围、收费、公开传播、未成年人策略已冻结", "公司负责人", "[ ]"),
+    ("G-02", "备案与主体", "域名 ICP / Android App 备案、主体与展示信息一致", "公司负责人", "[ ]"),
+    ("G-03", "签名与发布", "公司签名、版本、tag、SBOM、哈希、回滚包一致", "技术+安全", "[ ]"),
+    ("G-04", "隐私与人脸", "文本、单独同意、PIPIA、处理者、删除证据一致", "法务+隐私", "[ ]"),
+    ("G-05", "AI 与内容", "双重审核、标识、模型引用、举报/申诉/下架完成", "内容安全+技术", "[ ]"),
+    ("G-06", "供应商与版权", "合同/DPA/删除/备案材料、模板授权链齐全", "采购+法务", "[ ]"),
+    ("G-07", "能力质量", "所有开放入口独立 30 样本过线，未过线入口关闭", "产品+测试", "[ ]"),
+    ("G-08", "真机与安全", "Android 10/13/15、弱网/异常/越权/恢复/保存分享通过", "技术+安全", "[ ]"),
+    ("G-09", "支付与客服", "若收费：订单/退款/对账；客服和事件响应可运行", "财务+客服", "[ ]"),
+    ("G-10", "生产门", "Android 0 blocker；服务端 0 blocker；外部必需回执齐全", "项目经理", "[ ]"),
+]
+table(doc, ["编号", "闸门", "确认内容", "签字责任", "通过"], signoff_rows, [650, 1400, 4900, 2050, 1100], font_size=8.3)
+
+para(doc, "最终决定", size=12, color=NAVY, bold=True, before=12, after=4)
+para(doc, "[ ] GO：允许提交应用市场     [ ] NO-GO：继续封闭测试     [ ] 条件批准：条件与截止日期如下", size=10.5, color=INK, bold=True, after=12)
+para(doc, "公司负责人：________________  日期：__________", size=10, after=8)
+para(doc, "技术负责人：________________  日期：__________", size=10, after=8)
+para(doc, "法务/隐私负责人：____________  日期：__________", size=10, after=8)
+para(doc, "内容安全负责人：______________  日期：__________", size=10, after=8)
+para(doc, "备注/条件：________________________________________________________________________", size=10, after=0)
+
+page_break(doc)
+heading(doc, "附录 A：官方依据（提交前再次核对）", 1)
+para(doc, "下列为本轮核对的中央/北京官方入口。法规、平台字段和属地口径可能更新；正式提交前由公司法务/备案负责人复核最新版本。", size=9, color=MUTED, after=7)
+sources = [
+    ("国家网信办｜人工智能生成合成内容标识办法", "https://www.cac.gov.cn/2025-03/14/c_1743654684782215.htm"),
+    ("国家标准全文公开系统｜GB 45438-2025", "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=F32EA2A561F1886CD8D606513512D547"),
+    ("国家网信办｜人脸识别技术应用安全管理办法", "https://www.cac.gov.cn/2025-03/21/c_1744174262156096.htm"),
+    ("工信部｜个人信息保护法", "https://www.miit.gov.cn/jgsj/zfs/fl/art/2022/art_515a4b20c12f430eab54bb4f56d89f56.html"),
+    ("工信部｜移动互联网应用程序备案工作通知", "https://www.miit.gov.cn/jgsj/xgj/wjfb/art/2023/art_dd783a581c9644a4aee10afa582811db.html"),
+    ("国家网信办｜互联网信息服务深度合成管理规定", "https://www.cac.gov.cn/2022-12/11/c_1672221949354811.htm"),
+    ("国家网信办｜生成式人工智能服务管理暂行办法", "https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm"),
+    ("互联网信息服务算法备案系统", "https://beian.cac.gov.cn/"),
+    ("国家网信办｜网络数据安全管理条例", "https://www.cac.gov.cn/2024-09/30/c_1729384452307680.htm"),
+    ("国家网信办｜常见类型移动应用必要个人信息范围规定", "https://www.cac.gov.cn/2021-03/22/c_1617990997054277.htm"),
+    ("工信部｜App 服务能力/权益保护相关工作通知", "https://www.miit.gov.cn/jgsj/xgj/APPqhyhqyzxzzxd/tzgg/art/2023/art_be5c5d0782af4300a4cdcbc10a60f202.html"),
+    ("国家市场监督管理总局｜消费者权益保护法实施条例", "https://www.samr.gov.cn/zw/zfxxgk/fdzdgknr/bgt/art/2024/art_0aea188276a44f0baf940ab95ee00e0a.html"),
+    ("国家版权局｜著作权法", "https://www.ncac.gov.cn/xxfb/flfg/flfg_532/202103/t20210309_50530.html"),
+    ("北京市政务服务网｜联网单位备案", "https://banshi.beijing.gov.cn/pubtask/task/1/110000000000/77e1522c-0306-4b21-b79c-dfe64dadc12b.html?locationCode=110000000000&serverType=1001"),
+    ("国家网信办｜2025 年生成式人工智能服务已备案信息公告", "https://www.cac.gov.cn/2026-01/09/c_1769688009588554.htm"),
+    ("国家网信办｜第十七批境内深度合成服务算法备案信息公告", "https://www.cac.gov.cn/2026-05/06/c_1779809434590762.htm"),
+]
+for label, url in sources:
+    add_url(doc, label, url)
+
+page_break(doc)
+heading(doc, "附录 B：交付与证据索引", 1)
+artifacts = [
+    ("内部测试 APK", r"部署\Android测试包-2026-09-05\leyanxiu-android-debug-v1.0-20260905.apk"),
+    ("APK 说明与哈希", r"部署\Android测试包-2026-09-05\README.md / SHA256SUMS"),
+    ("Android 66 项验收", r"部署\Android测试包-2026-09-05\Android-APK-高优先级验收清单-2026-09-05.md"),
+    ("Android 构建说明", r"源码\app\android\RELEASE.md"),
+    ("视觉 QA", r"源码\app\output\visual-qa\report.json 与截图"),
+    ("服务端发布闸门", r"源码\app\server\scripts\release-check.mjs"),
+    ("服务端 SBOM", r"源码\app\server\sbom.cdx.json"),
+    ("能力证据规则", r"源码\app\server\evidence\capabilities\README.md"),
+    ("旧分工手册（输入，非最终）", r"部署\乐颜秀App上线整改与许可办理分工手册-公司与技术-2026-08-29.docx"),
+]
+table(doc, ["证据", "相对路径"], artifacts, [2700, 7400], font_size=8.5)
+
+callout(doc, "文档控制", "本文件替代旧手册中与当前代码事实、Android 产物状态或 2026-09-06 审查结果冲突的结论。旧材料可以作为历史输入，但不得不经复核直接提交主管机关或应用市场。", "warn")
+
+# Keep the final paragraph short to avoid a nearly-empty last page.
+para(doc, "END OF CONTROLLED DOCUMENT", size=8, color=MUTED, bold=True, align=WD_ALIGN_PARAGRAPH.CENTER, before=10, after=0)
+
+doc.save(OUT)
+print(OUT)

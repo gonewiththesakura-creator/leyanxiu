@@ -1,0 +1,11 @@
+{
+  "verified": true,
+  "volumes": 33,
+  "objects": 49651,
+  "files": 116333,
+  "excluded": 0,
+  "sanitized": 126,
+  "restored": false,
+  "manifestSha256": "8bb61c801ab5ace6311f4657a9107876613fccd996363d9071a7dc51428f3bea",
+  "checkedAt": "2026-10-15T19:03:55+0800"
+}

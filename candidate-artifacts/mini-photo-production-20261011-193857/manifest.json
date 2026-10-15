@@ -1,0 +1,301 @@
+{
+  "version": 1,
+  "scope": "mini-photo-production-local",
+  "entry": "photo-jobs/production-server.js",
+  "deployable": false,
+  "includesPrivateConfig": false,
+  "defaults": {
+    "env": 0,
+    "mode": "closed",
+    "purchaseEnabled": false,
+    "generationEnabled": false,
+    "processEnabled": false,
+    "cleanupEnabled": false,
+    "reconcileEnabled": false,
+    "productionPaymentsEnabled": false
+  },
+  "runtime": {
+    "platform": "linux/amd64",
+    "nodeVersion": "22.23.3",
+    "imageDigest": "sha256:efd0ab5780c2d9ab1f0f869571a00d5edb17793bff4cce4a2792e3eb0ffc7562",
+    "imageBuilt": false,
+    "linuxNpmCiVerified": false,
+    "linuxMarkerVerified": false,
+    "osPackageVersions": "recorded during actual Docker build"
+  },
+  "dependencyLock": {
+    "sourceSha256": "416f110eb5ac6bd3dbbc80ad4bf9b3de4a1388c06853f270fe9c7c19331e67d8",
+    "projectedSha256": "1278abb486086faa58704a1d4fe7484317dd9435e761624306f16dcb96d7780c",
+    "packages": 116,
+    "registryResolutionPerformed": false,
+    "installed": false
+  },
+  "files": [
+    {
+      "path": ".dockerignore",
+      "bytes": 196,
+      "sha256": "2efe57a46ce59665ba5013276fa449d099ae2dd079c4372ee8a7ea266cc80d70"
+    },
+    {
+      "path": "deploy/mini-payment/production-binding-dmc-v2.sql",
+      "bytes": 5192,
+      "sha256": "343235708607bf342a954b7055f0b9ef233edc0b5028c65c2a706bd4a6240d91"
+    },
+    {
+      "path": "deploy/mini-payment/production-schema-v1.sql",
+      "bytes": 32015,
+      "sha256": "6a8c2b685d9931017411fb438733e9ec01232347114de39ef673d943f9ef973e"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 1913,
+      "sha256": "bbd7f1c3696dfdba2c120ccb6ab373f58846d6fe6ca44ed34b9e0d2739ccc716"
+    },
+    {
+      "path": "mark-ai.py",
+      "bytes": 10824,
+      "sha256": "30c54a305580c42ffcc8052d7b22bc4d04fc3c7ce9528975b017d2f80e791487"
+    },
+    {
+      "path": "media-validation.js",
+      "bytes": 6919,
+      "sha256": "3c39723be630a7f7240f1e92d7b69ab3e6d50cbd7573bb7bf5b98cfcf15f8beb"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 46760,
+      "sha256": "6de18243f2fa0bb94ed239db24a9798945d7a58c97241256077a9fa4f8dfc0d1"
+    },
+    {
+      "path": "package.json",
+      "bytes": 417,
+      "sha256": "645ce8794562f08d494150700a85cc8b6c387e7a8e7137bbb1d61c1cca947ee0"
+    },
+    {
+      "path": "payments/virtual/cloud-business-endpoint.js",
+      "bytes": 6277,
+      "sha256": "d172c9a28832c7bfde027c8994a9c637eb9e030115bdb7fb5ab3382cf5433c12"
+    },
+    {
+      "path": "payments/virtual/cloud-message-endpoint.js",
+      "bytes": 2218,
+      "sha256": "13b81d932dc1aaebb7e8f74a7fb809de10e163820cea44f254a8244feb652878"
+    },
+    {
+      "path": "payments/virtual/database.js",
+      "bytes": 6725,
+      "sha256": "62bc5e4cbb718c81d618dcab71211abe362ff9a9ea24abc8a27d94673eb5d1ef"
+    },
+    {
+      "path": "payments/virtual/ledger.js",
+      "bytes": 23217,
+      "sha256": "246ab87aa929a9bee4f5de6b3a45641be062c834255c948cf6dbe29d729ede01"
+    },
+    {
+      "path": "payments/virtual/message-endpoint.js",
+      "bytes": 3120,
+      "sha256": "4b42fa327ba63cee7255d419facc2d41ec1030d2a2c50412c4bb4340caa8ecf9"
+    },
+    {
+      "path": "payments/virtual/mini-identity.js",
+      "bytes": 8213,
+      "sha256": "dff334df5f97dbc50a3fbd6bf022117bffdf7b3cda1b233e4a7bf4b8b19bd249"
+    },
+    {
+      "path": "payments/virtual/mini-production-service.js",
+      "bytes": 6416,
+      "sha256": "99e3f29818a29b74b9a2860f9f192183b4a6cd69c0a0865716a4166d0540825b"
+    },
+    {
+      "path": "payments/virtual/mini-refund-operator.js",
+      "bytes": 6453,
+      "sha256": "56252c6d918bedc744d5534326a491e105866acf232ef169bb7b1ab17d07c561"
+    },
+    {
+      "path": "payments/virtual/mini-sandbox-service.js",
+      "bytes": 11971,
+      "sha256": "7190804960fd2c79fa570557d020068d683888f392947396fb60785f011c9cd5"
+    },
+    {
+      "path": "payments/virtual/mini-service.js",
+      "bytes": 7789,
+      "sha256": "e7b423167aa1f1a35da3f0c1396082b2cf02b84a26e9d3f6c8d1dfd1778c2bcb"
+    },
+    {
+      "path": "payments/virtual/mysql-transport.js",
+      "bytes": 7424,
+      "sha256": "1019fc676c9683818f68ac6c6059ccd3f797d95bdd25fb3b91f76308dc5d5c85"
+    },
+    {
+      "path": "payments/virtual/products.js",
+      "bytes": 2335,
+      "sha256": "6106e6b6c9932a973a609c83d61e98f03aead5c408f3e8b38a04267de9e096d2"
+    },
+    {
+      "path": "payments/virtual/reconciliation.js",
+      "bytes": 2317,
+      "sha256": "fbbac87806cc8a2e6dfd83ea1dbec6e5ae9cb94884a86bdfd20123b894848a6a"
+    },
+    {
+      "path": "payments/virtual/reservation-transactions.js",
+      "bytes": 4286,
+      "sha256": "ae379b3c5be5b4124379dd535bbbaaa835a8afc53fe8b50ca4f04db9efa27a69"
+    },
+    {
+      "path": "payments/virtual/routes.js",
+      "bytes": 14672,
+      "sha256": "14c9e6b355a6609f327034a0442ac0b6dae97c973f28e9db19a7f4f6dc186511"
+    },
+    {
+      "path": "payments/virtual/runtime.js",
+      "bytes": 10511,
+      "sha256": "78e2fada10f9a79d416fcd6a6665605d61b97e5ecde3bfa656fcf5b1a2e49878"
+    },
+    {
+      "path": "payments/virtual/wechat.js",
+      "bytes": 7855,
+      "sha256": "c35ed8f98aebbca826bb1f91d3158ae530045c1c3a58d92ffae290ba0d837995"
+    },
+    {
+      "path": "photo-jobs/application.js",
+      "bytes": 14155,
+      "sha256": "6fbc1b716cad08aaa0f725ec2450fdb999aea413e43d85cd2ea65347b20d5769"
+    },
+    {
+      "path": "photo-jobs/candidate-host.js",
+      "bytes": 10360,
+      "sha256": "d476006a4a56c9080998629389ed0823382b1d21df1cf9b8b0ba80e7809cb87e"
+    },
+    {
+      "path": "photo-jobs/candidate-public.js",
+      "bytes": 6433,
+      "sha256": "072e9115815756e58ab57e04d5d7ed508b7bb89973bb43c7342ee23d1b6e5a4e"
+    },
+    {
+      "path": "photo-jobs/candidate-server.js",
+      "bytes": 22392,
+      "sha256": "88dd8f331dd8a96aa8ab78c674cfdaa5005b974d0aab1c374bed62d44a3a51d3"
+    },
+    {
+      "path": "photo-jobs/context.js",
+      "bytes": 21891,
+      "sha256": "bd8064dce2f6901bdf8aa28b9ca2e386ca518bcebbe015d7be572c6bb266ebd7"
+    },
+    {
+      "path": "photo-jobs/generation-cleanup.js",
+      "bytes": 13323,
+      "sha256": "8c63a418f7b10d2ac147b03a6168ed5071ba973f7ca6a9419a1c4f82a0f89ea6"
+    },
+    {
+      "path": "photo-jobs/generation-lifecycle.js",
+      "bytes": 11623,
+      "sha256": "710286852f5a2c16e937a101a919773513620856fc40773e509892632e7a74df"
+    },
+    {
+      "path": "photo-jobs/generation-pipeline.js",
+      "bytes": 6970,
+      "sha256": "571cb2af926d55a044acf804efc7246d8ebad06cfdf7cb6ac43c5c837e14ac8e"
+    },
+    {
+      "path": "photo-jobs/generation-repository.js",
+      "bytes": 18535,
+      "sha256": "cebbdf37b032ac32838f379d3c7f1759537d09335b9d2025672ae423b954598f"
+    },
+    {
+      "path": "photo-jobs/image-marker.js",
+      "bytes": 4459,
+      "sha256": "50a1eb1cd44a3f1d7b1d49b0be618caf1de9c9eb7e776f956c3536001d81fb4f"
+    },
+    {
+      "path": "photo-jobs/media-ports.js",
+      "bytes": 7530,
+      "sha256": "6372645362a2b2c9fbb92da27106920360f8f133189b78deda6c62d3ef6d4f47"
+    },
+    {
+      "path": "photo-jobs/moderation.js",
+      "bytes": 12253,
+      "sha256": "c22b7d8e840e1a9a31c04eb2922bf53727ffd41a4cb90dcc30688d7ba3dd9ae4"
+    },
+    {
+      "path": "photo-jobs/native-routes.js",
+      "bytes": 8815,
+      "sha256": "5429776f4ba4909314a0abcf1531a744a912a3028b1e3f8d73d4f3b90ea1e12b"
+    },
+    {
+      "path": "photo-jobs/output-storage.js",
+      "bytes": 9697,
+      "sha256": "38d22b28badb90e1805f21bdb8c2d3e8ca6891b560454caddcd5af75189fecc3"
+    },
+    {
+      "path": "photo-jobs/production-host.js",
+      "bytes": 12033,
+      "sha256": "432b861e2000aa53cfbdfafb74ac9842f4ac813fa6a06b84f7cddaf467a12a72"
+    },
+    {
+      "path": "photo-jobs/production-server.js",
+      "bytes": 12348,
+      "sha256": "27498b136e2c0c96dfa099ccec1575a83aa6c77b0b4457d4f29e64734c5b493a"
+    },
+    {
+      "path": "photo-jobs/qwen-provider.js",
+      "bytes": 19990,
+      "sha256": "772c12f20e00536d6f7832c092746e94b153bb03e0e3556b02d4ae2237623355"
+    },
+    {
+      "path": "photo-jobs/repository.js",
+      "bytes": 10739,
+      "sha256": "b7c1735e786f157faf3251ff4ed3bb5589a4b4a1354e0e8932433aafb4762e30"
+    },
+    {
+      "path": "photo-jobs/routes.js",
+      "bytes": 5002,
+      "sha256": "92b7822623ef6b317df55b0412cc9b243b066cf80de77080f28f14ad272bec56"
+    },
+    {
+      "path": "photo-jobs/upload-cleanup.js",
+      "bytes": 3490,
+      "sha256": "f1417184f4aa2c507feab31bc2222d28b9676425beb50b1292396f322d02a920"
+    },
+    {
+      "path": "photo-jobs/upload-repository.js",
+      "bytes": 30287,
+      "sha256": "6e36e831e10cfd42bb2f57c809d13865e81b5005355c8c088bfd0c080269e681"
+    },
+    {
+      "path": "photo-jobs/upload-routes.js",
+      "bytes": 3271,
+      "sha256": "c6c9c3d47e4c43abddd12297d68152df6d222baf4873db58f01361a719ca4eb5"
+    },
+    {
+      "path": "photo-jobs/upload-service.js",
+      "bytes": 4617,
+      "sha256": "96eea24d3ef1a27b62c29b71ea262f647ac6c22c0cabc8341dbdd824c833a560"
+    },
+    {
+      "path": "photo-jobs/upload-storage.js",
+      "bytes": 5278,
+      "sha256": "8033fdd74fa1488c4464b1de64127cc9115a440604652e7e3ad9be853a3c7b97"
+    },
+    {
+      "path": "photo-jobs/worker.js",
+      "bytes": 2481,
+      "sha256": "465d1d4c2ee58433c136e5835e4b489ffb91a7c9fb192d90b2ea6ab883a377e5"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3080,
+      "sha256": "c0a7df5fe8d0ee9db6fe1800f3110dfe19c910923223250f7a78f5f1b0e84080"
+    },
+    {
+      "path": "runtime-image.json",
+      "bytes": 602,
+      "sha256": "dfcb78a233b13c24034eb3173a6fb5115af36577162b664dc07d816378ef645c"
+    }
+  ],
+  "blockers": [
+    "Linux image build and runtime acceptance not performed",
+    "private runtime configuration and new production database not applied by this builder",
+    "existing-user refund operator allowlist and actual operational readiness must be configured and verified",
+    "real native user delivery, payment and refund acceptance are separate from local packaging"
+  ]
+}

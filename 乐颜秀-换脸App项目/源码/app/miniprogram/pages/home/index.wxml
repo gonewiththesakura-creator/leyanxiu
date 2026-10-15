@@ -1,0 +1,14 @@
+<view class="page" style="padding-top:{{top}}px">
+  <view class="header"><text class="title">模板推荐</text></view>
+  <view class="categories">
+    <view wx:for="{{categories}}" wx:key="*this" class="category {{category===item?'active':''}}" data-category="{{item}}" bindtap="selectCategory">{{item}}</view>
+  </view>
+  <view class="section-heading"><text class="kicker">{{category}}</text><text class="section-title">{{category}}</text></view>
+  <view class="list">
+    <view wx:for="{{templates}}" wx:key="id" class="rank-card" data-id="{{item.id}}" bindtap="preview">
+      <view class="cover-wrap"><image class="cover" src="{{item.cover}}" mode="aspectFill"/><text class="rank-label">推荐 {{index+1}}</text></view>
+      <view class="content"><text class="name">{{item.name}}</text><text class="details">{{item.category}} · {{item.duration}}</text><view class="action-row"><text class="action">查看模板 ›</text></view></view>
+    </view>
+    <view wx:if="{{!templates.length}}" class="empty">这个分类正在准备中</view>
+  </view>
+</view>

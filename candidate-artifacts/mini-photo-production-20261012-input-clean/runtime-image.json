@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "registry": "https://registry-1.docker.io",
+  "repository": "library/node",
+  "observedTag": "22-bookworm-slim",
+  "observedOn": "2026-10-10",
+  "platform": "linux/amd64",
+  "manifestDigest": "sha256:efd0ab5780c2d9ab1f0f869571a00d5edb17793bff4cce4a2792e3eb0ffc7562",
+  "nodeVersion": "22.23.3",
+  "verification": "Reuses candidate base manifest verified against official registry on 2026-10-10; no image layers pulled or container executed",
+  "osPackageVersions": "recorded by dpkg-query during an actual build; apt repository versions are not fixed here",
+  "imageBuilt": false
+}

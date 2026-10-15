@@ -1,0 +1,18 @@
+{
+  "Version": "1",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["dysms:SendSms"],
+      "Resource": ["*"],
+      "Condition": {
+        "IpAddress": {
+          "acs:SourceIp": ["REDACTED_COMPANY_INFRASTRUCTURE"]
+        },
+        "Bool": {
+          "acs:SecureTransport": ["true"]
+        }
+      }
+    }
+  ]
+}

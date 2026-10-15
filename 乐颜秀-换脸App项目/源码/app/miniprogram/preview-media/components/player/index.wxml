@@ -1,0 +1,1 @@
+<video wx:if="{{mediaSrc}}" id="preview" class="video" src="{{mediaSrc}}" poster="{{poster}}" object-fit="cover" autoplay loop muted="{{muted}}" controls="{{false}}" show-center-play-btn="{{false}}" show-play-btn="{{false}}" show-fullscreen-btn="{{false}}" enable-progress-gesture="{{false}}" bindloadedmetadata="resume" bindplay="played" binderror="failed"/>

@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-10-15T02:46:17.000Z",
+  "bundleSha256": "5fd1a881060a0b1c5279e4c48cd40f6ff179dfbc27f9db8250fa4ab110723a0f",
+  "phase": "active",
+  "onlyChangedPage": "terms.html",
+  "backupPreserved": true,
+  "changesNginxConfiguration": false,
+  "changesNodeOrDatabase": false,
+  "backendFactsUpdated": false,
+  "pages": [
+    {"name": "privacy.html", "status": 200, "bytes": 12574, "sha256": "cccb8006f2ad073ea757f5621c2199c949a3f94b12dd8f641783128c5396169f", "candidateMatched": true},
+    {"name": "terms.html", "status": 200, "bytes": 12392, "sha256": "33bdca5764f0e637d43b7e4fb7b8400fe477b1812f96207b90e25b8d9ce5ea19", "candidateMatched": true},
+    {"name": "third-parties.html", "status": 200, "bytes": 8213, "sha256": "0099e07b443855dab5cba880a86cdd617f3d2ed324594fc4ea4dbf181c7ea663", "candidateMatched": true}
+  ]
+}

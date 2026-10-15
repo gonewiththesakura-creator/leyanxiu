@@ -1,0 +1,13 @@
+<import src="../../components/privacy-consent/template.wxml"/>
+<template is="privacy-consent" data="{{privacyVisible,privacyName}}"/>
+<view class="page" style="padding-top:{{top}}px"><view class="header"><text class="title">我的</text><button class="settings" style="margin-left:auto;margin-right:0;flex:none" bindtap="openPrivacy" aria-label="隐私与账号设置">⚙</button></view>
+  <view class="creative-banner" bindtap="{{connected ? 'manageWorks' : 'connect'}}" role="button"><view><text class="banner-title">{{connected ? '我的创作' : '仅浏览模式'}}</text><text class="banner-detail">{{connected ? '可用图片 ' + photo + ' 次' : '浏览模板无需启用账号服务'}}</text><text class="banner-link">{{connected ? '查看作品　›' : '阅读隐私指引并连接账号　›'}}</text></view><text class="sparkle">✧</text></view>
+  <view wx:if="{{connected}}" class="rights"><view><text class="rights-title">制作次数</text><text class="muted">剩余 {{photo}} 次，以服务端台账为准</text></view><button bindtap="openPayments" disabled="{{busy}}">购买 / 订单</button></view>
+  <text wx:if="{{notice}}" class="notice">{{notice}}</text>
+  <view class="works-heading"><text>我的作品</text><button wx:if="{{connected}}" bindtap="manageWorks">管理作品　›</button></view>
+  <view wx:if="{{busy}}" class="empty"><text class="empty-icon">◌</text><text>正在读取账号作品…</text></view>
+  <view wx:elif="{{!connected}}" class="empty"><text class="empty-icon">♧</text><text>您的作品，只属于您</text><text class="muted">启用账号服务后，读取当前微信账号的作品</text><button bindtap="connect">阅读并连接账号</button></view>
+  <view wx:elif="{{works.length === 0}}" class="empty"><text class="empty-icon">▧</text><text>还没有任何作品</text><button bindtap="make">+ 去制作</button></view>
+  <view wx:else class="works-grid"><view wx:for="{{works}}" wx:key="assetId" class="work" data-id="{{item.assetId}}" bindtap="previewWork" role="button"><view class="work-placeholder">▧<text>点击查看私有作品</text></view><text class="work-title">{{item.title}}</text><text class="work-time">{{item.time}}</text></view></view>
+  <view class="help"><view bindtap="openService">服务与帮助 · 订单退款 · 投诉申诉 <text>›</text></view><view bindtap="openPrivacy">隐私与账号 · 授权与数据控制 <text>›</text></view><view bindtap="copySupport">客服邮箱 <text class="email">{{email}}</text></view></view>
+</view>

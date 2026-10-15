@@ -1,0 +1,67 @@
+{
+  "recordVersion": 1,
+  "date": "2026-10-13",
+  "authorization": "REDACTED_PRIVATE",
+  "probeVersion": "natural-avatar-v1-20261012",
+  "executed": true,
+  "syntheticOnly": true,
+  "provider": "aliyun-qwen-image",
+  "model": "qwen-image-2.0-2026-03-03",
+  "effectId": "natural-avatar",
+  "inputSha256": "56eb47602d36864b6eec9514ddb091cfa2b71309558c3e12917b3970329b947f",
+  "normalizedInputSha256": "f71c5d5a76157abfc260125935667e93370235f8caf296842202bdbf825cf018",
+  "specSha256": "6d379e5fac87ab8fd387c1d5fe5f1deec8ffdbf2c28874bb4ec3f40c4330d15c",
+  "attemptedGenerationCalls": 1,
+  "attemptedGreenCalls": 2,
+  "moderationServices": {
+    "input": "baselineCheck",
+    "output": "aigcCheck"
+  },
+  "inputAllowed": true,
+  "outputAllowed": true,
+  "marked": true,
+  "outputReadMatches": true,
+  "previewSaved": true,
+  "outputAbsentObserved": true,
+  "scratchAbsentObserved": 2,
+  "cleanupPending": false,
+  "permanentErasureConfirmed": false,
+  "historyErasureVerified": false,
+  "technicalPipelinePassed": true,
+  "output": {
+    "path": "mini-photo-natural-avatar-v1-20261012.png",
+    "format": "PNG",
+    "width": 1024,
+    "height": 1024,
+    "byteLength": 1246684,
+    "sha256": "37cb56b1d24211ebd53f08c56ccec48e890a26cd2a4866892711f2f7a7294c71"
+  },
+  "visualReview": {
+    "reviewedBy": [
+      "root",
+      "closed_gray_refresh"
+    ],
+    "qualityAccepted": false,
+    "disposition": "rejected-for-sale",
+    "observations": [
+      "Noticeably increased lines around the eyes, forehead and mouth produce an older appearance than the input.",
+      "Skin texture and facial details were changed beyond the intended lighting/background adjustment.",
+      "Square crop, neutral background and visible AI notice are present, but do not compensate for the quality failure.",
+      "The visible notice includes an unnecessarily long internal probe identifier; a local marker correction is separate from this immutable output."
+    ]
+  },
+  "localJournalAudit": {
+    "records": 16,
+    "generationIntentCount": 1,
+    "moderationIntentCount": 2,
+    "finishedCount": 1
+  },
+  "remainingAuthorizedCalls": {
+    "generation": 0,
+    "moderation": 0
+  },
+  "deployed": false,
+  "androidDeliveryVerified": false,
+  "productionApproved": false,
+  "paymentsAttempted": 0
+}

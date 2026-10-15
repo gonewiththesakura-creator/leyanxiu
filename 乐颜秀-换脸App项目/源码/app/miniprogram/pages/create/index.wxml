@@ -1,0 +1,70 @@
+<view class="page">
+  <view class="topline"><button class="link" bindtap="finishCreation">‹ 百变图片</button><button class="link" disabled="{{busy}}" bindtap="openWorks">我的作品</button></view>
+  <view class="heading">{{flowView === 'works' ? '我的图片作品' : flowView === 'privacy' ? '照片处理与授权' : flowView === 'result' ? resultTitle : flowView === 'processing' ? processingTitle : effectTitle}}</view>
+  <view class="description" wx:if="{{!readOnly && effectSubtitle && (flowView === 'upload' || flowView === 'consent')}}">{{effectSubtitle}}</view>
+  <view class="balance"><text wx:if="{{photo !== null}}">可用图片 {{photo}} 次</text><text wx:else>剩余次数待查询</text><button class="link" bindtap="openPayments">套餐与订单 ›</button></view>
+  <view class="notice" wx:if="{{!readAccessReady || !available || pending}}">{{notice}}</view>
+  <button wx:if="{{!readAccessReady}}" bindtap="connectReadAccess" loading="{{connecting}}" disabled="{{connecting}}">确认隐私指引并读取账号信息</button>
+
+  <view wx:if="{{!readOnly && flowView === 'upload'}}">
+    <view class="step">选择一张照片</view>
+    <view class="upload-frame">
+      <image wx:if="{{selectedPhoto}}" class="source-photo" src="{{selectedPhoto}}" mode="aspectFit"/>
+      <view wx:else class="upload-placeholder"><image wx:if="{{effectPreview}}" class="effect-preview" src="{{effectPreview}}" mode="aspectFit"/><view>上传您的清晰正脸照片</view><text>上方为效果示意，AI 结果的人物细节可能改变</text></view>
+    </view>
+    <view class="row"><button disabled="{{!readAccessReady || busy || pending || selecting}}" loading="{{selecting}}" data-source="album" bindtap="selectPhoto">{{selectedPhoto ? '更换照片' : '从相册选择'}}</button><button class="secondary" disabled="{{!readAccessReady || busy || pending || selecting}}" data-source="camera" bindtap="selectPhoto">直接拍照</button></view>
+    <view class="description">支持 20MB 以内的 JPG、PNG、WebP 照片。请选择清晰正脸；选择和预览不会上传或扣次。</view>
+    <button wx:if="{{selectedPhoto}}" class="link" disabled="{{busy || pending || selecting}}" bindtap="clearPhoto">移除这张照片</button>
+    <view class="action-area"><view class="cost">本次制作使用 1 次图片次数</view><view wx:if="{{photo === 0}}" class="shortage">图片次数不足，请先购买。<button class="link" bindtap="openPayments">查看套餐 ›</button></view><button class="primary" disabled="{{!readAccessReady || !available || !effectAvailable || busy || selecting || pending || !selectedPhoto || !photo}}" bindtap="continueToConsent">下一步 · 确认本次授权</button></view>
+  </view>
+
+  <view wx:if="{{flowView === 'consent' || flowView === 'privacy'}}" class="consent" id="photo-consent">
+    <view class="step">{{readOnly ? '了解照片如何处理' : '确认这一次照片制作'}}</view>
+    <view class="consent-summary"><image wx:if="{{selectedPhoto}}" class="consent-photo" src="{{selectedPhoto}}" mode="aspectFit"/><view><view class="title">{{readOnly ? '照片处理说明' : effectTitle}}</view><view>照片仅用于您主动发起的图片处理。</view><view>AI 结果可能与本人外观不同，不用于身份核验或伪造他人身份。</view></view></view>
+    <view class="card">
+      <view wx:if="{{operator}}">服务主体：{{operator}}</view>
+      <view wx:if="{{supplierText}}">本效果处理方：{{supplierText}}</view>
+      <view wx:if="{{sourceHours}}">上传照片、作品的在线使用期分别最长 {{sourceHours}}、{{resultHours}} 小时。到期不再提供新的查看或下载链接，并进入后台清理。请及时保存作品。</view>
+      <button class="link" bindtap="toggleDetails">{{detailsOpen ? '收起处理与删除详情' : '查看处理与删除详情 ›'}}</button>
+      <view wx:if="{{detailsOpen}}"><view wx:if="{{supplierPolicy}}">处理方保存及删除说明：{{supplierPolicy}}</view><view>不授权也可以查看效果、订单和已有权益。没有自动续费。请保留生成结果上的 AI 标识。</view></view>
+      <view class="row"><button class="link" bindtap="openPrivacy">隐私保护指引</button><button class="link" bindtap="openService">服务协议、处理方与客服</button></view>
+    </view>
+    <view wx:if="{{!readOnly}}" class="card consent-options">
+      <checkbox-group bindchange="basicChanged"><label><checkbox value="basic" checked="{{basicAgreed}}" disabled="{{busy || !basicVersion}}"/>我已阅读服务与隐私说明</label></checkbox-group>
+      <radio-group bindchange="authorizationChanged"><label><radio value="self" checked="{{subjectAuthorization === 'self'}}" disabled="{{busy}}"/>照片是我本人</label><label><radio value="authorized" checked="{{subjectAuthorization === 'authorized'}}" disabled="{{busy}}"/>已获得照片中人物及素材使用授权</label></radio-group>
+      <checkbox-group bindchange="faceChanged"><label><checkbox value="face" checked="{{faceAgreed}}" disabled="{{busy || !faceVersion}}"/>单独同意上传并由上述处理方处理本次人脸照片</label></checkbox-group>
+    </view>
+    <view wx:if="{{!readOnly}}" class="action-area"><view class="cost">本次制作使用 1 次图片次数</view><view wx:if="{{photo === 0}}" class="shortage">图片次数不足<button class="link" bindtap="openPayments">查看套餐 ›</button></view><button class="primary" disabled="{{!readAccessReady || !available || !effectAvailable || busy || pending || !selectedPhoto || !basicAgreed || !faceAgreed || !subjectAuthorization || !photo}}" loading="{{busy}}" bindtap="generate">同意授权并开始制作</button><button class="link centered" disabled="{{busy || pending}}" bindtap="backToPhoto">返回更换照片</button></view>
+  </view>
+
+  <view wx:if="{{!readOnly && flowView === 'processing'}}" class="processing">
+    <view class="processing-ring"><image wx:if="{{selectedPhoto || effectPreview}}" src="{{selectedPhoto || effectPreview}}" mode="aspectFit"/></view>
+    <view class="step">正在处理您的照片</view><view class="stage" aria-live="polite">{{status || notice}}</view>
+    <view wx:if="{{processingDifferentEffect}}" class="description">正在继续上次的制作。您当前选择的“{{effectTitle}}”尚未开始。</view>
+    <view class="description">可稍后回来查看原任务。请勿重复提交；结果未确认前不会开始新的制作。</view>
+    <button class="secondary" disabled="{{busy || refreshing}}" loading="{{refreshing}}" bindtap="refresh">刷新进度</button><button class="link centered" bindtap="openService">需要帮助</button>
+  </view>
+
+  <view wx:if="{{!readOnly && flowView === 'result' && result}}" class="result-view">
+    <view class="success-label">制作完成 · AI 生成合成</view><image class="result-photo" src="{{result.url}}" mode="aspectFit"/>
+    <view wx:if="{{resultEffectId && resultEffectId !== effectId}}" class="description">这是上次“{{resultTitle}}”的作品。您当前选择的“{{effectTitle}}”尚未开始。</view>
+    <view wx:if="{{!resultEffectId}}" class="description">这是您上次制作的作品，效果尚未确认。</view>
+    <view wx:if="{{!resultEffectId || resultEffectId !== effectId}}" class="description">当前选择仍为“{{effectTitle}}”。“再做一个”返回该效果选图页，重新选图、授权并确认后才会制作。</view>
+    <view class="description">作品已在“我的作品”中。请及时保存，并保留完整 AI 标识。</view>
+    <button class="primary" disabled="{{busy}}" data-id="{{result.assetId}}" bindtap="saveWork">保存到相册</button>
+    <view class="row"><button class="secondary" disabled="{{busy || pending}}" bindtap="restartCreation">再做一个</button><button class="secondary" disabled="{{busy}}" bindtap="finishCreation">完成</button></view>
+    <button class="link centered" disabled="{{busy}}" bindtap="openWorks">查看已有作品 ›</button>
+    <view class="row"><button class="link" disabled="{{busy}}" data-id="{{result.assetId}}" bindtap="deleteWork">删除云端结果</button><button wx:if="{{result.inputAssetId}}" class="link" disabled="{{busy}}" data-id="{{result.inputAssetId}}" bindtap="deleteWork">删除上传照片</button></view>
+  </view>
+
+  <view wx:if="{{flowView === 'works'}}" id="my-works">
+    <view class="empty" wx:if="{{!works.length}}">暂无可查看的作品，请刷新核实。</view>
+    <view class="card" wx:for="{{works}}" wx:key="assetId"><view class="title">图片作品 · AI生成合成</view><image class="result-photo" src="{{item.url}}" mode="aspectFit"/><view class="description">{{item.time}}<text wx:if="{{item.retention}}"> · 在线使用至 {{item.retention}}</text></view><view class="row"><button disabled="{{busy}}" data-id="{{item.assetId}}" bindtap="saveWork">保存到相册</button><button class="secondary" disabled="{{busy}}" data-id="{{item.assetId}}" bindtap="deleteWork">删除云端作品</button></view></view>
+    <button wx:if="{{!readOnly}}" class="secondary" disabled="{{busy}}" bindtap="closeWorks">返回当前制作</button>
+  </view>
+  <view class="notice" wx:if="{{status && flowView !== 'processing'}}">{{status}}</view>
+  <button wx:if="{{flowView !== 'processing'}}" class="link" disabled="{{!readAccessReady || busy || refreshing}}" loading="{{refreshing}}" bindtap="refresh">刷新状态与作品</button>
+  <view class="notice" wx:if="{{erasureNotice}}">{{erasureNotice}}</view>
+  <view class="footer-links" wx:if="{{flowView === 'works' || flowView === 'privacy'}}"><button class="link" disabled="{{busy}}" bindtap="withdrawConsent">撤回人脸处理授权并删除相关照片</button><button class="link" bindtap="openService">服务与帮助 · 投诉与注销申请</button></view>
+  <view class="privacy-overlay" wx:if="{{privacyVisible}}"><view class="privacy-dialog"><view class="title">启用服务前请确认</view><view>请选择是否同意{{privacyName}}。同意后才读取账号资料或进行照片操作；这不代表授权上传、制作或付款。</view><button class="link" bindtap="openPrivacy">阅读隐私指引</button><button id="agree-native-privacy" open-type="agreePrivacyAuthorization" REDACTED_SECRET"agreeNativePrivacy">同意并继续</button><button class="secondary" bindtap="declineNativePrivacy">暂不同意</button></view></view>
+</view>

@@ -1,0 +1,27 @@
+{
+  "recordVersion": 1,
+  "date": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "source": "official-wechatide-upload-result",
+  "appId": "REDACTED_APP_IDENTIFIER",
+  "version": "0.1.14",
+  "product": "Original black-and-pink five-tab Leyanxiu native adaptation",
+  "tabs": ["推荐", "视频玩法", "精选", "百变图片", "我的"],
+  "photoCatalogCount": 17,
+  "videoCatalogCount": 4,
+  "officialResult": { "ok": true, "success": true },
+  "localBuild": { "mainBytes": 1666335, "previewSubpackageBytes": 1240041, "nativeCompilePassed": true },
+  "officialSimulatorChecks": 13,
+  "officialSimulatorPassed": true,
+  "developmentCodeUploaded": true,
+  "experienceVersionConfigured": false,
+  "auditSubmitted": false,
+  "publicReleasePerformed": false,
+  "androidDeliveryVerified": false,
+  "paymentsAttempted": 0,
+  "limitations": [
+    "The upload receipt confirms developer code submission only; it is not platform approval or public release.",
+    "The client still targets the default buildtest service without test-route parameters.",
+    "Effect availability is server-owned. Only the reviewed candidate backend contains natural-avatar, modern-comic and gentle-watercolor; other catalog entries remain visible but creation is disabled."
+  ]
+}

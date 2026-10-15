@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "date": "2026-10-15",
+  "scope": "original-product-experience-and-allowlisted-merchant-backend",
+  "backend": {
+    "service": "buildtest",
+    "version": "buildtest-018",
+    "taskId": 2363777,
+    "releaseOrderId": 2858873,
+    "manifestSha256": "9794d95849bd32a333a18fad85363a161cb8846e3dea80ad5a04dc26642069c9",
+    "factsSha256": "82206d8ef6dd1e4995224a878100a5ff0df99015df3d1aba0a88175da7ce7dce",
+    "controlPlaneVerifiedAt": "2026-10-15T04:34:42.782Z",
+    "releaseCompleted": true,
+    "onlyDefaultVersion": true,
+    "flowPercent": 100,
+    "environment": 0,
+    "mode": "merchant_test",
+    "existingAllowlistPreserved": true,
+    "privateIngressPreserved": true,
+    "allVariablesExactlyMatchCandidate": true,
+    "rollbackVersion": "buildtest-016",
+    "rollbackVersionNormal": true,
+    "isolatedVersion": "buildtest-017",
+    "isolatedVersionFlowPercent": 0,
+    "isolatedUpdateOutcomeKnown": false,
+    "expectedHistoricalEviction": "buildtest-008",
+    "retainedPriorVersionConfigurationsUnchanged": true
+  },
+  "product": {"id": "photo10", "priceFen": 990, "photoCount": 10, "validDays": 365},
+  "effects": ["natural-avatar", "modern-comic", "gentle-watercolor"],
+  "candidateRuntime": {
+    "officialIde": true, "grayRouteBoundToRelease": true, "passed": true,
+    "calls": 10, "identityMatched": true, "logoutConfirmed": true,
+    "factsExactlyMatch": true, "orderCount": 0, "refundCount": 0
+  },
+  "originalDefaultRuntime": {
+    "project": "miniprogram", "platform": "devtools", "grayParameterUsed": false,
+    "allowlisted": {"passed": true, "calls": 10, "identityMatched": true, "logoutConfirmed": true, "factsExactlyMatch": true, "orderCount": 0, "refundCount": 0},
+    "anonymous": {"passed": true, "calls": 5, "healthStatus": 200, "callbackGetStatus": 405, "callbackError": "XPAY_METHOD_INVALID", "productsHidden": true, "catalogHidden": true, "generationUnavailable": true},
+    "priorAnonymousAttemptsPreserved": [
+      {"calls": 2, "reason": "Probe expected code/message instead of actual callback ErrCode/ErrMsg; diagnostic assertion corrected using real handler."},
+      {"calls": 0, "reason": "IDE refresh completed after navigation and returned to featured page; runtime guard rejected before requests."}
+    ],
+    "healthReturnsVersionIdentifier": false,
+    "versionEvidence": "Independent control-plane readback confirms 018 sole default; anonymous and allowlisted requests used no gray parameters."
+  },
+  "callback": {"messageBindingVerifiedInConsole": true, "service": "buildtest", "path": "/api/mini/payments/notify/cloud", "mode": "JSON", "realBusinessNotificationVerified": false},
+  "otherServices": {
+    "leyanxiuApiFingerprintUnchanged": true,
+    "leyanxiuStageAccessTypesOrderOnly": true,
+    "stageComparison": "Actual snapshots differed only in the order of two unique base.openAccessTypes elements; reversing only this array reproduced the prior fingerprint exactly. No environment, capacity, version or task changes.",
+    "nativeEcsInspectedThisRun": false
+  },
+  "client": {"experienceVersion": "0.1.14", "entry": "pages/featured/index", "originalBlackPinkFiveTabs": true, "androidAcceptanceCompleted": false},
+  "boundaries": {"paymentCalled": false, "uploadCalled": false, "generationCalled": false, "consentWritten": false, "auditSubmitted": false, "publicReleasePublished": false, "publicSaleEnabled": false}
+}

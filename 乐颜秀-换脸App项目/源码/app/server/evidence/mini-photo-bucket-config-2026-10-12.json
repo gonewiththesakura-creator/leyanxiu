@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "checkedAt": "2026-10-12T04:23:48.127Z",
+  "readOnly": true,
+  "configuredBucketOnly": true,
+  "attemptedConfigurationReads": 6,
+  "noAutomaticRetries": true,
+  "listedObjects": false,
+  "readObjectBytes": false,
+  "changedConfiguration": false,
+  "deletedObjects": false,
+  "modelCalls": 0,
+  "moderationCalls": 0,
+  "bucket": {
+    "readable": true,
+    "regionMatches": true,
+    "aclRecognized": true,
+    "bucketAclPrivate": false,
+    "bucketAclPublicRead": true,
+    "bucketAclPublicWrite": false,
+    "redundancyLocal": true,
+    "redundancyZone": false,
+    "crossRegionReplicationEnabled": false,
+    "bucketPublicAccessBlock": false,
+    "accessLoggingConfigured": false,
+    "defaultEncryptionConfigured": false
+  },
+  "versioning": {
+    "readable": true,
+    "statusRecognized": true,
+    "enabled": false,
+    "suspended": false,
+    "unversioned": true
+  },
+  "replication": {
+    "readable": true,
+    "configured": false,
+    "ruleCount": 0
+  },
+  "lifecycle": {
+    "readable": true,
+    "schemaConfirmed": true,
+    "ruleCount": 0,
+    "enabledRuleCount": 0,
+    "scopes": {
+      "source": {
+        "unconditionalRuleCount": 0,
+        "currentExpirationConfigured": false,
+        "currentExpirationDays": [],
+        "noncurrentExpirationConfigured": false,
+        "noncurrentExpirationDays": [],
+        "expiredDeleteMarkerRemovalConfigured": false
+      },
+      "output": {
+        "unconditionalRuleCount": 0,
+        "currentExpirationConfigured": false,
+        "currentExpirationDays": [],
+        "noncurrentExpirationConfigured": false,
+        "noncurrentExpirationDays": [],
+        "expiredDeleteMarkerRemovalConfigured": false
+      },
+      "moderation": {
+        "unconditionalRuleCount": 0,
+        "currentExpirationConfigured": false,
+        "currentExpirationDays": [],
+        "noncurrentExpirationConfigured": false,
+        "noncurrentExpirationDays": [],
+        "expiredDeleteMarkerRemovalConfigured": false
+      }
+    }
+  },
+  "bucketPolicy": {
+    "readable": true,
+    "configured": false,
+    "statementCount": 0,
+    "wildcardAllowPresent": false
+  },
+  "publicAccessBlock": {
+    "readable": true,
+    "enabled": false
+  },
+  "physicalDeletionVerified": false,
+  "historicalCopiesVerifiedAbsent": false,
+  "providerInternalReplicasInspected": false,
+  "separateBackupProductsInspected": false
+}

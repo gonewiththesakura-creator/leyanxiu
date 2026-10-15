@@ -1,0 +1,57 @@
+{
+  "testedAtDate": "2026-10-09",
+  "version": "8.0.46",
+  "officialMd5": "003f527d5df61b663ff191038cd676bd",
+  "source": "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-8.0.46-winx64.zip",
+  "originalReport": "REDACTED_LOCAL_USER_PATH/AppData/Local/Temp/lyx-photo-upload-mysql-qf7qqA/upload-mysql-acceptance.json",
+  "taskDirectory": "REDACTED_LOCAL_USER_PATH/AppData/Local/Temp/lyx-photo-upload-mysql-qf7qqA",
+  "datadir": "REDACTED_EMBEDDED_BINARY",
+  "host": "127.0.0.1",
+  "port": 29638,
+  "databaseName": "upload_test_89acee929d02",
+  "networkCallsToOssOrGreen": 0,
+  "checks": [
+    {
+      "name": "new_DDL_binary_InnoDB_enforces_user_key_object_scratch_uniqueness_and_checks",
+      "passed": true
+    },
+    {
+      "name": "last_global_upload_budget_across_two_users_and_two_pools_admits_exactly_one",
+      "passed": true
+    },
+    {
+      "name": "six_independent_pools_same_key_one_intent_claim_journal_publication",
+      "passed": true
+    },
+    {
+      "name": "asset_insert_and_ready_state_roll_back_together_then_publish_without_second_review",
+      "passed": true
+    },
+    {
+      "name": "consent_withdrawal_racing_publication_always_hides_old_input_and_records_cleanup",
+      "passed": true
+    }
+  ],
+  "deadlocks": 16,
+  "schema": {
+    "uniqueIndexes": [
+      "asset_id",
+      "moderation_cleanup_reference",
+      "id",
+      "storage_key",
+      "user_id,idem"
+    ],
+    "enforcedChecks": 5
+  },
+  "claimRetriesExhausted": 0,
+  "passed": true,
+  "serverStopped": true,
+  "independentProcessInspectionFoundRunningTaskMysqld": false,
+  "independentListenerCount": 0,
+  "dataDirectoriesDeleted": false,
+  "limitations": [
+    "Isolated local MySQL only, not the cloud database.",
+    "No real OSS writes or Green calls; synthetic source metadata and review receipts.",
+    "No deployment, automatic cleanup executor, or production migration."
+  ]
+}

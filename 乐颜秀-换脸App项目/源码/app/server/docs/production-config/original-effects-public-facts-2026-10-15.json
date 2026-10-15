@@ -1,0 +1,19 @@
+{
+  "publicDocuments": {
+    "privacyPolicyUrl": "https://REDACTED_COMPANY_INFRASTRUCTURE/mini/legal/privacy.html",
+    "userAgreementUrl": "https://REDACTED_COMPANY_INFRASTRUCTURE/mini/legal/terms.html",
+    "thirdPartyListUrl": "https://REDACTED_COMPANY_INFRASTRUCTURE/mini/legal/third-parties.html"
+  },
+  "retentionSupplierPolicy": "本方原图与结果最长在线24小时，到期或撤回后撤销访问并安排清理。百炼公开说明不将客户数据用于模型训练，但按适用协议保存调用数据；2026-10-12核查时本工作空间推理日志未开启、资产中心未开通。输入输出由上海Green审核，结果与审核临时对象在上海OSS逐对象私有保存。不能据链接失效推断供应商所有副本已删除。",
+  "aiServiceDisclosures": [
+    {
+      "provider": "aliyun-qwen-image",
+      "model": "qwen-image-2.0-2026-03-03",
+      "filingReference": "阿里云《模型备案信息公示》：千问算法网信算备330110507206401230035号、通义千问大模型ZheJiang-TongYiQianWen-20230901；属系列公示，未单列qwen-image-2.0-2026-03-03，不证明本快照或本应用单独获批。",
+      "purpose": "通义云启（杭州）信息技术有限公司通过阿里云百炼提供单张图片编辑，按制作页实际开放的固定自然 AI 头像、现代漫画像或温润水彩像效果处理用户主动提交的图片；不用于身份识别或模型训练。",
+      "region": "中国内地北京模型端点；内容审核及本方作品存储位于上海",
+      "capabilities": ["photo-effect"]
+    }
+  ],
+  "pipiaReference": "mini-photo-pipia-2026-10-12:v2; technical-assessment-recorded; scope=internal-self-merchant-test-fictional-adult-only; company-signature=pending; public-release=not-reviewed; not-official-approval"
+}

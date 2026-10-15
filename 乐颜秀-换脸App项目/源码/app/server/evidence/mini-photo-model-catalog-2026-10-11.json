@@ -1,0 +1,45 @@
+{
+  "verifiedDate": "2026-10-11",
+  "timezone": "Asia/Shanghai",
+  "readOnly": true,
+  "inferenceCalls": 0,
+  "method": "GET",
+  "path": "/api/v1/models",
+  "source": "Configured existing credential, validated official Beijing workspace and legacy Beijing endpoint; no credential or workspace host retained",
+  "historicalModel": {
+    "id": "qwen-image-edit-plus-2025-12-15",
+    "configuredEndpointExactQuery": { "httpStatus": 200, "success": true, "total": 0 },
+    "configuredAndLegacyNameQuery": { "httpStatus": 200, "success": true, "total": 10, "historicalModelPresent": false },
+    "inferenceAccessVerified": false,
+    "globallyRetiredProven": false,
+    "historical404RootCauseProven": false
+  },
+  "localReplacement": {
+    "id": "qwen-image-2.0-2026-03-03",
+    "configuredEndpointExactQuery": { "httpStatus": 200, "success": true, "total": 1 },
+    "requestModalities": ["Text", "Image"],
+    "responseModalities": ["Image"],
+    "inferenceOfflineInfo": null,
+    "catalogPrice": "0.2",
+    "catalogPriceUnit": "每张",
+    "priceCurrencyFromOfficialPricing": "CNY",
+    "inferenceAccessVerified": false,
+    "imageDeliveryVerified": false,
+    "imageQualityVerified": false,
+    "deployed": false
+  },
+  "comparison": {
+    "id": "qwen-image-2.0-pro-2026-06-22",
+    "configuredEndpointExactQuery": { "httpStatus": 200, "success": true, "total": 1 },
+    "requestModalities": ["Text", "Image"],
+    "responseModalities": ["Image"],
+    "inferenceOfflineInfo": null,
+    "catalogPrice": "0.5",
+    "selected": false
+  },
+  "references": [
+    "https://help.aliyun.com/zh/model-studio/list-models",
+    "https://help.aliyun.com/zh/model-studio/qwen-image-edit-api",
+    "https://help.aliyun.com/zh/model-studio/model-pricing"
+  ]
+}

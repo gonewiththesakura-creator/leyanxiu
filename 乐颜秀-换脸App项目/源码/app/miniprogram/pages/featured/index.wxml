@@ -1,0 +1,9 @@
+<swiper class="feed" vertical current="{{current}}" bindchange="changed" bindanimationfinish="previewSettled" duration="300">
+  <swiper-item wx:for="{{templates}}" wx:key="id"><view class="slide">
+    <image class="poster" src="{{item.cover}}" mode="aspectFill"/>
+    <preview-player id="featured-preview-{{index}}" class="preview" active="{{index===current && visible && !previewFailed}}" src="{{item.previewSrc}}" poster="{{item.cover}}" muted="{{muted}}" bindpreviewplay="previewPlayed" bindpreviewerror="previewError"/>
+    <view class="scrim"/>
+    <view class="top-row" style="top:{{top}}px"><text class="demo-tag">AI 模板演示</text><view class="sound" bindtap="toggleSound" aria-label="{{muted?'开启声音':'关闭声音'}}">{{muted?'♪':'♫'}}</view></view>
+    <view class="bottom"><text class="category">{{item.category}}</text><text class="title">{{item.name}}</text><text class="description">{{item.description}}</text><text wx:if="{{previewFailed}}" class="error">预览暂时无法播放，当前显示模板封面</text><view class="cta" bindtap="creationUnavailable">{{item.availabilityLabel}} ›</view><text class="swipe-tip">上下滑动，浏览更多模板</text></view>
+  </view></swiper-item>
+</swiper>

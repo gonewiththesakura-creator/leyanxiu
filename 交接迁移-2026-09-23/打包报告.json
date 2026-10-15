@@ -1,0 +1,44 @@
+{
+  "archive": "乐颜秀-私有迁移包-2026-09-23.zip",
+  "privacy": "PRIVATE, UNENCRYPTED: contains local environment credentials, data and evidence",
+  "included_roots": [
+    "乐颜秀-换脸App项目",
+    "dreamapi-image-proxy",
+    "交接迁移-2026-09-23"
+  ],
+  "file_count": 2007,
+  "uncompressed_bytes": 836921897,
+  "excluded_directories": [
+    "乐颜秀-换脸App项目/源码/app/.android-build-cache",
+    "乐颜秀-换脸App项目/源码/app/node_modules",
+    "乐颜秀-换脸App项目/源码/app/android/.gradle",
+    "乐颜秀-换脸App项目/源码/app/android/build",
+    "乐颜秀-换脸App项目/源码/app/android/app/build",
+    "乐颜秀-换脸App项目/源码/app/android/capacitor-cordova-android-plugins/build",
+    "乐颜秀-换脸App项目/源码/app/output/chrome-preview-qa-profile",
+    "乐颜秀-换脸App项目/源码/app/output/chrome-qa-profile",
+    "乐颜秀-换脸App项目/源码/app/output/qa/chrome-profile-20260913",
+    "乐颜秀-换脸App项目/源码/app/output/qa/dump-profile-20260913",
+    "乐颜秀-换脸App项目/源码/app/server/__pycache__",
+    "乐颜秀-换脸App项目/源码/app/server/node_modules",
+    "乐颜秀-换脸App项目/部署/__pycache__",
+    "乐颜秀-换脸App项目/部署/node_modules",
+    "乐颜秀-换脸App项目/部署/软件著作权登记材料-2026-09-08/__pycache__",
+    "dreamapi-image-proxy/node_modules"
+  ],
+  "recovered_nonportable_filenames": [
+    {
+      "original": "乐颜秀-换脸App项目/部署 && cd CUsersJTDocumentskimiworkspace乐颜秀-换脸App项目部署 && python -c ",
+      "copied_as": "交接迁移-2026-09-23/异常命名文件/60db2f8a0ffdd4f0.bin",
+      "reason": "original filename cannot be read through normal Windows paths"
+    }
+  ],
+  "exception": "乐颜秀-换脸App项目/源码/app/android/app/build/outputs/apk/debug/app-debug.apk",
+  "not_included": [
+    "cloud OSS contents and cloud configuration",
+    "external signing keys and cloud login sessions",
+    "other workspace projects",
+    "external Codex skills"
+  ],
+  "verification": "Every payload file has a SHA-256 manifest; final archive verification is recorded separately."
+}

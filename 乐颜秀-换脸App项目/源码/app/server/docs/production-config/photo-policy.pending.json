@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "policy": {
+    "approved": false,
+    "reviewReference": null,
+    "acceptanceVersion": "synthetic-generation-v4",
+    "serviceProviderCode": "REDACTED_APP_IDENTIFIER",
+    "provider": "aliyun-qwen-image",
+    "model": "qwen-image-2.0-2026-03-03",
+    "resultUrlPolicy": "qwen-dashscope-result-url-v1",
+    "sourceHosts": [
+      "dashscope-result-sz.oss-cn-shenzhen.aliyuncs.com",
+      "dashscope-result-hz.oss-cn-hangzhou.aliyuncs.com",
+      "dashscope-result-bj.oss-cn-beijing.aliyuncs.com"
+    ],
+    "operation": "edit",
+    "basicVersion": null,
+    "faceVersion": null,
+    "labelVersion": "synthetic-generation-v4",
+    "moderationVersion": "synthetic-generation-v4",
+    "moderationService": "aigcCheck",
+    "sourceRetentionMs": null,
+    "resultRetentionMs": null,
+    "maxDailyUploads": null,
+    "maxDailyUploadsPerUser": null
+  },
+  "approvedEffects": [],
+  "moderationPolicy": {
+    "approved": false,
+    "version": "synthetic-generation-v4",
+    "region": "cn-shanghai",
+    "services": { "input": "baselineCheck", "output": "aigcCheck" },
+    "lowRisk": "review",
+    "timeoutMs": 12000,
+    "maxBytes": 20971520
+  },
+  "cleanupPolicy": {
+    "timeoutMs": null,
+    "retryAfterMs": null,
+    "recheckAfterMs": null,
+    "inFlightGraceMs": null
+  }
+}

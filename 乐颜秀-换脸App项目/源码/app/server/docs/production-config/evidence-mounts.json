@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "status": "local-mount-plan-not-deployed",
+  "sourceRoot": "server",
+  "files": [
+    {
+      "source": "evidence/mini-photo-synthetic-generation-v4.json",
+      "bytes": 863,
+      "sha256": "f8cc698254966ab46c22ef60bbfa7c2b47cb82d5705483d45043a9f944a37dde",
+      "proposedMountPath": "/run/leyanxiu-config/photo-generation-v4.json",
+      "readOnly": true,
+      "fileVariable": "PHOTO_PRODUCTION_ACCEPTANCE_FILE",
+      "digestVariable": "PHOTO_PRODUCTION_ACCEPTANCE_SHA256",
+      "observed": {
+        "provider": "aliyun-qwen-image",
+        "model": "qwen-image-2.0-2026-03-03",
+        "probeVersion": "synthetic-generation-v4",
+        "resultUrlPolicy": "qwen-dashscope-result-url-v1",
+        "labelVersion": "synthetic-generation-v4",
+        "moderationVersion": "synthetic-generation-v4",
+        "moderationServices": { "input": "baselineCheck", "output": "aigcCheck" },
+        "executed": true,
+        "syntheticOnly": true,
+        "passed": true,
+        "attemptedGenerationCalls": 1,
+        "attemptedGreenCalls": 2,
+        "inputAllowed": true,
+        "outputAllowed": true,
+        "marked": true,
+        "outputReadMatches": true,
+        "outputAbsentObserved": true,
+        "scratchAbsentObserved": 2,
+        "cleanupPending": false,
+        "permanentErasureConfirmed": false,
+        "historyErasureVerified": false,
+        "productionApproved": false,
+        "deployed": false
+      },
+      "doesNotProve": [
+        "portrait-effect-quality",
+        "user-or-third-party-consent",
+        "production-env0-payment-acceptance",
+        "wechat-publication-approval",
+        "linux-container-runtime",
+        "supplier-permanent-deletion"
+      ]
+    }
+  ]
+}

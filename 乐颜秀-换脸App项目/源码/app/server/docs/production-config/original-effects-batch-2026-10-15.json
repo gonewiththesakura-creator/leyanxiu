@@ -1,0 +1,56 @@
+{
+  "recordVersion": 1,
+  "state": "local-first-service-candidate-not-runtime-config",
+  "probeVersion": "original-effects-v1-20261015",
+  "provider": "aliyun-qwen-image",
+  "model": "qwen-image-2.0-2026-03-03",
+  "input": {
+    "kind": "ai-generated-fictional-adult-portrait",
+    "workspaceRelativePath": "output/imagegen/fictional-adult-avatar-20261012.jpg",
+    "contentType": "image/jpeg",
+    "width": 768,
+    "height": 1024,
+    "rawByteLength": 133268,
+    "rawSha256": "REDACTED_EMBEDDED_BINARY",
+    "normalizedByteLength": 206503,
+    "normalizedSha256": "f71c5d5a76157abfc260125935667e93370235f8caf296842202bdbf825cf018"
+  },
+  "effects": [
+    {
+      "id": "classic-black-white",
+      "effectVersion": "classic-black-white-v1-20261015",
+      "specSha256": "6479aced8b0cb00fa8cf5f7fe74a69b78dd92af211cc5dd028b85d42e9e5f668",
+      "qualityAccepted": false
+    },
+    {
+      "id": "new-chinese",
+      "effectVersion": "new-chinese-v1-20261015",
+      "specSha256": "1830a968b9ad1627a3a45e179ff21187e10e817371d429e275789b50459acec7",
+      "qualityAccepted": false
+    },
+    {
+      "id": "modern-comic",
+      "effectVersion": "modern-comic-v1-20261015",
+      "specSha256": "d4137b2586c9ffb068984bea99573705965c6d3f73b235644345dba631fcafc5",
+      "qualityAccepted": false
+    },
+    {
+      "id": "gentle-watercolor",
+      "effectVersion": "gentle-watercolor-v1-20261015",
+      "specSha256": "8ac645a27dd98e60299eec5321e61415b876f6ea341857b2efe83b07d5cf874d",
+      "qualityAccepted": false
+    }
+  ],
+  "limits": {
+    "maximumGenerationCalls": 4,
+    "maximumGreenCalls": 8,
+    "sdkRetries": 0,
+    "stopOnFirstFailure": true
+  },
+  "commercial": {
+    "paymentsAttempted": 0,
+    "deployed": false,
+    "productionApproved": false,
+    "qualityReviewRequired": true
+  }
+}

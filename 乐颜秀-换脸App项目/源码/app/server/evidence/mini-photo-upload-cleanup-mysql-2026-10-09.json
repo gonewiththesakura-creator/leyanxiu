@@ -1,0 +1,47 @@
+{
+  "testedAtDate": "2026-10-09",
+  "version": "8.0.46",
+  "officialMd5": "003f527d5df61b663ff191038cd676bd",
+  "source": "https://cdn.mysql.com/Downloads/MySQL-8.0/mysql-8.0.46-winx64.zip",
+  "originalReport": "REDACTED_LOCAL_USER_PATH/AppData/Local/Temp/lyx-photo-upload-mysql-4wcvjf/upload-mysql-acceptance.json",
+  "taskDirectory": "REDACTED_LOCAL_USER_PATH/AppData/Local/Temp/lyx-photo-upload-mysql-4wcvjf",
+  "datadir": "REDACTED_EMBEDDED_BINARY",
+  "host": "127.0.0.1",
+  "port": 9130,
+  "databaseName": "upload_test_64dac3a84c6a",
+  "networkCallsToOssOrGreen": 0,
+  "checks": [
+    {
+      "name": "cleanup_DDL_enforces_scope_unique_key_and_observation_state_constraints",
+      "passed": true
+    },
+    {
+      "name": "cleanup_six_pools_claim_one_delete_intent_and_absence_stays_due_for_recheck",
+      "passed": true
+    },
+    {
+      "name": "cleanup_claim_rollback_and_stale_observation_never_erase_newer_unknown_attempt",
+      "passed": true
+    }
+  ],
+  "deadlocks": 5,
+  "cleanupSchema": {
+    "enforcedChecks": 6,
+    "uniqueIndexes": [
+      "upload_id,kind",
+      "storage_key"
+    ]
+  },
+  "cleanupClaimRetriesExhausted": 0,
+  "passed": true,
+  "serverStopped": true,
+  "independentListenerCount": 0,
+  "independentProcessInspectionFoundRunningTaskMysqld": false,
+  "dataDirectoriesDeleted": false,
+  "limitations": [
+    "Local isolated MySQL only; no production or cloud database.",
+    "No OSS or Green requests; no real photograph deletion.",
+    "Absence observations do not prove permanent erasure or deletion of object versions/backups.",
+    "Worker not deployed or scheduled; cleanup frequency, request budget, alerts and metadata retention remain deployment decisions."
+  ]
+}

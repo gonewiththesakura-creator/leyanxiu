@@ -1,0 +1,17 @@
+<import src="../../components/privacy-consent/template.wxml"/>
+<template is="privacy-consent" data="{{privacyVisible,privacyName}}"/>
+<view class="page" style="padding-top:{{top}}px">
+  <view class="header"><text class="title">百变图片</text><text class="subtitle">一张照片，随心变化</text></view>
+  <scroll-view scroll-x class="category-scroll" enhanced show-scrollbar="{{false}}">
+    <view class="category-row"><view wx:for="{{categories}}" wx:key="id" class="category-card" data-id="{{item.id}}" bindtap="selectCategory" role="button" aria-label="{{item.name}}">
+      <image src="{{item.cover}}" mode="aspectFill" /><view class="scrim"/><view class="category-copy"><text class="kicker">{{item.kicker}}</text><text class="category-name">{{item.name}}</text></view><view wx:if="{{categoryId === item.id}}" class="selected-line" style="background:{{item.accent}}"/>
+    </view></view>
+  </scroll-view>
+  <view class="section-heading"><view><text class="section-kicker" style="color:{{category.accent}}">◷　{{category.kicker}}</text><text class="section-title">{{category.name}}</text><text class="section-description">{{category.description}}</text></view><text class="picture-icon" style="color:{{category.accent}}">▧</text></view>
+  <view class="effect-grid"><view wx:for="{{effects}}" wx:key="id" class="effect-card" data-id="{{item.id}}" bindtap="openEffect" role="button" aria-label="{{item.title}}，{{item.availabilityLabel}}">
+    <view class="effect-image"><image src="{{item.preview}}" mode="aspectFill" lazy-load/><text wx:if="{{item.badge}}" class="badge">{{item.badge}}</text><text class="unavailable">{{checking ? '正在连接' : item.availabilityLabel}}</text></view>
+    <view class="effect-copy"><text class="effect-title">{{item.title}}</text><text class="effect-description">{{item.subtitle}}</text><text class="chevron">›</text></view>
+  </view></view>
+  <view class="availability"><button wx:if="{{connected || notice || checking}}" bindtap="checkAvailability" loading="{{checking}}" disabled="{{checking}}">{{connected ? '刷新效果状态' : '重新连接'}}</button><text wx:if="{{notice}}" class="notice">{{notice}}</text></view>
+  <view class="caption" bindtap="caption" role="button"><text class="caption-icon">▤</text><view><text class="caption-title">成片分享文案</text><text class="caption-description">做好作品后，配一句自然的话</text></view><text class="chevron">›</text></view>
+</view>

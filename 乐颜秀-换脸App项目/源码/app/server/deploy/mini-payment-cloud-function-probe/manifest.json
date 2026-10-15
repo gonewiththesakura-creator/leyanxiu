@@ -1,0 +1,25 @@
+{
+  "mode": "verification-only",
+  "files": [
+    {
+      "path": "index.js",
+      "sha256": "e4d7ff292468d94dfcc4c15c9c8670d92aaddaf21075c2523638f7c1a257c07c",
+      "bytes": 1561
+    },
+    {
+      "path": "package.json",
+      "sha256": "86c3df39eae2c1750ea186eceb28b7f8089004c1c5a0161a68a2bdc85ec0bb23",
+      "bytes": 198
+    },
+    {
+      "path": "README.md",
+      "sha256": "810c63e79ce8b78f06f4e233c8d7b7014148066e8434c7135350ce533d8304f3",
+      "bytes": 2373
+    },
+    {
+      "path": "cloudbase-function-probe.mjs",
+      "sha256": "b7ac612f725be63d5d9a32e1b32146b3c94153c4d32fb2aa201ef265e939fe6e",
+      "bytes": 6316
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "leyanxiu-mini-payment-sandbox",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "1.19.17",
+    "hono": "4.13.7",
+    "mysql2": "3.24.4"
+  }
+}

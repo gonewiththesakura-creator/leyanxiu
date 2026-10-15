@@ -1,0 +1,35 @@
+> leyanxiu-server@0.1.0 release:check
+> node scripts/release-check.mjs
+
+{
+  "releaseTag": "technical-materials-audit-2026-08-29",
+  "commit": "705699261720e658089f5a762de1e30d27f49c75",
+  "serverSha256": "4f70200e3c08c9dd83e8fc5dcd11693747a891fad4819deac90d7115c2c4a959",
+  "sourceFileCount": 161,
+  "workingTreeDirty": true,
+  "environment": "production",
+  "publicLaunchAllowed": false,
+  "blockers": [
+    "working tree must be clean and committed before production release",
+    "AUTH_MODE=wechat is required in production",
+    "AUTH_SESSION_SECRET must be at least 32 characters",
+    "OBJECT_STORAGE_BACKEND=oss is required in production",
+    "PUBLIC_BASE_URL must be HTTPS in production",
+    "CORS_ORIGIN must be an explicit HTTPS origin allowlist in production",
+    "approved CONTENT_POLICY_VERSION is required",
+    "external content safety adapter is not implemented; credentials alone are insufficient",
+    "AI_MARKING_REQUIRED=true is required in production",
+    "SERVICE_PROVIDER_CODE is required in production",
+    "AI_MODEL_FILING_REFERENCE is required in production",
+    "LICENSED_ASSET_IDS is required in production",
+    "supplier retention/deletion policy is required",
+    "approved HTTPS privacy policy URL is required",
+    "approved HTTPS user agreement URL is required",
+    "approved HTTPS third-party list URL is required",
+    "company support contact is required",
+    "approved PIPIA reference is required",
+    "approved AI service disclosures are required",
+    "VITE_USE_MOCK must not be enabled in a production build"
+  ],
+  "checkedAt": "2026-08-29T11:01:29.546Z"
+}

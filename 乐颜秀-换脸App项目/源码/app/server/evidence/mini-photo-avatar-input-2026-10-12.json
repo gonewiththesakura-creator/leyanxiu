@@ -1,0 +1,45 @@
+{
+  "recordVersion": 1,
+  "date": "2026-10-12",
+  "purpose": "natural-avatar-acceptance-input",
+  "userSelected": "AI-generated photorealistic fictional adult portrait through the currently configured GPT API relay",
+  "executionMode": "installed-imagegen-cli-generate",
+  "requestedModel": "gpt-image-2",
+  "relayInternalsIndependentlyVerified": false,
+  "submittedGenerationCommands": 1,
+  "newGenerationCommandsAfterSuccess": 0,
+  "sdkRetriesIndependentlyCounted": false,
+  "requestedOutput": { "contentType": "image/jpeg", "width": 1024, "height": 1024 },
+  "actualOriginal": {
+    "workspaceRelativePath": "output/imagegen/fictional-adult-avatar-20261012.original.png",
+    "contentType": "image/png", "width": 1086, "height": 1448, "byteLength": 2233380,
+    "sha256": "1409fbb980d8ec1ec1101857eb092255ea61574bf6d59d987249f3eb079d648f"
+  },
+  "preparedInput": {
+    "workspaceRelativePath": "output/imagegen/fictional-adult-avatar-20261012.jpg",
+    "contentType": "image/jpeg", "width": 768, "height": 1024, "byteLength": 133268,
+    "sha256": "56eb47602d36864b6eec9514ddb091cfa2b71309558c3e12917b3970329b947f",
+    "exifTagCount": 0,
+    "withinApplicationUploadLimit": true
+  },
+  "localApplicationNormalizer": {
+    "result": "passed",
+    "port": "createPhotoInputNormalizer.normalize",
+    "contentType": "image/jpeg", "byteLength": 206503,
+    "sha256": "f71c5d5a76157abfc260125935667e93370235f8caf296842202bdbf825cf018",
+    "networkRequests": 0, "cloudWrites": 0
+  },
+  "visualReview": {
+    "singleAdultSubject": true, "faceUnobstructed": true,
+    "noObviousDuplicatedFeatures": true, "noVisibleTextOrLogos": true,
+    "suitableAsSyntheticInput": true,
+    "realPersonIdentityVerified": false,
+    "naturalAvatarOutputQualityAccepted": false
+  },
+  "thisStage": { "aliyunModelCalls": 0, "aliyunModerationCalls": 0, "payments": 0, "deploymentChanges": 0 },
+  "limitations": [
+    "Synthetic input material only; no real-user photograph, identity or portrait permission is asserted.",
+    "Input normalization was run locally on Windows, not in the cloud Linux runtime or Android client.",
+    "Image generation through the GPT relay does not renew the exhausted per-run Aliyun acceptance authorization."
+  ]
+}

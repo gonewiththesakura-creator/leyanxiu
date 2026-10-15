@@ -1,0 +1,29 @@
+[Unit]
+Description=Leyanxiu App isolated account testing API
+After=network.target postgresql.service
+Requires=postgresql.service
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=leyanxiu-app
+Group=leyanxiu-app
+WorkingDirectory=/opt/leyanxiu-app-account/releases/20260930-account
+EnvironmentFile=/etc/leyanxiu-app-account/server.env
+Environment=DOTENV_CONFIG_PATH=/dev/null
+ExecStart=/usr/bin/node bootstrap.js
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=70
+UMask=0077
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/leyanxiu-app-account
+MemoryMax=1536M
+TasksMax=256
+
+[Install]
+WantedBy=multi-user.target

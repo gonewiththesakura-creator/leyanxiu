@@ -1,0 +1,43 @@
+{
+  "name": "leyanxiu-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch bootstrap.js",
+    "start": "node bootstrap.js",
+    "lint": "node scripts/lint.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "release:check": "node scripts/release-check.mjs",
+    "sbom": "node scripts/sbom.mjs",
+    "storage:audit": "node scripts/audit-private-bucket.mjs",
+    "admin:hash-password": "node scripts/hash-admin-password.mjs",
+    "deploy:cloudbase:stage": "node scripts/deploy-cloudbase-stage.mjs"
+  },
+  "dependencies": {
+    "@alicloud/dysmsapi20170525": "4.6.0",
+    "@alicloud/facebody20191230": "^6.0.0",
+    "@alicloud/openapi-client": "^0.4.11",
+    "@alicloud/tea-util": "1.4.9",
+    "@hono/node-server": "^1.13.0",
+    "ali-oss": "^6.23.0",
+    "better-sqlite3": "11.10.0",
+    "dotenv": "^16.4.5",
+    "hono": "4.13.7",
+    "lunar-javascript": "^1.7.7",
+    "mime": "^2.6.0",
+    "mysql2": "3.24.4",
+    "pg": "8.16.3",
+    "tencentcloud-sdk-nodejs-ft": "^4.1.221",
+    "tencentcloud-sdk-nodejs-hunyuan": "^4.1.188",
+    "tencentcloud-sdk-nodejs-vclm": "^4.1.263",
+    "wechatpay-axios-plugin": "0.9.6"
+  },
+  "overrides": {
+    "qs": "6.16.0",
+    "uuid": "11.1.1"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.3.14"
+  }
+}

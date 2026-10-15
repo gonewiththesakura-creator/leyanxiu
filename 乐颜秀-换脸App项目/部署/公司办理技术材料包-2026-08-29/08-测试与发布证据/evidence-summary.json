@@ -1,0 +1,18 @@
+{
+  "server-test": 0,
+  "server-lint": 0,
+  "web-lint": 0,
+  "web-build": 0,
+  "server-sbom": 0,
+  "server-audit": 1,
+  "web-audit": 1,
+  "release-check-production": 1,
+  "git-state": 0,
+  "git-commit": 0,
+  "generatedAt": "2026-08-29T19:01:29.661782+08:00",
+  "notes": {
+    "audit": "npm audit 非零表示仍有漏洞，原始 JSON 随包保留；不得把非零改写成通过。",
+    "releaseCheck": "生产检查预期非零，证明缺少公司材料时会阻断上线。",
+    "git": "工作树不干净时不得生成正式 release tag。"
+  }
+}

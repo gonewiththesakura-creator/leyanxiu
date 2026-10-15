@@ -1,0 +1,87 @@
+{
+  "format": "mini-legal-static-public-verification-v1",
+  "observedFrom": "2026-10-11T19:20:16.849Z",
+  "observedAt": "2026-10-11T19:20:17.012Z",
+  "localDate": "2026-10-12",
+  "timeZone": "Asia/Shanghai",
+  "origin": "https://REDACTED_COMPANY_INFRASTRUCTURE",
+  "bundleSha256": "03dd297400a2a50dab4ef0947c668bb7b2bdf343bf63a5e173e0ce5c0ed7b2b1",
+  "passed": true,
+  "requestScope": {
+    "credentialsSent": false,
+    "redirectsAllowed": false,
+    "postBodiesSent": false,
+    "businessPostRequests": 0,
+    "deploymentCalls": 0,
+    "reloadCalls": 0,
+    "requests": 17
+  },
+  "newPages": [
+    {
+      "path": "/mini/legal/privacy.html",
+      "getStatus": 200,
+      "headStatus": 200,
+      "headBodyBytes": 0,
+      "emptyPostStatus": 403,
+      "bytes": 12370,
+      "sha256": "e079a99563fae84d00ab7d36d4d70d9e183474e2042af1916257e1fad85d6ba9",
+      "matchesLocalReviewedPage": true
+    },
+    {
+      "path": "/mini/legal/terms.html",
+      "getStatus": 200,
+      "headStatus": 200,
+      "headBodyBytes": 0,
+      "emptyPostStatus": 403,
+      "bytes": 11330,
+      "sha256": "efbed56f9a6b3b0b0cdcd562ec22a361787fb44d7b4d5ab79aa7a6a59260322e",
+      "matchesLocalReviewedPage": true
+    },
+    {
+      "path": "/mini/legal/third-parties.html",
+      "getStatus": 200,
+      "headStatus": 200,
+      "headBodyBytes": 0,
+      "emptyPostStatus": 403,
+      "bytes": 8057,
+      "sha256": "95d6ebd0f9cbfaad44a0be869dfe1b6f9efad124369d268865080e1f6bf145f3",
+      "matchesLocalReviewedPage": true
+    }
+  ],
+  "headersObservedOnAllNewPageGetHeadAndPostResponses": {
+    "content-type": "text/html; charset=utf-8",
+    "strict-transport-security": "max-age=31536000",
+    "x-content-type-options": "nosniff",
+    "cache-control": "no-cache"
+  },
+  "existingAppPages": [
+    {
+      "path": "/app/legal/privacy.html",
+      "status": 200,
+      "bytes": 7541,
+      "sha256": "c62e61362112b055441c581e03a006a58900fef974f477d665159cf24cdae9fe",
+      "matchesLocalExistingPage": true
+    },
+    {
+      "path": "/app/legal/terms.html",
+      "status": 200,
+      "bytes": 4487,
+      "sha256": "caf7680fbfaf78fd42e5534327900cd27ba9dc97fec02bc4b1762a6869d19646",
+      "matchesLocalExistingPage": true
+    }
+  ],
+  "unpublishedPaths": [
+    { "path": "/mini/legal/", "status": 403, "contentType": "application/json" },
+    { "path": "/mini/legal/legal.css", "status": 403, "contentType": "application/json" },
+    { "path": "/mini/legal/nonexistent.html", "status": 403, "contentType": "application/json" }
+  ],
+  "protectedPaths": [
+    { "path": "/admin", "status": 404 },
+    { "path": "/api/admin", "status": 404 },
+    { "path": "/api/ops", "status": 404 }
+  ],
+  "limitations": [
+    "This record verifies public HTTP responses and page bytes at the observation time only.",
+    "It does not attest to business database state, application process uptime, WeChat review approval, generation availability or purchase availability."
+  ]
+}

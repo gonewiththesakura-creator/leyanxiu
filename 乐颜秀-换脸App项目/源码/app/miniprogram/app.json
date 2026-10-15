@@ -1,0 +1,17 @@
+{
+  "pages": ["pages/featured/index", "pages/home/index", "pages/songs/index", "pages/photos/index", "pages/mine/index", "pages/create/index", "pages/payments/index", "pages/service/index", "pages/privacy/index", "pages/refund-ops/index"],
+  "subpackages": [{ "name": "preview-media", "root": "preview-media", "pages": ["pages/index"] }],
+  "tabBar": {
+    "color": "#929295", "selectedColor": "#f23bd1", "backgroundColor": "#09090b", "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/home/index", "text": "推荐", "iconPath": "assets/nav/0-normal.png", "selectedIconPath": "assets/nav/0-active.png" },
+      { "pagePath": "pages/songs/index", "text": "视频玩法", "iconPath": "assets/nav/1-normal.png", "selectedIconPath": "assets/nav/1-active.png" },
+      { "pagePath": "pages/featured/index", "text": "精选", "iconPath": "assets/nav/2-normal.png", "selectedIconPath": "assets/nav/2-active.png" },
+      { "pagePath": "pages/photos/index", "text": "百变图片", "iconPath": "assets/nav/3-normal.png", "selectedIconPath": "assets/nav/3-active.png" },
+      { "pagePath": "pages/mine/index", "text": "我的", "iconPath": "assets/nav/4-normal.png", "selectedIconPath": "assets/nav/4-active.png" }
+    ]
+  },
+  "window": { "navigationBarTitleText": "乐颜秀", "navigationBarTextStyle": "white", "navigationBarBackgroundColor": "#000000", "backgroundColor": "#000000", "backgroundTextStyle": "dark" },
+  "__usePrivacyCheck__": true,
+  "style": "v2"
+}

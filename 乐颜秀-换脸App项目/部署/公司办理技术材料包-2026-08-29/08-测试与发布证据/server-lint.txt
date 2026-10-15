@@ -1,0 +1,4 @@
+> leyanxiu-server@0.1.0 lint
+> node scripts/lint.mjs
+
+server syntax check passed: 45 files

@@ -1,0 +1,68 @@
+limit_req_zone $binary_remote_addr zone=leyanxiu_api:10m rate=10r/s;
+limit_conn_zone $binary_remote_addr zone=leyanxiu_conn:10m;
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name __API_DOMAIN__;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/letsencrypt;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name __API_DOMAIN__;
+    server_tokens off;
+
+    ssl_certificate /etc/letsencrypt/live/__API_DOMAIN__/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/__API_DOMAIN__/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_timeout 1d;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
+
+    client_max_body_size 155m;
+    limit_conn leyanxiu_conn 20;
+
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy no-referrer always;
+
+    location ~ ^/downloads/(?<apk>[A-Za-z0-9][A-Za-z0-9._-]*\.apk)$ {
+        alias /var/www/leyanxiu-downloads/$apk;
+        limit_except GET HEAD { deny all; }
+        default_type application/vnd.android.package-archive;
+        add_header Content-Disposition "attachment; filename=\"$apk\"" always;
+        add_header Cache-Control "private, no-store" always;
+        add_header X-Content-Type-Options nosniff always;
+    }
+
+    location / {
+        limit_req zone=leyanxiu_api burst=30 nodelay;
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        # The application is reachable only on loopback, so replace any
+        # attacker-supplied forwarding chain with the actual peer address.
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Host $host;
+        proxy_request_buffering on;
+        proxy_buffering off;
+        proxy_read_timeout 600s;
+        proxy_send_timeout 600s;
+    }
+
+    location = /api/readiness {
+        deny all;
+    }
+}

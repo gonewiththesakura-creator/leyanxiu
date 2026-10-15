@@ -1,0 +1,14 @@
+page { background: #000; color: #fff; font-size: 30rpx; }
+.page { padding: 28rpx 28rpx 80rpx; }
+.heading { font-size: 42rpx; font-weight: 700; margin: 24rpx 0; }
+.notice, .detail { line-height: 1.8; margin: 18rpx 0; color: #b5b5bd; overflow-wrap: anywhere; }
+.card { padding: 28rpx; background: #19191d; border: 2rpx solid #29292e; border-radius: 22rpx; margin: 24rpx 0; }
+.title { font-size: 34rpx; font-weight: 600; margin-bottom: 20rpx; }
+.document { margin: 24rpx 0; padding-bottom: 20rpx; border-bottom: 2rpx solid #39393e; }
+.url { display: block; font-size: 26rpx; overflow-wrap: anywhere; margin: 12rpx 0; }
+.field { box-sizing: border-box; width: 100%; border: 2rpx solid #39393e; background: #101012; color: #fff; border-radius: 12rpx; padding: 20rpx; margin: 22rpx 0; font-size: 30rpx; }
+input.field { height: 92rpx; }
+textarea.field { height: 230rpx; }
+button { background: #f23bd1; color: white; border-radius: 16rpx; font-size: 30rpx; margin: 18rpx 0; }
+.secondary { background: #29292e; color: #eee; }
+button[disabled] { background: #303036; color: #9999a1; }

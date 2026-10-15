@@ -1,0 +1,2901 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-08-29T11:01:12.680Z",
+    "component": {
+      "type": "application",
+      "name": "leyanxiu-server",
+      "version": "0.1.0"
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "name": "@alicloud/credentials",
+      "version": "2.4.5",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/credentials@2.4.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/darabonba-array",
+      "version": "0.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/darabonba-array@0.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/darabonba-encode-util",
+      "version": "0.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/darabonba-encode-util@0.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/darabonba-encode-util",
+      "version": "0.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/darabonba-encode-util@0.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/darabonba-map",
+      "version": "0.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/darabonba-map@0.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/darabonba-signature-util",
+      "version": "0.0.4",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/darabonba-signature-util@0.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/darabonba-string",
+      "version": "1.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/darabonba-string@1.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/endpoint-util",
+      "version": "0.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/endpoint-util@0.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/facebody20191230",
+      "version": "6.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/facebody20191230@6.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/gateway-pop",
+      "version": "0.0.6",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/gateway-pop@0.0.6",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/gateway-spi",
+      "version": "0.0.8",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/gateway-spi@0.0.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/openapi-client",
+      "version": "0.4.15",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/openapi-client@0.4.15",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/openapi-core",
+      "version": "1.0.8",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/openapi-core@1.0.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/openapi-util",
+      "version": "0.3.3",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/openapi-util@0.3.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/tea-typescript",
+      "version": "1.8.0",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/tea-typescript@1.8.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/tea-util",
+      "version": "1.4.9",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/tea-util@1.4.9",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@alicloud/tea-xml",
+      "version": "0.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/@alicloud/tea-xml@0.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@cloudbase/database",
+      "version": "0.9.15",
+      "scope": "required",
+      "purl": "pkg:npm/@cloudbase/database@0.9.15",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@cloudbase/signature-nodejs",
+      "version": "1.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/@cloudbase/signature-nodejs@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@darabonba/typescript",
+      "version": "1.0.5",
+      "scope": "required",
+      "purl": "pkg:npm/@darabonba/typescript@1.0.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@hono/node-server",
+      "version": "1.19.17",
+      "scope": "required",
+      "purl": "pkg:npm/@hono/node-server@1.19.17",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@tootallnate/once",
+      "version": "2.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/@tootallnate/once@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/clone",
+      "version": "0.1.30",
+      "scope": "required",
+      "purl": "pkg:npm/@types/clone@0.1.30",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/node",
+      "version": "12.20.55",
+      "scope": "required",
+      "purl": "pkg:npm/@types/node@12.20.55",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/node",
+      "version": "20.19.43",
+      "scope": "required",
+      "purl": "pkg:npm/@types/node@20.19.43",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/node",
+      "version": "22.20.1",
+      "scope": "required",
+      "purl": "pkg:npm/@types/node@22.20.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "@types/xml2js",
+      "version": "0.4.14",
+      "scope": "required",
+      "purl": "pkg:npm/@types/xml2js@0.4.14",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "address",
+      "version": "1.2.2",
+      "scope": "required",
+      "purl": "pkg:npm/address@1.2.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "agent-base",
+      "version": "6.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/agent-base@6.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "agentkeepalive",
+      "version": "3.5.3",
+      "scope": "required",
+      "purl": "pkg:npm/agentkeepalive@3.5.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ajv",
+      "version": "6.15.0",
+      "scope": "required",
+      "purl": "pkg:npm/ajv@6.15.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ali-oss",
+      "version": "6.23.0",
+      "scope": "required",
+      "purl": "pkg:npm/ali-oss@6.23.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "any-promise",
+      "version": "1.3.0",
+      "scope": "required",
+      "purl": "pkg:npm/any-promise@1.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "asn1",
+      "version": "0.2.6",
+      "scope": "required",
+      "purl": "pkg:npm/asn1@0.2.6",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "assert-plus",
+      "version": "1.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/assert-plus@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "asynckit",
+      "version": "0.4.0",
+      "scope": "required",
+      "purl": "pkg:npm/asynckit@0.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "aws-sign2",
+      "version": "0.7.0",
+      "scope": "required",
+      "purl": "pkg:npm/aws-sign2@0.7.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "aws4",
+      "version": "1.13.2",
+      "scope": "required",
+      "purl": "pkg:npm/aws4@1.13.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "base64-js",
+      "version": "1.5.1",
+      "scope": "required",
+      "purl": "pkg:npm/base64-js@1.5.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "bcrypt-pbkdf",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/bcrypt-pbkdf@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "bignumber.js",
+      "version": "9.3.1",
+      "scope": "required",
+      "purl": "pkg:npm/bignumber.js@9.3.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "bowser",
+      "version": "1.9.4",
+      "scope": "required",
+      "purl": "pkg:npm/bowser@1.9.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "bson",
+      "version": "4.7.2",
+      "scope": "required",
+      "purl": "pkg:npm/bson@4.7.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "buffer",
+      "version": "5.7.1",
+      "scope": "required",
+      "purl": "pkg:npm/buffer@5.7.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "buffer-equal-constant-time",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/buffer-equal-constant-time@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "builtin-status-codes",
+      "version": "3.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/builtin-status-codes@3.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "call-bind-apply-helpers",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/call-bind-apply-helpers@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "call-bound",
+      "version": "1.0.4",
+      "scope": "required",
+      "purl": "pkg:npm/call-bound@1.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "caseless",
+      "version": "0.12.0",
+      "scope": "required",
+      "purl": "pkg:npm/caseless@0.12.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "clone",
+      "version": "2.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/clone@2.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "combined-stream",
+      "version": "1.0.8",
+      "scope": "required",
+      "purl": "pkg:npm/combined-stream@1.0.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "content-type",
+      "version": "1.0.5",
+      "scope": "required",
+      "purl": "pkg:npm/content-type@1.0.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "copy-to",
+      "version": "2.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/copy-to@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "core-util-is",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/core-util-is@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "core-util-is",
+      "version": "1.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/core-util-is@1.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "dashdash",
+      "version": "1.14.1",
+      "scope": "required",
+      "purl": "pkg:npm/dashdash@1.14.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "dateformat",
+      "version": "2.2.0",
+      "scope": "required",
+      "purl": "pkg:npm/dateformat@2.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "debug",
+      "version": "4.4.3",
+      "scope": "required",
+      "purl": "pkg:npm/debug@4.4.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "default-user-agent",
+      "version": "1.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/default-user-agent@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "delayed-stream",
+      "version": "1.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/delayed-stream@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "destroy",
+      "version": "1.2.0",
+      "scope": "required",
+      "purl": "pkg:npm/destroy@1.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "digest-header",
+      "version": "1.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/digest-header@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "dotenv",
+      "version": "16.6.1",
+      "scope": "required",
+      "purl": "pkg:npm/dotenv@16.6.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "dunder-proto",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/dunder-proto@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ecc-jsbn",
+      "version": "0.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/ecc-jsbn@0.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ecdsa-sig-formatter",
+      "version": "1.0.11",
+      "scope": "required",
+      "purl": "pkg:npm/ecdsa-sig-formatter@1.0.11",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ee-first",
+      "version": "1.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/ee-first@1.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "end-of-stream",
+      "version": "1.4.5",
+      "scope": "required",
+      "purl": "pkg:npm/end-of-stream@1.4.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "end-or-error",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/end-or-error@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "es-define-property",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/es-define-property@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "es-errors",
+      "version": "1.3.0",
+      "scope": "required",
+      "purl": "pkg:npm/es-errors@1.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "es-object-atoms",
+      "version": "1.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/es-object-atoms@1.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "es-set-tostringtag",
+      "version": "2.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/es-set-tostringtag@2.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "escape-html",
+      "version": "1.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/escape-html@1.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "extend",
+      "version": "3.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/extend@3.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "extend-shallow",
+      "version": "2.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/extend-shallow@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "extsprintf",
+      "version": "1.3.0",
+      "scope": "required",
+      "purl": "pkg:npm/extsprintf@1.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fast-deep-equal",
+      "version": "3.1.3",
+      "scope": "required",
+      "purl": "pkg:npm/fast-deep-equal@3.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "fast-json-stable-stringify",
+      "version": "2.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/fast-json-stable-stringify@2.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "forever-agent",
+      "version": "0.6.1",
+      "scope": "required",
+      "purl": "pkg:npm/forever-agent@0.6.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "form-data",
+      "version": "2.3.3",
+      "scope": "required",
+      "purl": "pkg:npm/form-data@2.3.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "form-data",
+      "version": "3.0.5",
+      "scope": "required",
+      "purl": "pkg:npm/form-data@3.0.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "formstream",
+      "version": "1.5.2",
+      "scope": "required",
+      "purl": "pkg:npm/formstream@1.5.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "function-bind",
+      "version": "1.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/function-bind@1.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "get-intrinsic",
+      "version": "1.3.0",
+      "scope": "required",
+      "purl": "pkg:npm/get-intrinsic@1.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "get-proto",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/get-proto@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "get-ready",
+      "version": "1.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/get-ready@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "get-stream",
+      "version": "6.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/get-stream@6.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "getpass",
+      "version": "0.1.7",
+      "scope": "required",
+      "purl": "pkg:npm/getpass@0.1.7",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "gopd",
+      "version": "1.2.0",
+      "scope": "required",
+      "purl": "pkg:npm/gopd@1.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "har-schema",
+      "version": "2.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/har-schema@2.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "har-validator",
+      "version": "5.1.5",
+      "scope": "required",
+      "purl": "pkg:npm/har-validator@5.1.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "has-symbols",
+      "version": "1.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/has-symbols@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "has-tostringtag",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/has-tostringtag@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "hasown",
+      "version": "2.0.4",
+      "scope": "required",
+      "purl": "pkg:npm/hasown@2.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "hono",
+      "version": "4.13.5",
+      "scope": "required",
+      "purl": "pkg:npm/hono@4.13.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "http-proxy-agent",
+      "version": "5.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/http-proxy-agent@5.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "http-signature",
+      "version": "1.2.0",
+      "scope": "required",
+      "purl": "pkg:npm/http-signature@1.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "https-proxy-agent",
+      "version": "5.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/https-proxy-agent@5.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "httpx",
+      "version": "2.3.3",
+      "scope": "required",
+      "purl": "pkg:npm/httpx@2.3.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "humanize-ms",
+      "version": "1.2.1",
+      "scope": "required",
+      "purl": "pkg:npm/humanize-ms@1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "iconv-lite",
+      "version": "0.6.3",
+      "scope": "required",
+      "purl": "pkg:npm/iconv-lite@0.6.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ieee754",
+      "version": "1.2.1",
+      "scope": "required",
+      "purl": "pkg:npm/ieee754@1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "inherits",
+      "version": "2.0.4",
+      "scope": "required",
+      "purl": "pkg:npm/inherits@2.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ini",
+      "version": "1.3.8",
+      "scope": "required",
+      "purl": "pkg:npm/ini@1.3.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ini",
+      "version": "2.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/ini@2.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ip-address",
+      "version": "10.4.0",
+      "scope": "required",
+      "purl": "pkg:npm/ip-address@10.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "is-class-hotfix",
+      "version": "0.0.6",
+      "scope": "required",
+      "purl": "pkg:npm/is-class-hotfix@0.0.6",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "is-extendable",
+      "version": "0.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/is-extendable@0.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "is-regex",
+      "version": "1.2.1",
+      "scope": "required",
+      "purl": "pkg:npm/is-regex@1.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "is-stream",
+      "version": "2.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/is-stream@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "is-type-of",
+      "version": "1.4.0",
+      "scope": "required",
+      "purl": "pkg:npm/is-type-of@1.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "is-typedarray",
+      "version": "1.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/is-typedarray@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "isarray",
+      "version": "1.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/isarray@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "isstream",
+      "version": "0.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/isstream@0.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "js-base64",
+      "version": "2.6.4",
+      "scope": "required",
+      "purl": "pkg:npm/js-base64@2.6.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jsbn",
+      "version": "0.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/jsbn@0.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "json-bigint",
+      "version": "1.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/json-bigint@1.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "json-schema",
+      "version": "0.4.0",
+      "scope": "required",
+      "purl": "pkg:npm/json-schema@0.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "json-schema-traverse",
+      "version": "0.4.1",
+      "scope": "required",
+      "purl": "pkg:npm/json-schema-traverse@0.4.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "json-stringify-safe",
+      "version": "5.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/json-stringify-safe@5.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jsonwebtoken",
+      "version": "8.5.1",
+      "scope": "required",
+      "purl": "pkg:npm/jsonwebtoken@8.5.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jsprim",
+      "version": "1.4.2",
+      "scope": "required",
+      "purl": "pkg:npm/jsprim@1.4.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jstoxml",
+      "version": "2.2.9",
+      "scope": "required",
+      "purl": "pkg:npm/jstoxml@2.2.9",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jwa",
+      "version": "1.4.2",
+      "scope": "required",
+      "purl": "pkg:npm/jwa@1.4.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "jws",
+      "version": "3.2.3",
+      "scope": "required",
+      "purl": "pkg:npm/jws@3.2.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "kitx",
+      "version": "2.2.0",
+      "scope": "required",
+      "purl": "pkg:npm/kitx@2.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash",
+      "version": "4.18.1",
+      "scope": "required",
+      "purl": "pkg:npm/lodash@4.18.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.clonedeep",
+      "version": "4.5.0",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.clonedeep@4.5.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.includes",
+      "version": "4.3.0",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.includes@4.3.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.isboolean",
+      "version": "3.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.isboolean@3.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.isinteger",
+      "version": "4.0.4",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.isinteger@4.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.isnumber",
+      "version": "3.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.isnumber@3.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.isplainobject",
+      "version": "4.0.6",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.isplainobject@4.0.6",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.isstring",
+      "version": "4.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.isstring@4.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.merge",
+      "version": "4.6.2",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.merge@4.6.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.once",
+      "version": "4.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.once@4.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.set",
+      "version": "4.3.2",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.set@4.3.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lodash.unset",
+      "version": "4.5.2",
+      "scope": "required",
+      "purl": "pkg:npm/lodash.unset@4.5.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "lunar-javascript",
+      "version": "1.7.7",
+      "scope": "required",
+      "purl": "pkg:npm/lunar-javascript@1.7.7",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "math-intrinsics",
+      "version": "1.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/math-intrinsics@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "merge-descriptors",
+      "version": "1.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/merge-descriptors@1.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mime",
+      "version": "2.6.0",
+      "scope": "required",
+      "purl": "pkg:npm/mime@2.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mime-db",
+      "version": "1.52.0",
+      "scope": "required",
+      "purl": "pkg:npm/mime-db@1.52.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mime-types",
+      "version": "2.1.35",
+      "scope": "required",
+      "purl": "pkg:npm/mime-types@2.1.35",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "minimist",
+      "version": "1.2.8",
+      "scope": "required",
+      "purl": "pkg:npm/minimist@1.2.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mkdirp",
+      "version": "0.5.6",
+      "scope": "required",
+      "purl": "pkg:npm/mkdirp@0.5.6",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "moment",
+      "version": "2.30.1",
+      "scope": "required",
+      "purl": "pkg:npm/moment@2.30.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "moment-timezone",
+      "version": "0.5.48",
+      "scope": "required",
+      "purl": "pkg:npm/moment-timezone@0.5.48",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ms",
+      "version": "2.1.3",
+      "scope": "required",
+      "purl": "pkg:npm/ms@2.1.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "mz",
+      "version": "2.7.0",
+      "scope": "required",
+      "purl": "pkg:npm/mz@2.7.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "node-fetch",
+      "version": "2.7.0",
+      "scope": "required",
+      "purl": "pkg:npm/node-fetch@2.7.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "node-hex",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/node-hex@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "oauth-sign",
+      "version": "0.9.0",
+      "scope": "required",
+      "purl": "pkg:npm/oauth-sign@0.9.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "object-assign",
+      "version": "4.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/object-assign@4.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "object-inspect",
+      "version": "1.13.4",
+      "scope": "required",
+      "purl": "pkg:npm/object-inspect@1.13.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "once",
+      "version": "1.4.0",
+      "scope": "required",
+      "purl": "pkg:npm/once@1.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "os-name",
+      "version": "1.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/os-name@1.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "osx-release",
+      "version": "1.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/osx-release@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pause-stream",
+      "version": "0.0.11",
+      "scope": "required",
+      "purl": "pkg:npm/pause-stream@0.0.11",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "performance-now",
+      "version": "2.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/performance-now@2.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "platform",
+      "version": "1.3.6",
+      "scope": "required",
+      "purl": "pkg:npm/platform@1.3.6",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "process-nextick-args",
+      "version": "2.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/process-nextick-args@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "psl",
+      "version": "1.15.0",
+      "scope": "required",
+      "purl": "pkg:npm/psl@1.15.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "pump",
+      "version": "3.0.4",
+      "scope": "required",
+      "purl": "pkg:npm/pump@3.0.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "punycode",
+      "version": "1.4.1",
+      "scope": "required",
+      "purl": "pkg:npm/punycode@1.4.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "punycode",
+      "version": "2.3.1",
+      "scope": "required",
+      "purl": "pkg:npm/punycode@2.3.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "qs",
+      "version": "6.15.3",
+      "scope": "required",
+      "purl": "pkg:npm/qs@6.15.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "qs",
+      "version": "6.5.5",
+      "scope": "required",
+      "purl": "pkg:npm/qs@6.5.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "readable-stream",
+      "version": "2.3.8",
+      "scope": "required",
+      "purl": "pkg:npm/readable-stream@2.3.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "request",
+      "version": "2.88.2",
+      "scope": "required",
+      "purl": "pkg:npm/request@2.88.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "safe-buffer",
+      "version": "5.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/safe-buffer@5.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "safer-buffer",
+      "version": "2.1.2",
+      "scope": "required",
+      "purl": "pkg:npm/safer-buffer@2.1.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sax",
+      "version": "1.6.1",
+      "scope": "required",
+      "purl": "pkg:npm/sax@1.6.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sdk-base",
+      "version": "2.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/sdk-base@2.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "semver",
+      "version": "5.7.2",
+      "scope": "required",
+      "purl": "pkg:npm/semver@5.7.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "side-channel",
+      "version": "1.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/side-channel@1.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "side-channel-list",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/side-channel-list@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "side-channel-map",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/side-channel-map@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "side-channel-weakmap",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/side-channel-weakmap@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sm3",
+      "version": "1.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/sm3@1.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "smart-buffer",
+      "version": "4.2.0",
+      "scope": "required",
+      "purl": "pkg:npm/smart-buffer@4.2.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "socks",
+      "version": "2.8.9",
+      "scope": "required",
+      "purl": "pkg:npm/socks@2.8.9",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "socks-proxy-agent",
+      "version": "6.2.1",
+      "scope": "required",
+      "purl": "pkg:npm/socks-proxy-agent@6.2.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "sshpk",
+      "version": "1.18.0",
+      "scope": "required",
+      "purl": "pkg:npm/sshpk@1.18.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "statuses",
+      "version": "1.5.0",
+      "scope": "required",
+      "purl": "pkg:npm/statuses@1.5.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "stream-http",
+      "version": "2.8.2",
+      "scope": "required",
+      "purl": "pkg:npm/stream-http@2.8.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "stream-wormhole",
+      "version": "1.1.0",
+      "scope": "required",
+      "purl": "pkg:npm/stream-wormhole@1.1.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "string_decoder",
+      "version": "1.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/string_decoder@1.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tcb-admin-node",
+      "version": "1.23.0",
+      "scope": "required",
+      "purl": "pkg:npm/tcb-admin-node@1.23.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tencentcloud-sdk-nodejs-common",
+      "version": "4.1.220",
+      "scope": "required",
+      "purl": "pkg:npm/tencentcloud-sdk-nodejs-common@4.1.220",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tencentcloud-sdk-nodejs-ft",
+      "version": "4.1.221",
+      "scope": "required",
+      "purl": "pkg:npm/tencentcloud-sdk-nodejs-ft@4.1.221",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tencentcloud-sdk-nodejs-hunyuan",
+      "version": "4.1.188",
+      "scope": "required",
+      "purl": "pkg:npm/tencentcloud-sdk-nodejs-hunyuan@4.1.188",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tencentcloud-sdk-nodejs-vclm",
+      "version": "4.1.263",
+      "scope": "required",
+      "purl": "pkg:npm/tencentcloud-sdk-nodejs-vclm@4.1.263",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "thenify",
+      "version": "3.3.1",
+      "scope": "required",
+      "purl": "pkg:npm/thenify@3.3.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "thenify-all",
+      "version": "1.6.0",
+      "scope": "required",
+      "purl": "pkg:npm/thenify-all@1.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "through",
+      "version": "2.3.8",
+      "scope": "required",
+      "purl": "pkg:npm/through@2.3.8",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "to-arraybuffer",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/to-arraybuffer@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tough-cookie",
+      "version": "2.5.0",
+      "scope": "required",
+      "purl": "pkg:npm/tough-cookie@2.5.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tr46",
+      "version": "0.0.3",
+      "scope": "required",
+      "purl": "pkg:npm/tr46@0.0.3",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tslib",
+      "version": "1.13.0",
+      "scope": "required",
+      "purl": "pkg:npm/tslib@1.13.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tunnel-agent",
+      "version": "0.6.0",
+      "scope": "required",
+      "purl": "pkg:npm/tunnel-agent@0.6.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "tweetnacl",
+      "version": "0.14.5",
+      "scope": "required",
+      "purl": "pkg:npm/tweetnacl@0.14.5",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "undici-types",
+      "version": "6.21.0",
+      "scope": "required",
+      "purl": "pkg:npm/undici-types@6.21.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "unescape",
+      "version": "1.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/unescape@1.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "uri-js",
+      "version": "4.4.1",
+      "scope": "required",
+      "purl": "pkg:npm/uri-js@4.4.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "url",
+      "version": "0.11.4",
+      "scope": "required",
+      "purl": "pkg:npm/url@0.11.4",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "urllib",
+      "version": "2.44.1",
+      "scope": "required",
+      "purl": "pkg:npm/urllib@2.44.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "util-deprecate",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/util-deprecate@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "utility",
+      "version": "1.18.0",
+      "scope": "required",
+      "purl": "pkg:npm/utility@1.18.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "uuid",
+      "version": "3.4.0",
+      "scope": "required",
+      "purl": "pkg:npm/uuid@3.4.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "uuid",
+      "version": "9.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/uuid@9.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "verror",
+      "version": "1.10.0",
+      "scope": "required",
+      "purl": "pkg:npm/verror@1.10.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "webidl-conversions",
+      "version": "3.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/webidl-conversions@3.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "whatwg-url",
+      "version": "5.0.0",
+      "scope": "required",
+      "purl": "pkg:npm/whatwg-url@5.0.0",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "win-release",
+      "version": "1.1.1",
+      "scope": "required",
+      "purl": "pkg:npm/win-release@1.1.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "wrappy",
+      "version": "1.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/wrappy@1.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "ws",
+      "version": "8.21.1",
+      "scope": "required",
+      "purl": "pkg:npm/ws@8.21.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "xml2js",
+      "version": "0.4.23",
+      "scope": "required",
+      "purl": "pkg:npm/xml2js@0.4.23",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "xml2js",
+      "version": "0.6.2",
+      "scope": "required",
+      "purl": "pkg:npm/xml2js@0.6.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "xmlbuilder",
+      "version": "11.0.1",
+      "scope": "required",
+      "purl": "pkg:npm/xmlbuilder@11.0.1",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    },
+    {
+      "type": "library",
+      "name": "xtend",
+      "version": "4.0.2",
+      "scope": "required",
+      "purl": "pkg:npm/xtend@4.0.2",
+      "hashes": [
+        {
+          "alg": "SHA-512",
+          "content": "REDACTED_EMBEDDED_BINARY"
+        }
+      ]
+    }
+  ]
+}

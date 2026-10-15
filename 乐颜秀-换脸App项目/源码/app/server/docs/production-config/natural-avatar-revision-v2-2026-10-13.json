@@ -1,0 +1,37 @@
+{
+  "recordVersion": 1,
+  "state": "local-first-service-candidate-not-runtime-config",
+  "preparedAt": "2026-10-13",
+  "previousResult": "v1 technical pipeline passed; visual quality rejected due to age appearance drift",
+  "changeScope": "Same input and fixed model; restrict edit to background, explicitly preserve foreground appearance; concise AI label with tracking kept in metadata",
+  "effect": {
+    "id": "natural-avatar",
+    "version": "natural-avatar-v2-20261013",
+    "provider": "aliyun-qwen-image",
+    "model": "qwen-image-2.0-2026-03-03",
+    "purpose": "photo-effect:natural-avatar",
+    "parameters": {
+      "prompt": "仅对人物轮廓外的原有灰色背景做轻微柔光调整。人物外观保持与输入图像一致：保留原有五官、表情、皮肤纹理、肤色、发型和衣服，不重新设计人物。",
+      "negativePrompt": "面部重绘，新增皱纹，新增色斑，皮肤粗糙化，过度磨皮，改变五官，改变表情，改变人物年龄观感",
+      "size": "1024*1024", "n": 1, "watermark": true, "promptExtend": false
+    },
+    "qualityAccepted": true,
+    "qualityScope": "one fictional-adult sample for the original natural-AI-avatar offer; not pixel preservation or general quality certification",
+    "backgroundOnlyTargetMet": false,
+    "qualityEvidence": "mini-photo-natural-avatar-v2-2026-10-13.json"
+  },
+  "selectedAcceptanceInput": {
+    "kind": "ai-generated-fictional-adult-portrait",
+    "workspaceRelativePath": "output/imagegen/fictional-adult-avatar-20261012.jpg",
+    "contentType": "image/jpeg", "width": 768, "height": 1024, "byteLength": 133268,
+    "sha256": "56eb47602d36864b6eec9514ddb091cfa2b71309558c3e12917b3970329b947f"
+  },
+  "feeAuthorization": {
+    "source": "user-session-2026-10-13",
+    "scope": "reasonable small paid validation needed to complete this mini-program; no repeated per-call confirmation required",
+    "thisAttempt": { "generation": 1, "moderation": 2, "executed": true, "replayAllowed": false },
+    "automaticRetries": false,
+    "customerPaymentsAllowedByThisTest": false
+  },
+  "deployment": { "uploaded": false, "generationEnabled": false, "purchaseEnabled": false }
+}

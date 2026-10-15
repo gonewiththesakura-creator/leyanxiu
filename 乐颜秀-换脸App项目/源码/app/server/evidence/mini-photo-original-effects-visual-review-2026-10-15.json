@@ -1,0 +1,66 @@
+{
+  "recordVersion": 1,
+  "reviewedAt": "2026-10-15T01:03:51+08:00",
+  "reviewers": [
+    "root",
+    "probe_independent_review"
+  ],
+  "mode": "agent-visual",
+  "source": "output/imagegen/fictional-adult-avatar-20261012.jpg",
+  "sourceRawSha256": "REDACTED_EMBEDDED_BINARY",
+  "scope": "One fictional adult portrait per effect; independent agent visual review, not human approval or broad population evaluation.",
+  "attemptedGenerationCalls": 4,
+  "attemptedGreenCalls": 8,
+  "cleanupObservedForAll": true,
+  "paymentsAttempted": 0,
+  "deployed": false,
+  "productionApproved": false,
+  "androidDeliveryVerified": false,
+  "originalTechnicalReportsModified": false,
+  "effects": [
+    {
+      "effectId": "classic-black-white",
+      "effectVersion": "classic-black-white-v1-20261015",
+      "technicalPassed": true,
+      "decision": "rejected",
+      "observations": "黑白转换与构图成立，但新增密集色斑和明显眼周、额头、法令纹及颈纹；人物年龄观感明显增加，拒绝当前参数版本。",
+      "reportSha256": "b22e09a4b3a774102adb4fb3107831c3427a27fb5825dee5a4a6e1be6c752181",
+      "outputSha256": "1f7aa0fbe94c2274d55b55a735f5ec3b7b79491553e2e19eed828250597b7eb8",
+      "report": "mini-photo-classic-black-white-v1-20261015.json",
+      "output": "mini-photo-classic-black-white-v1-20261015.png"
+    },
+    {
+      "effectId": "new-chinese",
+      "effectVersion": "new-chinese-v1-20261015",
+      "technicalPassed": true,
+      "decision": "rejected",
+      "observations": "立领盘扣、木质空间与侧光成立，但写实皮肤新增密集斑点、粗糙纹理和眼周皱纹，拒绝当前参数版本。",
+      "reportSha256": "80061f38b213f6f5b7b52c7e52112396d33a8913c48c958405d5e31467435be9",
+      "outputSha256": "e99747fe4b041d5cc07e91cebe4d6a41b06b562070f24309c36e6f174a5515bf",
+      "report": "mini-photo-new-chinese-v1-20261015.json",
+      "output": "mini-photo-new-chinese-v1-20261015.png"
+    },
+    {
+      "effectId": "modern-comic",
+      "effectVersion": "modern-comic-v1-20261015",
+      "technicalPassed": true,
+      "decision": "accepted",
+      "observations": "漫画勾线、墨线、色块和纸底明确，五官连续、头肩完整；眼周和颈部线描略成熟，可接受为风格化夸张，不作身份或真实年龄保真保证。",
+      "reportSha256": "7523906d68c0e58284350913100fd06bf9a2f975efb42986d62189f3502b25ee",
+      "outputSha256": "09cb6d6ce6ffab22c5b28a81241cf55fcf5f95f05c2aab931755ba11dab85ed9",
+      "report": "mini-photo-modern-comic-v1-20261015.json",
+      "output": "mini-photo-modern-comic-v1-20261015.png"
+    },
+    {
+      "effectId": "gentle-watercolor",
+      "effectVersion": "gentle-watercolor-v1-20261015",
+      "technicalPassed": true,
+      "decision": "accepted",
+      "observations": "水彩晕染、柔和笔触、纸纹及留白清楚；五官结构与发型布局大体保留，未见明显加龄或器官错误。",
+      "reportSha256": "6e7389a6e2b3040b116bd3757d23bf124823e52ab78658f612f2d37fe3b0b885",
+      "outputSha256": "3921befdd2dad79efecc9d97845f3a5ae9eb28d3004c26e3f9acc609e4340d94",
+      "report": "mini-photo-gentle-watercolor-v1-20261015.json",
+      "output": "mini-photo-gentle-watercolor-v1-20261015.png"
+    }
+  ]
+}

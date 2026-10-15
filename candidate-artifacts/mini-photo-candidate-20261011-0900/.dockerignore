@@ -1,0 +1,13 @@
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!runtime-image.json
+!manifest.json
+!media-validation.js
+!mark-ai.py
+!photo-jobs
+!photo-jobs/*.js
+!payments
+!payments/virtual
+!payments/virtual/*.js

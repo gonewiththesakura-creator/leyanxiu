@@ -1,0 +1,56 @@
+{
+  "format": "mini-production-gray-routing-observation-v1",
+  "recordedAt": "2026-10-12T03:47:02+08:00",
+  "service": "buildtest",
+  "candidate": "buildtest-014",
+  "predecessor": "buildtest-013",
+  "finalTestRule": "URL_PARAMS",
+  "testRuleCount": 1,
+  "releaseOrder": {
+    "currentVersion": "buildtest-013",
+    "releaseVersion": "buildtest-014",
+    "releaseStatus": "test",
+    "grayStatus": "success"
+  },
+  "predecessorEnvironmentDirectComparisonUnchanged": true,
+  "ordinaryCallContainerHealthAfterRestoration": {
+    "sameApp": true,
+    "statusCode": 200,
+    "sandboxScopeConfirmed": true,
+    "closed": true,
+    "healthy": true,
+    "productionScope": false
+  },
+  "parameterCallContainerHealthAfterRestoration": {
+    "sameApp": true,
+    "statusCode": 200,
+    "productionScopeConfirmed": true,
+    "paymentPrepared": true,
+    "paymentOperationsReady": true,
+    "photoPrepared": true,
+    "acceptingRequests": true,
+    "salesClosed": true,
+    "generationClosed": true,
+    "healthy": true
+  },
+  "temporaryDeveloperRuleObservation": {
+    "saved": true,
+    "ordinaryHealthReachedEnv0Closed": true,
+    "retainedAsFinalRule": false
+  },
+  "versionListObservation": {
+    "fieldsWereExplicitlyPresent": true,
+    "predecessorFlowRatio": 0,
+    "candidateFlowRatio": 0,
+    "predecessorIsDefaultPriority": false,
+    "candidateIsDefaultPriority": false,
+    "trafficType": "",
+    "percentageWeightVerified": false
+  },
+  "limits": [
+    "Release-order identity, direct predecessor configuration and actual health calls are separate observations.",
+    "Raw version-list fields did not establish percentage weights or a unique default-priority marker; existing status checks remain unconfirmed.",
+    "No promotion, paid generation, payment, business login or business POST was performed in this routing check.",
+    "The temporary developer routing rule was replaced with the original parameter rule. Future full client merchant acceptance must configure and verify its complete test route again."
+  ]
+}

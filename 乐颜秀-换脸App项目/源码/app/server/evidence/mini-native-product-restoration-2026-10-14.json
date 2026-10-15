@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-14",
+  "scope": "Original product native mini-program adaptation, local candidate",
+  "canonicalSource": "miniprogram",
+  "tabs": ["推荐", "视频玩法", "精选", "百变图片", "我的"],
+  "originalAssetsPreserved": true,
+  "pictures": 37,
+  "photoEffectCatalogCount": 17,
+  "videoTemplateCount": 4,
+  "nativeCompilation": { "javascript": true, "json": true, "wxml": true, "wxss": true, "mainBytes": 1665088, "previewPackageBytes": 1240041 },
+  "tests": { "passed": 207, "failed": 0, "suiteFiles": 6 },
+  "runtime": {
+    "environment": "Official WeChat developer tools simulator",
+    "report": "../../output/native-product-20261014/runtime-check.json",
+    "review": "../../output/native-product-20261014/review.html",
+    "allFiveTabs": true,
+    "fourNativeVideosActuallyPlayed": true,
+    "videoMuteToggle": true,
+    "photoCategories": 4,
+    "browsingAccountConnection": false,
+    "unavailableEffectStartsJob": false,
+    "handsetAcceptance": false
+  },
+  "independentReview": {
+    "readOnlyViewCannotResumeGeneration": true,
+    "nativePrivacyBeforePaymentAccountRead": true,
+    "lateAuthorizationAndRefreshInvalidated": true,
+    "inactivePreviewCallbacksInvalidated": true
+  },
+  "liveActions": { "upload": false, "reviewSubmission": false, "release": false, "payment": false, "providerGeneration": false, "cloudConfigurationChange": false },
+  "remaining": [
+    "16 additional image effects and 4 video creation capabilities need actual durable pipeline integration and effect-specific acceptance",
+    "Android acceptance of the restored original UI",
+    "Formal env=0 purchase, delivery, save and refund loop in this UI",
+    "Current platform readback, review submission and release"
+  ]
+}

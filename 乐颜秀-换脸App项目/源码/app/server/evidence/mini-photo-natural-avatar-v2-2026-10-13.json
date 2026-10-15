@@ -1,0 +1,69 @@
+{
+  "recordVersion": 1,
+  "date": "2026-10-13",
+  "authorization": "REDACTED_PRIVATE",
+  "probeVersion": "natural-avatar-v2-20261013",
+  "executed": true,
+  "syntheticOnly": true,
+  "provider": "aliyun-qwen-image",
+  "model": "qwen-image-2.0-2026-03-03",
+  "effectId": "natural-avatar",
+  "inputSha256": "56eb47602d36864b6eec9514ddb091cfa2b71309558c3e12917b3970329b947f",
+  "normalizedInputSha256": "f71c5d5a76157abfc260125935667e93370235f8caf296842202bdbf825cf018",
+  "specSha256": "5d4de1225b011792253dedda9730eda8fba9fc495e991dbd2f9c9119ad978bd9",
+  "attemptedGenerationCalls": 1,
+  "attemptedGreenCalls": 2,
+  "moderationServices": {
+    "input": "baselineCheck",
+    "output": "aigcCheck"
+  },
+  "inputAllowed": true,
+  "outputAllowed": true,
+  "marked": true,
+  "outputReadMatches": true,
+  "previewSaved": true,
+  "outputAbsentObserved": true,
+  "scratchAbsentObserved": 2,
+  "cleanupPending": false,
+  "permanentErasureConfirmed": false,
+  "historyErasureVerified": false,
+  "technicalPipelinePassed": true,
+  "output": {
+    "path": "mini-photo-natural-avatar-v2-20261013.png",
+    "format": "PNG",
+    "width": 1024,
+    "height": 1024,
+    "byteLength": 1181603,
+    "sha256": "d9ddb7c040075f73b4550cb3449c05018805c1957264016b481a4490a3dd2dc7",
+    "standardAigcNodeCount": 1,
+    "standardLabel": "1",
+    "operation": "edit"
+  },
+  "visualReview": {
+    "reviewedBy": [
+      "root",
+      "closed_gray_refresh",
+      "release_client_readiness"
+    ],
+    "qualityAccepted": true,
+    "disposition": "single-fictional-sample-pass-for-original-natural-avatar-offer",
+    "backgroundOnlyTargetMet": false,
+    "observations": [
+      "No v1-like pronounced aging, extra facial features or obvious distortion observed.",
+      "Skin is smoother, with modest facial-detail and contour changes; these fit the original disclosed AI-avatar offer but do not satisfy pixel preservation or background-only editing.",
+      "Natural soft light, neutral background and square head-and-shoulders framing provide visible value.",
+      "Own AI notice overlaps the provider watermark. A separately tested local layout fix moves our notice left; this immutable real output was not altered."
+    ],
+    "limits": "One fictional sample cannot establish real-person identity fidelity, population success rate, Android delivery or readiness for public sale. v1 remains rejected."
+  },
+  "localJournalAudit": {
+    "records": 16,
+    "generationIntentCount": 1,
+    "moderationIntentCount": 2,
+    "finishedCount": 1
+  },
+  "deployed": false,
+  "androidDeliveryVerified": false,
+  "productionApproved": false,
+  "paymentsAttempted": 0
+}

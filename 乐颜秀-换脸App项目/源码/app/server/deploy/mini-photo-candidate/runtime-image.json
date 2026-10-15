@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "registry": "https://registry-1.docker.io",
+  "repository": "library/node",
+  "observedTag": "22-bookworm-slim",
+  "observedOn": "2026-10-10",
+  "indexDigest": "sha256:c3de60bf2f9dd0ac6370e6117950ff62d6e339527e7472301c9c78a017978392",
+  "platform": "linux/amd64",
+  "manifestDigest": "sha256:efd0ab5780c2d9ab1f0f869571a00d5edb17793bff4cce4a2792e3eb0ffc7562",
+  "configDigest": "sha256:d0a16be756b6ec6658aecb8b7bcf87fa6c7d0d7fcc6ca53ad14bb49a4c90bdd7",
+  "configCreatedAt": "2026-10-06T01:45:41.041313292Z",
+  "nodeVersion": "22.23.3",
+  "verification": "official registry manifest and config only; no image layers pulled or container executed",
+  "osPackageVersions": "recorded by dpkg-query during an actual build; apt repository versions are not fixed here",
+  "imageBuilt": false
+}

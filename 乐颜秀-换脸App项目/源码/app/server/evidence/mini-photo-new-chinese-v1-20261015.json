@@ -1,0 +1,71 @@
+{
+  "executed": true,
+  "syntheticOnly": true,
+  "deployed": false,
+  "productionApproved": false,
+  "provider": "aliyun-qwen-image",
+  "model": "qwen-image-2.0-2026-03-03",
+  "probeVersion": "original-effects-v1-20261015",
+  "resultUrlPolicy": "qwen-dashscope-result-url-v1",
+  "labelVersion": "original-effects-v1-20261015",
+  "moderationVersion": "original-effects-v1-20261015",
+  "moderationServices": {
+    "input": "baselineCheck",
+    "output": "aigcCheck"
+  },
+  "maximumGenerationCalls": 1,
+  "maximumGreenCalls": 2,
+  "attemptedGenerationCalls": 1,
+  "attemptedGreenCalls": 2,
+  "inputAllowed": true,
+  "outputAllowed": true,
+  "marked": true,
+  "outputReadMatches": true,
+  "previewSaved": true,
+  "outputAbsentObserved": true,
+  "scratchAbsentObserved": 2,
+  "cleanupPending": false,
+  "permanentErasureConfirmed": false,
+  "historyErasureVerified": false,
+  "passed": true,
+  "acceptanceBinding": {
+    "inputKind": "ai-generated-fictional-adult-portrait",
+    "workspaceRelativePath": "output/imagegen/fictional-adult-avatar-20261012.jpg",
+    "contentType": "image/jpeg",
+    "width": 768,
+    "height": 1024,
+    "rawByteLength": 133268,
+    "rawSha256": "REDACTED_EMBEDDED_BINARY",
+    "normalizedByteLength": 206503,
+    "normalizedSha256": "f71c5d5a76157abfc260125935667e93370235f8caf296842202bdbf825cf018",
+    "effectId": "new-chinese",
+    "effectVersion": "new-chinese-v1-20261015",
+    "probeVersion": "original-effects-v1-20261015",
+    "specSha256": "1830a968b9ad1627a3a45e179ff21187e10e817371d429e275789b50459acec7"
+  },
+  "effectId": "new-chinese",
+  "effectVersion": "new-chinese-v1-20261015",
+  "specSha256": "1830a968b9ad1627a3a45e179ff21187e10e817371d429e275789b50459acec7",
+  "sourceParameters": {
+    "provider": "aliyun-qwen-image",
+    "model": "qwen-image-2.0-2026-03-03",
+    "effectParameters": {
+      "prompt": "以输入照片为唯一人物参考，严格保留同一个人的身份、五官、脸型、肤色、真实年龄、发型、神态和主要构图；只执行指定效果。不要换脸，不增加人物，不改变性别，不添加文字、标志或边框。转换为高级新中式人物肖像，现代东方服装、木质空间和柔和侧光。输出一张高清完整照片。",
+      "negativePrompt": "",
+      "size": "1024*1024",
+      "n": 1,
+      "watermark": true,
+      "promptExtend": false
+    }
+  },
+  "outputSha256": "e99747fe4b041d5cc07e91cebe4d6a41b06b562070f24309c36e6f174a5515bf",
+  "qualityAccepted": false,
+  "qualityReview": {
+    "status": "pending-visual-review",
+    "reviewer": null,
+    "notes": null
+  },
+  "manualCropAndQualityReviewRequired": false,
+  "androidDeliveryVerified": false,
+  "paymentsAttempted": 0
+}

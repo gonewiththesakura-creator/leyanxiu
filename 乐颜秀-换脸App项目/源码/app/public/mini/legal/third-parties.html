@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>服务提供方清单 · 乐颜秀小程序</title>
+  <style>
+:root {
+  color-scheme: light;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  color: #222b32;
+  background: #f7f8fa;
+  font-synthesis: none;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-size: 16px; line-height: 1.85; }
+main { width: min(100%, 50rem); margin: 0 auto; padding: 28px 20px 48px; }
+h1 { margin: 12px 0; font-size: clamp(1.5rem, 5.5vw, 2rem); line-height: 1.45; }
+h2 { margin: 32px 0 12px; font-size: 1.2rem; line-height: 1.6; }
+h3 { margin: 24px 0 8px; font-size: 1.05rem; line-height: 1.6; }
+p, li, dd { overflow-wrap: anywhere; }
+p { margin: 12px 0; }
+a { color: #165c78; text-underline-offset: 3px; overflow-wrap: anywhere; }
+a:focus-visible { outline: 3px solid #165c78; outline-offset: 4px; }
+.brand, .meta, footer { color: #56616b; font-size: .875rem; }
+.brand { margin: 0; }
+.status { margin: 20px 0; padding: 16px; background: #edf3f6; border-left: 3px solid #487287; }
+.status p { margin: 0; }
+.status strong { display: block; margin-bottom: 4px; }
+nav { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 16px 0; border-block: 1px solid #d9dfe4; }
+nav a { padding: 4px 0; }
+ol, ul { padding-left: 1.5em; }
+li { margin: 12px 0; }
+dl { margin: 16px 0; }
+dt { margin-top: 16px; font-weight: 600; }
+dd { margin: 4px 0 0; }
+.provider { padding: 4px 0 16px; border-bottom: 1px solid #d9dfe4; }
+footer { margin-top: 36px; border-top: 1px solid #d9dfe4; padding-top: 16px; }
+@media (max-width: 360px) {
+  main { padding-inline: 16px; }
+  .status { padding: 12px; }
+}
+@media print {
+  :root { background: #fff; color: #000; }
+  main { max-width: none; padding: 0; }
+  nav { display: none; }
+  h2, h3 { break-after: avoid; }
+}
+  </style>
+</head>
+<body>
+<main>
+  <p class="brand">乐颜秀 · 微信小程序</p>
+  <h1>服务提供方清单</h1>
+  <p class="meta">版本：2026-10-13 · 内部商测</p>
+  <aside class="status" aria-label="当前服务状态">
+    <p><strong>内部商测，尚未公众开售</strong>当前服务仅供获准的内部测试人员按实际开放范围验收，尚未向公众开放购买与图片制作。本清单说明服务的处理方，不表示已经通过平台审核。</p>
+  </aside>
+  <nav aria-label="服务文档">
+    <a href="privacy.html">隐私补充说明</a>
+    <a href="third-parties.html" aria-current="page">服务提供方清单</a>
+    <a href="terms.html">服务与退款规则</a>
+  </nav>
+  <p>运营者为REDACTED_COMPANY_NAME。以下三项图片服务由我们的服务器调用，不是在你手机内运行的第三方小程序插件；不会向模型或审核服务附带你的OpenID、手机号或支付订单信息。</p>
+
+  <section class="provider" aria-labelledby="model-provider">
+    <h2 id="model-provider">一、图片编辑：阿里云百炼</h2>
+    <dl>
+      <dt>服务提供主体</dt><dd>通义云启（杭州）信息技术有限公司。</dd>
+      <dt>处理目的和信息</dt><dd>接收你提交的单张照片及固定效果参数，生成单张编辑结果。涉及人脸时，须按制作前说明取得单独同意。</dd>
+      <dt>接入与范围</dt><dd>服务器调用中国内地北京接入点，当前固定模型为 qwen-image-2.0-2026-03-03。</dd>
+      <dt>数据使用和保存</dt><dd>百炼公开说明不将按量API调用数据用于模型训练，同时会按适用要求保存调用产生的数据。2026年10月12日核对的本服务北京工作空间推理日志未开启、资产中心未开通；这不代表供应商零留存，结果链接失效不代表其所有副本已经删除。</dd>
+    </dl>
+    <p><a href="https://terms.alicdn.com/legal-agreement/terms/common_platform_service/20230728213935489/20230728213935489.html">百炼服务及数据处理条款</a> · <a href="https://help.aliyun.com/zh/model-studio/privacy-notice">百炼隐私说明</a></p>
+  </section>
+
+  <section class="provider" aria-labelledby="moderation-provider">
+    <h2 id="moderation-provider">二、图片审核：阿里云内容安全</h2>
+    <dl>
+      <dt>服务提供主体</dt><dd>阿里云计算有限公司。</dd>
+      <dt>处理目的和信息</dt><dd>接收上传照片、生成结果及必要检测参数，用于识别违法、不良或侵权风险。我们保存必要的审核结论、请求编号和图片摘要；审核未通过或结果不明时，不作为可交付作品发布。</dd>
+      <dt>接入与范围</dt><dd>服务器调用上海地域的输入基线检测和AI生成内容检测，仅提供完成本次审核所需的图片和请求信息。</dd>
+      <dt>数据使用和保存</dt><dd>适用内容检测及数据保护条款；必要调用记录、安全记录和备份不等同于本方照片的在线使用期，不承诺处理方零留存。</dd>
+    </dl>
+    <p><a href="https://terms.alicdn.com/legal-agreement/terms/common_product_agreement/20230728095623471/20230728095623471.html">内容安全产品服务条款</a></p>
+  </section>
+
+  <section class="provider" aria-labelledby="storage-provider">
+    <h2 id="storage-provider">三、图片存储：阿里云对象存储OSS</h2>
+    <dl>
+      <dt>服务提供主体</dt><dd>阿里云计算有限公司。</dd>
+      <dt>处理目的和信息</dt><dd>保存原图、作品、审核临时对象及必要的对象标识，用于完成图片处理、受限查看和下载。</dd>
+      <dt>接入与范围</dt><dd>使用中国内地上海地域的对象存储，逐对象设置私有访问，通过我们的服务器按用户身份授权；作品访问链接最长有效60秒。</dd>
+      <dt>数据使用和保存</dt><dd>原图和结果各自最长24小时在线使用期；到期、删除或撤回相关授权后停止新的访问授权并进入后台清理。审核临时对象在请求结束后尝试删除，未确认完成的继续核查。链接失效、访问撤销与对象及全部备份删除是不同的状态。</dd>
+    </dl>
+    <p><a href="https://terms.aliyun.com/legal-agreement/terms/suit_bu1_ali_cloud/suit_bu1_ali_cloud201802111644_32057.html">OSS存储服务协议</a></p>
+  </section>
+
+  <section aria-labelledby="wechat-platform">
+    <h2 id="wechat-platform">四、微信平台与微信云托管</h2>
+    <p>微信提供小程序运行、微信登录和官方支付能力。我们通过微信登录取得本小程序的OpenID、建立账户和登录会话，处理必要的商品、订单、次数及退款记录；付款在微信提供的流程中完成，我们不获取支付密码或完整银行卡资料。</p>
+    <p>我们的服务和必要业务记录运行、保存在微信云托管中。平台网络安全日志可能包含IP地址、请求时间及运行状态。平台自身的信息处理适用其公开隐私规则；上述服务器服务不作为在你手机内运行的第三方小程序插件列示。</p>
+    <p><a href="https://weixin.qq.com/cgi-bin/readtemplate?lang=zh_CN&amp;t=weixin_agreement&amp;s=privacy">微信隐私保护指引</a> · <a href="https://cloud.tencent.com/document/product/301/11470">腾讯云隐私政策</a></p>
+  </section>
+
+  <h2>处理范围与权利申请</h2>
+  <p>当前图片处理和业务存储配置在中国内地，我们不主动把照片发送到境外服务。不出售照片，不将其用于广告、人脸身份库或我们自行开展的模型训练。目的或处理方发生实质变化时，会重新告知并依法取得相应同意。</p>
+  <p>详细保存、撤回和删除规则见<a href="privacy.html">个人信息处理补充说明</a>。你可通过 <a href="mailto:REDACTED_COMPANY_CONTACT_EMAIL">REDACTED_COMPANY_CONTACT_EMAIL</a> 提出权利申请；需要处理方配合时，我们会提出请求并跟进进展，不将本方访问撤销描述为第三方所有副本已永久擦除。</p>
+  <footer>运营者：REDACTED_COMPANY_NAME<br>个人信息保护与客服：<a href="mailto:REDACTED_COMPANY_CONTACT_EMAIL">REDACTED_COMPANY_CONTACT_EMAIL</a></footer>
+</main>
+</body>
+</html>

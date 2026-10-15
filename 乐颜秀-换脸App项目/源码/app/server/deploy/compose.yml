@@ -1,0 +1,48 @@
+name: leyanxiu
+
+services:
+  api:
+    image: leyanxiu-api:${IMAGE_TAG:-staging}
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    init: true
+    restart: unless-stopped
+    env_file:
+      - /etc/leyanxiu/server.env
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      DATA_DIR: /var/lib/leyanxiu/data
+      ADMIN_DATA_DIR: /var/lib/leyanxiu/data
+      ADMIN_STORE_FILE: /var/lib/leyanxiu/data/admin-console.json
+      ADMIN_WORKFLOW_DATA_DIR: /var/lib/leyanxiu/data
+      ADMIN_WORKFLOW_STORE_FILE: /var/lib/leyanxiu/data/admin-workflows.json
+      CAPABILITY_EVIDENCE_DIR: /var/lib/leyanxiu/reports/capabilities
+      PRIVATE_OBJECT_DIR: /var/lib/leyanxiu/private-objects
+      OBJECT_INDEX_FILE: /var/lib/leyanxiu/data/object-index.json
+      PRIVATE_BUCKET_AUDIT_REPORT: /var/lib/leyanxiu/reports/private-bucket-audit.json
+      METRICS_LOG_PATH: /var/lib/leyanxiu/logs/metrics.jsonl
+      REPAIR_WORK_DIR: /tmp/leyanxiu
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - /var/lib/leyanxiu/data:/var/lib/leyanxiu/data
+      - /var/lib/leyanxiu/private-objects:/var/lib/leyanxiu/private-objects
+      - /var/lib/leyanxiu/reports:/var/lib/leyanxiu/reports
+      - /var/lib/leyanxiu/logs:/var/lib/leyanxiu/logs
+      - /var/lib/leyanxiu/work:/tmp/leyanxiu
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 256
+    mem_limit: 3g
+    cpus: 1.75
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: 20m
+        max-file: "5"

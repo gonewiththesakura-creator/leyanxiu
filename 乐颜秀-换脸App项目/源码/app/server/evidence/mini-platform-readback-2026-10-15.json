@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-15",
+  "source": "existing-chrome-devtools-mcp-visible-ui",
+  "appName": "乐颜秀",
+  "appId": "REDACTED_APP_IDENTIFIER",
+  "operator": "REDACTED_COMPANY_NAME",
+  "authentication": {"status": "已认证", "completedOn": "2026-08-05"},
+  "filing": {"status": "已备案"},
+  "category": ["深度合成", "AI换脸"],
+  "versions": {
+    "developmentVersion": "0.1.14",
+    "uploadedAt": "2026-10-15 01:35:40",
+    "remark": "原版黑粉五栏目恢复；图片三效果接线；内部商测开发包，未提交审核",
+    "experienceVersion": "0.1.14",
+    "experienceEntry": "pages/featured/index",
+    "experienceQrReadback": "乐颜秀体验版；路径 pages/featured/index；该二维码10月22日前有效",
+    "auditSubmitted": false,
+    "onlinePublished": false
+  },
+  "serviceDeclarations": {
+    "privacySettingsLabel": "已更新",
+    "privacyApprovalVerified": true,
+    "privacyApprovalNotificationDate": "2026-10-12",
+    "privacyApprovalText": "你好，你提交的小程序“乐颜秀”用户隐私保护指引已审核通过。",
+    "ugcSettingsLabel": "已声明",
+    "orderCenterPath": "/pages/payments/index",
+    "orderCenterApprovalVerified": true,
+    "orderCenterApprovalNotificationDate": "2026-10-12",
+    "orderCenterApprovalText": "你好，你提交的小程序订单中心path设置审核已通过。",
+    "privacyDetailLimitation": "去完善仍打开ver=1/id=0表单；本次通过已提交资料的审核通知确认审核通过，未更改或重提该表单。"
+  },
+  "messagePush": {"source": "微信云托管全局设置现场只读", "appId": "REDACTED_APP_IDENTIFIER", "environment": "leyanxiu-prod-d5gimob8af6a6e5c9", "service": "buildtest", "path": "/api/mini/payments/notify/cloud", "mode": "JSON", "configurationVerified": true, "businessEventReceivedVerified": false},
+  "changes": {"experienceSet": true, "auditSubmitted": false, "onlinePublished": false, "privacyResubmitted": false, "productChanged": false}
+}

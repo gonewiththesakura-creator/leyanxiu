@@ -1,0 +1,118 @@
+{
+  "format": "mini-legal-static-refresh-verification-v1",
+  "observedFrom": "2026-10-13T09:08:26.284Z",
+  "observedAt": "2026-10-13T09:08:26.496Z",
+  "localDate": "2026-10-13",
+  "timeZone": "Asia/Shanghai",
+  "origin": "https://REDACTED_COMPANY_INFRASTRUCTURE",
+  "bundleSha256": "628354a2f04d593b23f988410cc371d7a1171e7d04ce19c256fc7a471a34b226",
+  "bundleBytes": 16087,
+  "previousBundleSha256": "03dd297400a2a50dab4ef0947c668bb7b2bdf343bf63a5e173e0ce5c0ed7b2b1",
+  "passed": true,
+  "operation": {
+    "mode": "fixed-three-page-refresh",
+    "uploadInvocationId": "REDACTED_COMPANY_CLOUD_OPERATION",
+    "refreshInvocationId": "REDACTED_COMPANY_CLOUD_OPERATION",
+    "status": "Success",
+    "phase": "active",
+    "confirmedCode": "MINI_LEGAL_REFRESHED",
+    "uploadDispatches": 1,
+    "refreshDispatches": 1,
+    "mutationRetries": 0,
+    "backupDirectory": "/var/www/.leyanxiu-mini-legal-628354a2f04d593b23f988410cc371d7a1171e7d04ce19c256fc7a471a34b226-refresh/backup",
+    "allOldPageBackupsVerifiedBeforeReplacement": true,
+    "replacement": "atomic os.replace per file after all three backups and staged files were verified",
+    "nginxSiteSha256VerifiedBeforeAndAfter": "074b16ee9c06bf42c47664c1da7dcd76b3e97a6d587217961474b24d69fddab7",
+    "nginxSnippetSha256VerifiedBeforeAndAfter": "5ebe6b23c5e71ebfd21111a070b244bfc4c8d6dc334f2b69a70bfa58cf4a496c",
+    "nginxConfigurationWrites": 0,
+    "serviceReloadCalls": 0,
+    "serviceRestartCalls": 0,
+    "businessApiCalls": 0,
+    "cloudbaseDeploymentCalls": 0
+  },
+  "preflight": {
+    "publicGetRequests": 3,
+    "allPagesMatched20261012Evidence": true
+  },
+  "newPages": [
+    {
+      "path": "/mini/legal/privacy.html",
+      "getStatus": 200,
+      "headStatus": 200,
+      "headBodyBytes": 0,
+      "bytes": 12574,
+      "sha256": "cccb8006f2ad073ea757f5621c2199c949a3f94b12dd8f641783128c5396169f",
+      "matchesReviewedPage": true,
+      "internalMerchantTestNotPublicSale": true
+    },
+    {
+      "path": "/mini/legal/terms.html",
+      "getStatus": 200,
+      "headStatus": 200,
+      "headBodyBytes": 0,
+      "bytes": 12176,
+      "sha256": "fdcf1675f2f21477cb892e2b6f23737ff6d3dc2e18abd1f17e3902aa68d64216",
+      "matchesReviewedPage": true,
+      "internalMerchantTestNotPublicSale": true
+    },
+    {
+      "path": "/mini/legal/third-parties.html",
+      "getStatus": 200,
+      "headStatus": 200,
+      "headBodyBytes": 0,
+      "bytes": 8213,
+      "sha256": "0099e07b443855dab5cba880a86cdd617f3d2ed324594fc4ea4dbf181c7ea663",
+      "matchesReviewedPage": true,
+      "internalMerchantTestNotPublicSale": true
+    }
+  ],
+  "existingAppPages": [
+    {
+      "path": "/app/legal/privacy.html",
+      "status": 200,
+      "bytes": 7541,
+      "sha256": "c62e61362112b055441c581e03a006a58900fef974f477d665159cf24cdae9fe",
+      "matchesPreviousVersion": true
+    },
+    {
+      "path": "/app/legal/terms.html",
+      "status": 200,
+      "bytes": 4487,
+      "sha256": "caf7680fbfaf78fd42e5534327900cd27ba9dc97fec02bc4b1762a6869d19646",
+      "matchesPreviousVersion": true
+    }
+  ],
+  "headersObservedOnAllMiniPageGetAndHeadResponses": {
+    "content-type": "text/html; charset=utf-8",
+    "strict-transport-security": "max-age=31536000",
+    "x-content-type-options": "nosniff",
+    "cache-control": "no-cache"
+  },
+  "publicVerificationRequests": 8,
+  "publicVerification": {
+    "credentialsSent": false,
+    "redirectsAllowed": false,
+    "postRequests": 0
+  },
+  "localValidation": {
+    "existingAndRefreshTestsPassed": 16,
+    "failures": 0,
+    "checks": [
+      "fixed old evidence and new bundle hashes",
+      "backup then per-file atomic replacement",
+      "old page or Nginx drift rejects before mutation",
+      "second replacement failure restores all old pages",
+      "status is read-only and can recognize completion without a result receipt",
+      "mixed pages are reported without mutation",
+      "hardlinks are rejected",
+      "timeout permits inspection only, never a second update dispatch"
+    ],
+    "unixPermissionChecks": "Local Windows fixture adapter does not emulate Unix permissions; the real Linux refresh command enforced root ownership, non-writable ancestors, exact modes and O_NOFOLLOW before reporting success."
+  },
+  "limitations": [
+    "Only the three mini-program public HTML pages were refreshed; no WeChat supplementary TXT was submitted by this operation.",
+    "This is not WeChat review approval, company PIPIA approval, public sale, payment acceptance or image-generation availability.",
+    "Per-file replacement is atomic; the three-page set is not switched in one filesystem transaction.",
+    "The backup and Nginx hash assertions were enforced by the successful fixed-hash remote command; public HTTP verifies the new page bytes independently."
+  ]
+}

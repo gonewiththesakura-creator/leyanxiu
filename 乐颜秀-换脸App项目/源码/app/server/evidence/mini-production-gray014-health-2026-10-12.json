@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "observedAt": "2026-10-12T02:44:22.560+08:00",
+  "transport": "official-wechatide-automation-evaluate-wx-cloud-callContainer",
+  "reportedCandidateVersion": "buildtest-014",
+  "reportedDefaultVersion": "buildtest-013",
+  "reportedReleaseTask": 2335630,
+  "versionMappingSource": "parent-control-plane-observation",
+  "healthResponseDoesNotProveVersionId": true,
+  "requests": [
+    {
+      "grayRoute": true,
+      "attempts": 1,
+      "toolSucceeded": true,
+      "result": {
+        "statusCode": 200,
+        "appScopeConfirmed": true,
+        "callContainerAvailable": true,
+        "receivedHttp200": true,
+        "productionScopeConfirmed": true,
+        "oldSandboxScopeConfirmed": false,
+        "paymentPrepared": true,
+        "paymentOperationsReady": true,
+        "photoPrepared": true,
+        "acceptingRequests": true,
+        "salesClosed": true,
+        "generationClosed": true,
+        "closedHostHealthy": true,
+        "oldSandboxHealthy": false,
+        "requestFailed": false
+      }
+    },
+    {
+      "grayRoute": false,
+      "attempts": 1,
+      "toolSucceeded": true,
+      "result": {
+        "statusCode": 200,
+        "appScopeConfirmed": true,
+        "callContainerAvailable": true,
+        "receivedHttp200": true,
+        "productionScopeConfirmed": false,
+        "oldSandboxScopeConfirmed": true,
+        "paymentPrepared": false,
+        "paymentOperationsReady": false,
+        "photoPrepared": false,
+        "acceptingRequests": false,
+        "salesClosed": false,
+        "generationClosed": false,
+        "closedHostHealthy": false,
+        "oldSandboxHealthy": true,
+        "requestFailed": false
+      }
+    }
+  ],
+  "defaultLegacyContractDoesNotHaveProductionPreparedFlags": true,
+  "businessLoginPerformed": false,
+  "paymentInvoked": false,
+  "modelInvoked": false,
+  "greenInvoked": false,
+  "cloudConfigurationChangedByThisCheck": false,
+  "rawResponsesRecorded": false,
+  "identityOrTestParametersRecorded": false
+}

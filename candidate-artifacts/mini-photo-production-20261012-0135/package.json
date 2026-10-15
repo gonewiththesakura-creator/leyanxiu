@@ -1,0 +1,16 @@
+{
+  "name": "leyanxiu-mini-photo-production",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": { "start": "node photo-jobs/production-bootstrap.js" },
+  "dependencies": {
+    "@alicloud/openapi-client": "0.4.15",
+    "@alicloud/tea-util": "1.4.9",
+    "@hono/node-server": "1.19.17",
+    "ali-oss": "6.23.0",
+    "hono": "4.13.7",
+    "mysql2": "3.24.4"
+  },
+  "overrides": { "qs": "6.16.0" }
+}

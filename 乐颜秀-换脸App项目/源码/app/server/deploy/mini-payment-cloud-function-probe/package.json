@@ -1,0 +1,10 @@
+{
+  "name": "leyanxiu-mini-payment-cloud-function-probe",
+  "version": "0.0.0",
+  "private": true,
+  "type": "commonjs",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "4.0.2"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "envFilePresent": true,
+  "safeConfiguration": {
+    "PROVIDER": "aliyun",
+    "PHOTO_PROVIDER": null,
+    "LLM_PROVIDER": null,
+    "DEPLOY_ENV": null,
+    "RELEASE_CHANNEL": null,
+    "AUTH_MODE": null,
+    "CLOSED_TEST_MODE": null,
+    "TASKS_BACKEND": "oss",
+    "OBJECT_STORAGE_BACKEND": null,
+    "OSS_REGION": "oss-cn-shanghai",
+    "TENCENT_REGION": "ap-guangzhou",
+    "DEEPSEEK_MODEL": null,
+    "PHOTO_EDIT_MODEL": null,
+    "BAILIAN_MODEL": null,
+    "CONTENT_SAFETY_MODE": null,
+    "PAYMENT_MODE": null,
+    "MONITORING_MODE": null
+  },
+  "credentialPresence": {
+    "WECHAT_APP_ID": false,
+    "WECHAT_APP_SECRET": false,
+    "MINIPROGRAM_APPID": false,
+    "ALIYUN_ACCESS_KEY_ID": true,
+    "ALIYUN_ACCESS_KEY_SECRET": true,
+    "TENCENT_SECRET_ID": true,
+    "TENCENT_SECRET_KEY": true,
+    "VOLC_API_KEY": true,
+    "DASHSCOPE_API_KEY": true,
+    "DEEPSEEK_API_KEY": true,
+    "PAYMENT_WEBHOOK_SECRET": false,
+    "OBJECT_SIGNING_SECRET": false,
+    "AUTH_SESSION_SECRET": false,
+    "INTERNAL_CRON_TOKEN": false
+  },
+  "warning": "仅记录是否存在，不包含任何密钥值；所有既有密钥在正式上线前应由公司账号轮换。"
+}

@@ -1,0 +1,13 @@
+# Private configuration remains local.
+.env
+.env.*
+!**/.env*example*
+*.pem
+*.key
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.sqlite*
+*.db
+private-redaction-*.json

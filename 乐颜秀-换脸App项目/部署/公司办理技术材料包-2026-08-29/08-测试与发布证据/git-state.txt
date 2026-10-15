@@ -1,0 +1,119 @@
+M .gitignore
+ M eslint.config.js
+ M index.html
+ M package-lock.json
+ M package.json
+ D public/avatars/a1.png
+ D public/avatars/a2.png
+ D public/avatars/a3.png
+ D public/templates/guangchang.jpg
+ D public/templates/jinqu.jpg
+ D public/templates/junlv.jpg
+ D public/templates/qipao.jpg
+ D public/templates/shouyan.jpg
+ D public/templates/xiqu.jpg
+ M server/.env.example
+ M server/README.md
+ M server/index.js
+ M server/package.json
+ M server/providers/aliyun.js
+ M src/App.css
+ M src/App.tsx
+ M src/data/templates.ts
+ M src/index.css
+ M src/lib/api.ts
+ M src/lib/growth.ts
+ M src/main.tsx
+ M src/views/Flow.tsx
+ M src/views/Home.tsx
+ M src/views/Mine.tsx
+ M src/views/Share.tsx
+ M vite.config.ts
+?? .github/
+?? output/
+?? public/avatars/sample-man-openai-r2.webp
+?? public/avatars/sample-woman-openai-r2.webp
+?? public/avatars/sample-young-woman-openai-r2.webp
+?? public/banners/
+?? public/effects/
+?? public/plays/
+?? public/templates/ai-avatar-openai-r8.webp
+?? public/templates/classic-song-openai-r2.webp
+?? public/templates/classic-song-preview-r12.mp4
+?? public/templates/classic-song-preview-r4.mp4
+?? public/templates/classic-song-preview-r9.mp4
+?? public/templates/comic-openai-r8.webp
+?? public/templates/dance-preview-r12.mp4
+?? public/templates/dance-r12.webp
+?? public/templates/night-song-openai-r2.webp
+?? public/templates/night-song-preview-r4.mp4
+?? public/templates/night-song-preview-r9.mp4
+?? public/templates/quote-preview-r12.mp4
+?? public/templates/quote-r12.webp
+?? public/templates/restore-openai-r2.webp
+?? public/templates/watercolor-openai-r2.webp
+?? public/templates/westlake-openai-r2.webp
+?? public/templates/younger-openai-r2.webp
+?? server/.dockerignore
+?? server/Dockerfile
+?? server/_deploy-20260819.mjs
+?? "server/_\347\231\276\347\202\274\345\205\215\350\264\271\351\242\235\345\272\246\346\266\210\350\200\227.mjs"
+?? "server/_\347\231\276\347\202\274\346\266\210\350\200\227-qwen-image-3.mjs"
+?? "server/_\347\231\276\347\202\274\346\266\210\350\264\271\350\256\260\345\275\225-20260813.mjs"
+?? "server/_\347\231\276\347\202\274\350\247\206\351\242\221\346\215\242\350\204\270\346\265\213\350\257\225.mjs"
+?? "server/_\350\205\276\350\256\257\346\266\210\350\264\271\350\256\260\345\275\225-20260812.mjs"
+?? server/add-template.js
+?? server/ai-marking.js
+?? server/assets/
+?? server/auth.js
+?? server/compare-providers.js
+?? server/compliance-store.js
+?? server/content-safety.js
+?? server/docs/
+?? server/evidence/
+?? server/fix-occlusion.py
+?? server/generate-play-assets.mjs
+?? server/idphoto-compose.py
+?? server/mark-ai.py
+?? server/matting.js
+?? server/metrics.js
+?? server/monitoring.js
+?? server/network-policy.js
+?? server/package-lock.json
+?? server/photo-bg-compose.py
+?? server/photo-effects.js
+?? server/precompute-mask.py
+?? server/provider-registry.js
+?? server/providers/bailian.js
+?? server/providers/deepseek.js
+?? server/providers/hunyuan.js
+?? server/providers/qwen-image.js
+?? server/providers/seededit.js
+?? server/providers/tencent-ft.js
+?? server/providers/tencent.js
+?? server/providers/viapi.js
+?? server/providers/volcengine.js
+?? server/providers/wanx.js
+?? server/repair.js
+?? server/retention.js
+?? server/screen-template.py
+?? server/scripts/
+?? server/storage.js
+?? server/supplier-lifecycle.js
+?? server/tasks-store.js
+?? server/test-photo-models.mjs
+?? server/test-photo-production.mjs
+?? server/test-viapi.js
+?? server/testpage.html
+?? server/tests/
+?? server/upload-test-assets.js
+?? server/web/
+?? "server/\347\231\276\347\202\274\350\260\203\347\224\250\350\256\260\345\275\225-20260813/"
+?? "server/\350\205\276\350\256\257\350\260\203\347\224\250\350\256\260\345\275\225-20260812/"
+?? src/archive/
+?? src/data/effects.ts
+?? src/views/Custom.tsx
+?? src/views/Play.tsx
+?? src/views/Rank.tsx
+?? src/views/Songs.tsx
+?? src/views/TemplateMedia.tsx

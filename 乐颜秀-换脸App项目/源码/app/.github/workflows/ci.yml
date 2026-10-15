@@ -1,0 +1,27 @@
+name: leyanxiu-ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - name: Install server dependencies
+        working-directory: server
+        run: npm ci --ignore-scripts
+      - name: Server checks
+        working-directory: server
+        run: npm run lint && npm test && npm audit --omit=dev --audit-level=high
+      - name: Generate server SBOM
+        working-directory: server
+        run: npm run sbom

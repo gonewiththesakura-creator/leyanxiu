@@ -1,0 +1,675 @@
+
+> leyanxiu-server@0.1.0 test
+> node --test tests/*.test.mjs
+
+TAP version 13
+# {"level":"info","event":"tasks.file_loaded","details":{},"createdAt":"2026-09-23T01:47:16.046Z"}
+# {"level":"warn","event":"admin.login_rejected","details":{"requestId":"req_d8a3dc20-b244-418f-bf4b-b7812252be8c","source":"unavailable"},"createdAt":"2026-09-23T01:47:16.224Z"}
+# Subtest: admin console protects, validates, publishes and rolls back catalog changes
+ok 1 - admin console protects, validates, publishes and rolls back catalog changes
+  ---
+  duration_ms: 548.7192
+  type: 'test'
+  ...
+# Subtest: legacy catalogs are sealed once while unknown historical releases stay blocked
+ok 2 - legacy catalogs are sealed once while unknown historical releases stay blocked
+  ---
+  duration_ms: 40.4013
+  type: 'test'
+  ...
+# {"level":"error","event":"catalog.published_asset_integrity_failed","details":{"path":"/templates/classic-song-openai-r2.webp","reason":"changed"},"createdAt":"2026-09-23T01:47:16.695Z"}
+# {"level":"alert","event":"alert.drill","details":{},"createdAt":"2026-09-23T01:47:16.931Z"}
+# Subtest: published static assets fail closed when their sealed bytes change
+ok 3 - published static assets fail closed when their sealed bytes change
+  ---
+  duration_ms: 50.6885
+  type: 'test'
+  ...
+# Subtest: admin capability intake enforces roles, revisions and ordered review
+ok 4 - admin capability intake enforces roles, revisions and ordered review
+  ---
+  duration_ms: 217.2961
+  type: 'test'
+  ...
+# Subtest: risk handling requires authentication, CSRF, role and current revision
+ok 5 - risk handling requires authentication, CSRF, role and current revision
+  ---
+  duration_ms: 207.4457
+  type: 'test'
+  ...
+# Subtest: admin media validates bytes/rights/path and saves unique immutable decodable images
+ok 6 - admin media validates bytes/rights/path and saves unique immutable decodable images
+  ---
+  duration_ms: 2219.8091
+  type: 'test'
+  ...
+# Subtest: admin media accepts a real bounded MP4 and records dimensions/duration
+ok 7 - admin media accepts a real bounded MP4 and records dimensions/duration
+  ---
+  duration_ms: 196.5734
+  type: 'test'
+  ...
+# Subtest: admin media rejects forged video headers through actual decoder
+ok 8 - admin media rejects forged video headers through actual decoder
+  ---
+  duration_ms: 42.0139
+  type: 'test'
+  ...
+# Subtest: snapshot survives a new container with catalog, workflow and media, excluding secrets
+ok 9 - snapshot survives a new container with catalog, workflow and media, excluding secrets
+  ---
+  duration_ms: 53.637
+  type: 'test'
+  ...
+# Subtest: failed upload does not advance pointer and locks subsequent writes
+ok 10 - failed upload does not advance pointer and locks subsequent writes
+  ---
+  duration_ms: 32.7368
+  type: 'test'
+  ...
+# Subtest: restore rejects corrupt blob and differing local state, without installing incomplete snapshot
+ok 11 - restore rejects corrupt blob and differing local state, without installing incomplete snapshot
+  ---
+  duration_ms: 63.3379
+  type: 'test'
+  ...
+# Subtest: admin response awaits durable save and persistence failure prevents later mutations
+ok 12 - admin response awaits durable save and persistence failure prevents later mutations
+  ---
+  duration_ms: 73.5754
+  type: 'test'
+  ...
+# Subtest: public catalog is unavailable throughout an in-flight snapshot commit
+ok 13 - public catalog is unavailable throughout an in-flight snapshot commit
+  ---
+  duration_ms: 1.7753
+  type: 'test'
+  ...
+# Subtest: writer waits for admitted generation across awaits and blocks new readers
+ok 14 - writer waits for admitted generation across awaits and blocks new readers
+  ---
+  duration_ms: 3.8746
+  type: 'test'
+  ...
+# Subtest: reader failure releases waiting writers and queued writers stay exclusive
+ok 15 - reader failure releases waiting writers and queued writers stay exclusive
+  ---
+  duration_ms: 1.9081
+  type: 'test'
+  ...
+# Subtest: unauthenticated, missing CSRF, unauthorized role and unknown writes never acquire writer intent
+ok 16 - unauthenticated, missing CSRF, unauthorized role and unknown writes never acquire writer intent
+  ---
+  duration_ms: 120.128
+  type: 'test'
+  ...
+# Subtest: workflow store validates create fields and stays closed-test only
+ok 17 - workflow store validates create fields and stays closed-test only
+  ---
+  duration_ms: 17.887
+  type: 'test'
+  ...
+# Subtest: workflow store enforces the one-way status state machine
+ok 18 - workflow store enforces the one-way status state machine
+  ---
+  duration_ms: 34.3308
+  type: 'test'
+  ...
+# Subtest: workflow store detects stale revisions and exposes append-only audit history
+ok 19 - workflow store detects stale revisions and exposes append-only audit history
+  ---
+  duration_ms: 11.0145
+  type: 'test'
+  ...
+# Subtest: risk actions persist ownership, resolution, notes and immutable audit history
+ok 20 - risk actions persist ownership, resolution, notes and immutable audit history
+  ---
+  duration_ms: 29.5555
+  type: 'test'
+  ...
+# Subtest: legacy workflow files without risk records load without losing their audit chain
+ok 21 - legacy workflow files without risk records load without losing their audit chain
+  ---
+  duration_ms: 11.2101
+  type: 'test'
+  ...
+# Subtest: AI marking status is verified only by a pinned complete conformance report
+ok 22 - AI marking status is verified only by a pinned complete conformance report
+  ---
+  duration_ms: 427.3678
+  type: 'test'
+  ...
+# Subtest: video marking uses the supplied Chinese-visible label instead of a hard-coded English claim
+ok 23 - video marking uses the supplied Chinese-visible label instead of a hard-coded English claim
+  ---
+  duration_ms: 1.9539
+  type: 'test'
+  ...
+# Subtest: selects the auditable Aliyun video fusion model for each request mode
+ok 24 - selects the auditable Aliyun video fusion model for each request mode
+  ---
+  duration_ms: 0.9405
+  type: 'test'
+  ...
+# Subtest: parses the documented VIAPI Result JSON string and VideoUrl field
+ok 25 - parses the documented VIAPI Result JSON string and VideoUrl field
+  ---
+  duration_ms: 0.8838
+  type: 'test'
+  ...
+# Subtest: accepts object Result and historical URL key variants
+ok 26 - accepts object Result and historical URL key variants
+  ---
+  duration_ms: 0.144
+  type: 'test'
+  ...
+# Subtest: retains supplier failure code and message
+ok 27 - retains supplier failure code and message
+  ---
+  duration_ms: 0.1752
+  type: 'test'
+  ...
+# Subtest: fails explicitly when a successful result is malformed or has no video URL
+ok 28 - fails explicitly when a successful result is malformed or has no video URL
+  ---
+  duration_ms: 0.6749
+  type: 'test'
+  ...
+# Subtest: capabilities require configured providers, templates and 30 passing unique samples
+ok 29 - capabilities require configured providers, templates and 30 passing unique samples
+  ---
+  duration_ms: 29.187
+  type: 'test'
+  ...
+# Subtest: new catalog entries are validated, reviewed, published and bound to executable capabilities
+ok 30 - new catalog entries are validated, reviewed, published and bound to executable capabilities
+  ---
+  duration_ms: 56.2855
+  type: 'test'
+  ...
+# Subtest: offline migration validates restore and refuses overwrite; readiness rejects tampered evidence
+ok 31 - offline migration validates restore and refuses overwrite; readiness rejects tampered evidence
+  ---
+  duration_ms: 718.1543
+  type: 'test'
+  ...
+# Subtest: private ordered snapshots survive a new container and migrate local first-start baseline
+ok 32 - private ordered snapshots survive a new container and migrate local first-start baseline
+  ---
+  duration_ms: 32.4539
+  type: 'test'
+  ...
+# Subtest: failed remote write locks queued and future writes, and flush rejects without unhandled rejection
+ok 33 - failed remote write locks queued and future writes, and flush rejects without unhandled rejection
+  ---
+  duration_ms: 8.1884
+  type: 'test'
+  ...
+# Subtest: restore fails closed on connection errors or corrupt remote data even with a local ledger
+ok 34 - restore fails closed on connection errors or corrupt remote data even with a local ledger
+  ---
+  duration_ms: 54.422
+  type: 'test'
+  ...
+# Subtest: default file mode cannot accidentally use available cloud credentials
+ok 35 - default file mode cannot accidentally use available cloud credentials
+  ---
+  duration_ms: 0.3085
+  type: 'test'
+  ...
+# Subtest: flush waits for snapshots enqueued while a previous remote write is in progress
+ok 36 - flush waits for snapshots enqueued while a previous remote write is in progress
+  ---
+  duration_ms: 1.7824
+  type: 'test'
+  ...
+# Subtest: successful and error API replies await ledger persistence, including GET task polls
+ok 37 - successful and error API replies await ledger persistence, including GET task polls
+  ---
+  duration_ms: 39.9469
+  type: 'test'
+  ...
+# Subtest: failed ledger commit replaces success and removes unconfirmed session cookie
+ok 38 - failed ledger commit replaces success and removes unconfirmed session cookie
+  ---
+  duration_ms: 5.1826
+  type: 'test'
+  ...
+# Subtest: unhealthy ledger blocks business access while authenticated diagnostics remain reachable
+ok 39 - unhealthy ledger blocks business access while authenticated diagnostics remain reachable
+  ---
+  duration_ms: 2.6777
+  type: 'test'
+  ...
+# Subtest: sqlite reopens committed state and rolls back failed mutations
+ok 40 - sqlite reopens committed state and rolls back failed mutations
+  ---
+  duration_ms: 384.1703
+  type: 'test'
+  ...
+# Subtest: store rolls back partial mutations and nested account deletion commits together
+ok 41 - store rolls back partial mutations and nested account deletion commits together
+  ---
+  duration_ms: 3062.3071
+  type: 'test'
+  ...
+# Subtest: multiple server processes retain all users and idempotent orders
+ok 42 - multiple server processes retain all users and idempotent orders
+  ---
+  duration_ms: 1875.7246
+  type: 'test'
+  ...
+# {"level":"info","event":"tasks.file_loaded","details":{},"createdAt":"2026-09-23T01:47:16.175Z"}
+# {"level":"warn","event":"auth.device_signature_rejected","details":{"keyFingerprint":"fa3d3299b0c465606d9d7d89a46d417e7e994d789c7e9143329bf1b128953450","requestId":"req_a4aad861-4fa9-4a8f-849d-dcdeff7a56f9"},"createdAt":"2026-09-23T01:47:16.355Z"}
+# Subtest: P-256 device challenges are bound, short-lived and one-time
+ok 43 - P-256 device challenges are bound, short-lived and one-time
+  ---
+  duration_ms: 186.1587
+  type: 'test'
+  ...
+# Subtest: server env bootstrap loads beside server and preserves runtime overrides
+ok 44 - server env bootstrap loads beside server and preserves runtime overrides
+  ---
+  duration_ms: 129.8092
+  type: 'test'
+  ...
+# Subtest: mock provider requires an explicit opt-in and is never allowed in production
+ok 45 - mock provider requires an explicit opt-in and is never allowed in production
+  ---
+  duration_ms: 4943.8902
+  type: 'test'
+  ...
+# Subtest: occlusion repair preserves the supplier model and records post-processing separately
+ok 46 - occlusion repair preserves the supplier model and records post-processing separately
+  ---
+  duration_ms: 5.0097
+  type: 'test'
+  ...
+# Subtest: video matting preserves SegmentVideoBody and records maskedmerge separately
+ok 47 - video matting preserves SegmentVideoBody and records maskedmerge separately
+  ---
+  duration_ms: 0.3087
+  type: 'test'
+  ...
+# Subtest: image upload validation checks actual type and dimensions
+ok 48 - image upload validation checks actual type and dimensions
+  ---
+  duration_ms: 3.3083
+  type: 'test'
+  ...
+# Subtest: video upload validation rejects extension-only spoofing
+ok 49 - video upload validation rejects extension-only spoofing
+  ---
+  duration_ms: 1.0226
+  type: 'test'
+  ...
+# Subtest: private OSS snapshots restore real timestamps and sanitized alerts
+ok 50 - private OSS snapshots restore real timestamps and sanitized alerts
+  ---
+  duration_ms: 5.4583
+  type: 'test'
+  ...
+# Subtest: internal mutation persists without HTTP traffic and reports failed saves
+ok 51 - internal mutation persists without HTTP traffic and reports failed saves
+  ---
+  duration_ms: 37.3569
+  type: 'test'
+  ...
+# Subtest: invalid or oversized snapshots fail closed, no overwrite or cross-environment OSS
+ok 52 - invalid or oversized snapshots fail closed, no overwrite or cross-environment OSS
+  ---
+  duration_ms: 0.8759
+  type: 'test'
+  ...
+# Subtest: writes serialize and changes during save remain pending for next flush
+ok 53 - writes serialize and changes during save remain pending for next flush
+  ---
+  duration_ms: 1.1765
+  type: 'test'
+  ...
+# Subtest: public access rejects trial grants and ignores historical trial balance
+ok 54 - public access rejects trial grants and ignores historical trial balance
+  ---
+  duration_ms: 5.403
+  type: 'test'
+  ...
+# Subtest: production forbids trial credits even with an accidental test flag
+ok 55 - production forbids trial credits even with an accidental test flag
+  ---
+  duration_ms: 4.1809
+  type: 'test'
+  ...
+# Subtest: closed payment and unsupported client cannot create chargeable orders
+ok 56 - closed payment and unsupported client cannot create chargeable orders
+  ---
+  duration_ms: 49.6429
+  type: 'test'
+  ...
+# Subtest: order creation ignores client prices and retries do not create a second order
+ok 57 - order creation ignores client prices and retries do not create a second order
+  ---
+  duration_ms: 14.53
+  type: 'test'
+  ...
+# Subtest: another user cannot query or refund an owned order
+ok 58 - another user cannot query or refund an owned order
+  ---
+  duration_ms: 16.4355
+  type: 'test'
+  ...
+# Subtest: gateway amount mismatch cannot grant credits through query or notification
+ok 59 - gateway amount mismatch cannot grant credits through query or notification
+  ---
+  duration_ms: 19.7107
+  type: 'test'
+  ...
+# Subtest: query response must refer to the requested owned order rather than expose another order
+ok 60 - query response must refer to the requested owned order rather than expose another order
+  ---
+  duration_ms: 15.7699
+  type: 'test'
+  ...
+# Subtest: query then repeated provider notifications grant the purchased quota exactly once
+ok 61 - query then repeated provider notifications grant the purchased quota exactly once
+  ---
+  duration_ms: 33.6046
+  type: 'test'
+  ...
+# Subtest: refund approval processing holds quota until authenticated success, duplicates do not revoke twice
+ok 62 - refund approval processing holds quota until authenticated success, duplicates do not revoke twice
+  ---
+  duration_ms: 60.6801
+  type: 'test'
+  ...
+# Subtest: refund timeout preserves held quota and does not report a successful refund
+ok 63 - refund timeout preserves held quota and does not report a successful refund
+  ---
+  duration_ms: 25.6743
+  type: 'test'
+  ...
+# Subtest: operator reject returns held credits once and customer refund list is owner-scoped
+ok 64 - operator reject returns held credits once and customer refund list is owner-scoped
+  ---
+  duration_ms: 26.8803
+  type: 'test'
+  ...
+# Subtest: refund status sync recovers missed callback and rejects mismatched original amount
+ok 65 - refund status sync recovers missed callback and rejects mismatched original amount
+  ---
+  duration_ms: 82.157
+  type: 'test'
+  ...
+# Subtest: long customer refund reason cannot strand refund through provider UTF8 byte limit
+ok 66 - long customer refund reason cannot strand refund through provider UTF8 byte limit
+  ---
+  duration_ms: 26.8398
+  type: 'test'
+  ...
+# Subtest: closing order requires ownership and confirmed gateway close, timeout keeps pending
+ok 67 - closing order requires ownership and confirmed gateway close, timeout keeps pending
+  ---
+  duration_ms: 345.0188
+  type: 'test'
+  ...
+# Subtest: product updates require owner and reject invalid monetary amounts without overwriting valid catalog
+ok 68 - product updates require owner and reject invalid monetary amounts without overwriting valid catalog
+  ---
+  duration_ms: 18.4125
+  type: 'test'
+  ...
+# Subtest: new sales closed still allows old paid notifications and owner reconciliation exactly once
+ok 69 - new sales closed still allows old paid notifications and owner reconciliation exactly once
+  ---
+  duration_ms: 31.4678
+  type: 'test'
+  ...
+# Subtest: merchant_test accepts only explicitly allowlisted account and denies an empty list
+ok 70 - merchant_test accepts only explicitly allowlisted account and denies an empty list
+  ---
+  duration_ms: 13.7519
+  type: 'test'
+  ...
+# Subtest: prepay timeout returns persisted order for recovery without fake payment parameters
+ok 71 - prepay timeout returns persisted order for recovery without fake payment parameters
+  ---
+  duration_ms: 14.8128
+  type: 'test'
+  ...
+# Subtest: disabling new sales does not prevent refund approval of previously paid order
+ok 72 - disabling new sales does not prevent refund approval of previously paid order
+  ---
+  duration_ms: 27.0825
+  type: 'test'
+  ...
+# Subtest: failed operational durability gate cannot be bypassed by order query or manual reconciliation
+ok 73 - failed operational durability gate cannot be bypassed by order query or manual reconciliation
+  ---
+  duration_ms: 21.2099
+  type: 'test'
+  ...
+# Subtest: Android production treats device_key as auxiliary identity and still blocks without real-name verification
+ok 74 - Android production treats device_key as auxiliary identity and still blocks without real-name verification
+  ---
+  duration_ms: 3517.7606
+  type: 'test'
+  ...
+# Subtest: refund holds exactly once, prevents spend and success never double revokes
+ok 75 - refund holds exactly once, prevents spend and success never double revokes
+  ---
+  duration_ms: 40.3028
+  type: 'test'
+  ...
+# Subtest: reject releases hold once, ambiguous provider outcome keeps frozen
+ok 76 - reject releases hold once, ambiguous provider outcome keeps frozen
+  ---
+  duration_ms: 32.0797
+  type: 'test'
+  ...
+# Subtest: cannot refund another user, insufficient credits or reuse failed generation reference
+ok 77 - cannot refund another user, insufficient credits or reuse failed generation reference
+  ---
+  duration_ms: 25.7978
+  type: 'test'
+  ...
+# Subtest: unexpected payment states cannot downgrade paid orders
+ok 78 - unexpected payment states cannot downgrade paid orders
+  ---
+  duration_ms: 16.2248
+  type: 'test'
+  ...
+# Subtest: product catalog validates prices and names and never rewrites historic order pricing
+ok 79 - product catalog validates prices and names and never rewrites historic order pricing
+  ---
+  duration_ms: 27.9474
+  type: 'test'
+  ...
+# Subtest: JSON stdin transport keeps deployment secrets out of child argv
+ok 80 - JSON stdin transport keeps deployment secrets out of child argv
+  ---
+  duration_ms: 193.9899
+  type: 'test'
+  ...
+# Subtest: deployment child environment removes inherited credentials
+ok 81 - deployment child environment removes inherited credentials
+  ---
+  duration_ms: 1.4159
+  type: 'test'
+  ...
+# Subtest: deployment diagnostics redact nested admin hashes and escaped environment JSON
+ok 82 - deployment diagnostics redact nested admin hashes and escaped environment JSON
+  ---
+  duration_ms: 1.2827
+  type: 'test'
+  ...
+# {"level":"info","event":"tasks.file_loaded","details":{},"createdAt":"2026-09-23T01:47:16.990Z"}
+# {"level":"alert","event":"supplier_deletion.blocked","details":{"objectId":"obj_59d02dde-b901-4a70-bfd4-0e1e45c61683","provider":"unknown"},"createdAt":"2026-09-23T01:47:17.127Z"}
+# {"level":"alert","event":"supplier_deletion.blocked","details":{"objectId":"obj_32e3f9d2-3476-4aac-a1ff-23735b6e040b","provider":"unknown"},"createdAt":"2026-09-23T01:47:17.144Z"}
+# {"level":"alert","event":"supplier_deletion.blocked","details":{"objectId":"obj_f5a1fb65-597a-44f9-800b-ab2c5e836cd0","provider":"test-provider"},"createdAt":"2026-09-23T01:47:17.159Z"}
+# {"level":"alert","event":"retention.supplier_deletion_pending","details":{"pending":[{"objectId":"obj_f5a1fb65-597a-44f9-800b-ab2c5e836cd0","provider":"test-provider","status":"blocked_missing_contract"}]},"createdAt":"2026-09-23T01:47:17.161Z"}
+# Subtest: identity, consent, private object, moderation, retention and payment gates
+ok 83 - identity, consent, private object, moderation, retention and payment gates
+  ---
+  duration_ms: 190.098
+  type: 'test'
+  ...
+# Subtest: drain waits in-flight operation, refuses new work, flushes and resumes
+ok 84 - drain waits in-flight operation, refuses new work, flushes and resumes
+  ---
+  duration_ms: 3.0952
+  type: 'test'
+  ...
+# Subtest: exceptions release requests and failed flush keeps service drained
+ok 85 - exceptions release requests and failed flush keeps service drained
+  ---
+  duration_ms: 0.5132
+  type: 'test'
+  ...
+# Subtest: unauthorized drain never changes state and control endpoint avoids self-deadlock
+ok 86 - unauthorized drain never changes state and control endpoint avoids self-deadlock
+  ---
+  duration_ms: 70.5365
+  type: 'test'
+  ...
+# Subtest: OSS object index restores from a private object and persists mutations serially
+ok 87 - OSS object index restores from a private object and persists mutations serially
+  ---
+  duration_ms: 7.9388
+  type: 'test'
+  ...
+# Subtest: OSS index bootstraps once from a legacy local index when the remote key is absent
+ok 88 - OSS index bootstraps once from a legacy local index when the remote key is absent
+  ---
+  duration_ms: 9.5529
+  type: 'test'
+  ...
+# Subtest: file object index remains local and does not require an OSS client
+ok 89 - file object index remains local and does not require an OSS client
+  ---
+  duration_ms: 5.521
+  type: 'test'
+  ...
+# Subtest: providerUrl returns an owned HTTPS OSS URL capped by retention and 900 seconds
+ok 90 - providerUrl returns an owned HTTPS OSS URL capped by retention and 900 seconds
+  ---
+  duration_ms: 1.5609
+  type: 'test'
+  ...
+# Subtest: configured template objects are made private and exposed to providers only by short HTTPS signatures
+ok 91 - configured template objects are made private and exposed to providers only by short HTTPS signatures
+  ---
+  duration_ms: 2.2671
+  type: 'test'
+  ...
+# Subtest: providerUrl rejects another owner and expired objects without signing
+ok 92 - providerUrl rejects another owner and expired objects without signing
+  ---
+  duration_ms: 1.3351
+  type: 'test'
+  ...
+# Subtest: file providerUrl falls back to the application signed URL contract
+ok 93 - file providerUrl falls back to the application signed URL contract
+  ---
+  duration_ms: 4.9653
+  type: 'test'
+  ...
+# Subtest: task ledger OSS key keeps the legacy default and accepts isolated prefixes
+ok 94 - task ledger OSS key keeps the legacy default and accepts isolated prefixes
+  ---
+  duration_ms: 1.2055
+  type: 'test'
+  ...
+# Subtest: task ledger OSS key rejects unsafe or ambiguous paths
+ok 95 - task ledger OSS key rejects unsafe or ambiguous paths
+  ---
+  duration_ms: 0.7871
+  type: 'test'
+  ...
+# {"level":"info","event":"tasks.oss_loaded","details":{"count":11},"createdAt":"2026-09-23T01:47:17.714Z"}
+# {"level":"alert","event":"provider.budget_circuit_open","details":{"token":"[REDACTED]","globalUsage":5},"createdAt":"2026-09-23T01:47:17.721Z"}
+# Subtest: HTTP telemetry is bounded, route-labelled and produces threshold incidents
+ok 96 - HTTP telemetry is bounded, route-labelled and produces threshold incidents
+  ---
+  duration_ms: 3.6218
+  type: 'test'
+  ...
+# Subtest: generation analytics preserves legacy rows and separates success, refund and pending
+ok 97 - generation analytics preserves legacy rows and separates success, refund and pending
+  ---
+  duration_ms: 20.1999
+  type: 'test'
+  ...
+# Subtest: admin dashboard exposes real analytics and monitoring structures
+ok 98 - admin dashboard exposes real analytics and monitoring structures
+  ---
+  duration_ms: 80.7301
+  type: 'test'
+  ...
+# Subtest: published managed videos use the immutable preview as the actual fusion source
+ok 99 - published managed videos use the immutable preview as the actual fusion source
+  ---
+  duration_ms: 2.1666
+  type: 'test'
+  ...
+# Subtest: replacing an existing preview with an uploaded video also replaces the actual fusion source
+ok 100 - replacing an existing preview with an uploaded video also replaces the actual fusion source
+  ---
+  duration_ms: 0.6558
+  type: 'test'
+  ...
+# Subtest: unpublished, disabled, unlicensed or external template sources cannot reach a provider
+ok 101 - unpublished, disabled, unlicensed or external template sources cannot reach a provider
+  ---
+  duration_ms: 0.3481
+  type: 'test'
+  ...
+# Subtest: APP prepay signs exact request bytes and returns verifiable native payment signature
+ok 102 - APP prepay signs exact request bytes and returns verifiable native payment signature
+  ---
+  duration_ms: 40.4388
+  type: 'test'
+  ...
+# Subtest: unsigned or mismatched signed API responses never issue payment params
+ok 103 - unsigned or mismatched signed API responses never issue payment params
+  ---
+  duration_ms: 8.5745
+  type: 'test'
+  ...
+# Subtest: notification authenticates original bytes, timestamp and pinned serial before decrypting
+ok 104 - notification authenticates original bytes, timestamp and pinned serial before decrypting
+  ---
+  duration_ms: 6.2841
+  type: 'test'
+  ...
+# Subtest: transaction validation rejects cross merchant/app/order/currency/amount and missing trade ID
+ok 105 - transaction validation rejects cross merchant/app/order/currency/amount and missing trade ID
+  ---
+  duration_ms: 2.4546
+  type: 'test'
+  ...
+# Subtest: query, close and refund use signed correct merchant endpoints and integer cents
+ok 106 - query, close and refund use signed correct merchant endpoints and integer cents
+  ---
+  duration_ms: 14.9991
+  type: 'test'
+  ...
+# Subtest: refund validation ties notification to merchant, original transaction, order and exact refund
+ok 107 - refund validation ties notification to merchant, original transaction, order and exact refund
+  ---
+  duration_ms: 1.1068
+  type: 'test'
+  ...
+# Subtest: authenticated but wrong-merchant or inconsistent notification is rejected, including corrupted GCM tag
+ok 108 - authenticated but wrong-merchant or inconsistent notification is rejected, including corrupted GCM tag
+  ---
+  duration_ms: 4.4313
+  type: 'test'
+  ...
+1..108
+# tests 108
+# suites 0
+# pass 108
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 6263.4632

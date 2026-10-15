@@ -1,0 +1,68 @@
+{
+  "sourceFiles": 116333,
+  "uniqueObjects": 49651,
+  "logicalBytes": 3261040103,
+  "archiveBytes": 1109004591,
+  "volumes": 33,
+  "browsableFiles": 1646,
+  "excludedFiles": 3613,
+  "byRoot": {
+    "乐颜秀-换脸App项目": {
+      "files": 60584,
+      "bytes": 1526671362
+    },
+    "lyx-deploy-r4": {
+      "files": 6232,
+      "bytes": 60942086
+    },
+    "lyx-tmp": {
+      "files": 4,
+      "bytes": 59625
+    },
+    "交接迁移-2026-09-23": {
+      "files": 17,
+      "bytes": 684024
+    },
+    "candidate-artifacts": {
+      "files": 374,
+      "bytes": 3529311
+    },
+    "output": {
+      "files": 6,
+      "bytes": 4483555
+    },
+    "_restore_verification": {
+      "files": 48115,
+      "bytes": 1493399733
+    },
+    "_render_payment_doc.ps1": {
+      "files": 1,
+      "bytes": 690
+    },
+    "_build_payment_company_guide.py": {
+      "files": 1,
+      "bytes": 13811
+    },
+    "历史迁移包-2026-09-23": {
+      "files": 997,
+      "bytes": 171198366
+    },
+    "_build_company_technical_package.py": {
+      "files": 1,
+      "bytes": 56714
+    },
+    "AGENTS.md": {
+      "files": 1,
+      "bytes": 826
+    }
+  },
+  "statuses": {
+    "unchanged": 115028,
+    "document_text_export": 164,
+    "reviewed_privacy_override": 10,
+    "text_redacted": 981,
+    "archive_sanitized": 126,
+    "public_dependency_restored": 8,
+    "pem_marker_false_positive_repaired": 16
+  }
+}

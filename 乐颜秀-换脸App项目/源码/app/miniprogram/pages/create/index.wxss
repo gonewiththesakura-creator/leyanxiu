@@ -1,0 +1,50 @@
+/* Flow.tsx supplies the stage structure. The mini program keeps black/pink;
+   the original upload/generating/result views use a light blue theme. */
+page { background: #08080b; color: #f8f6fa; font-size: 30rpx; }
+.page { padding: 24rpx 32rpx calc(48rpx + env(safe-area-inset-bottom)); }
+.topline, .balance { display: flex; align-items: center; justify-content: space-between; gap: 20rpx; }
+.topline .link { margin: 0; }
+.heading { font-size: 46rpx; font-weight: 700; line-height: 1.4; margin: 28rpx 0 12rpx; }
+.balance { margin: 24rpx 0; padding: 8rpx 24rpx; border-radius: 20rpx; background: #21151f; }
+.balance .link { white-space: nowrap; }
+.step { font-size: 38rpx; font-weight: 600; margin: 32rpx 0 22rpx; }
+.description, .empty { color: #b2aeb8; font-size: 27rpx; line-height: 1.75; margin: 18rpx 0; }
+.notice { color: #d0c8d0; line-height: 1.75; margin: 24rpx 0; }
+.upload-frame { width: 100%; height: 680rpx; border: 2rpx dashed #51404d; border-radius: 28rpx; box-sizing: border-box; background: #151218; overflow: hidden; }
+.source-photo { width: 100%; height: 100%; display: block; }
+.upload-placeholder { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22rpx; padding: 30rpx; box-sizing: border-box; text-align: center; }
+.upload-placeholder text { color: #aaa0ac; font-size: 25rpx; line-height: 1.6; }
+.effect-preview { width: 310rpx; height: 340rpx; border-radius: 20rpx; }
+.row { display: flex; flex-wrap: wrap; gap: 20rpx; margin: 24rpx 0; }
+.row > button { flex: 1; }
+button { margin: 0; padding: 0 24rpx; background: #ef3acb; color: #fff; border-radius: 18rpx; font-size: 30rpx; min-height: 88rpx; line-height: 88rpx; }
+button[disabled] { background: #303036; color: #9999a1; }
+.page button { width: auto; }
+.page button.primary { width: 100%; }
+.page button[disabled] { background: #303036; color: #9999a1; }
+.primary { width: 100%; font-size: 32rpx; font-weight: 600; }
+.secondary { background: #29262e; color: #f0eaf2; }
+.link { background: transparent; color: #ef8add; font-size: 27rpx; margin: 16rpx 0; text-align: left; padding: 0; min-height: 64rpx; line-height: 1.6; display: flex; align-items: center; }
+.link::after { border: 0; }
+.centered { justify-content: center; text-align: center; }
+.action-area { margin-top: 32rpx; padding: 24rpx 0 12rpx; border-top: 2rpx solid #302631; }
+.cost { color: #e6dae6; text-align: center; margin-bottom: 22rpx; font-size: 28rpx; }
+.shortage { padding: 20rpx 24rpx; margin: 20rpx 0; background: #33261b; color: #ffdb9c; border-radius: 16rpx; line-height: 1.7; }
+.shortage .link { display: inline-flex; margin: 0 12rpx; }
+.card { padding: 26rpx; background: #19171e; border: 2rpx solid #302c36; border-radius: 24rpx; margin: 24rpx 0; }
+.title { font-size: 32rpx; font-weight: 600; margin-bottom: 16rpx; }
+.consent-summary { display: flex; align-items: center; gap: 24rpx; line-height: 1.7; font-size: 28rpx; }
+.consent-photo { width: 150rpx; height: 190rpx; flex-shrink: 0; border-radius: 14rpx; background: #151218; }
+.consent .card { line-height: 1.8; font-size: 28rpx; }
+.consent-options label { display: block; margin: 22rpx 0; line-height: 1.8; }
+.processing { text-align: center; padding: 54rpx 12rpx 32rpx; }
+.processing-ring { width: 280rpx; height: 280rpx; margin: 0 auto 44rpx; padding: 12rpx; border: 6rpx solid #71315f; border-top-color: #ef3acb; border-radius: 50%; }
+.processing-ring image { width: 100%; height: 100%; border-radius: 50%; background: #19171e; }
+.stage { color: #ef8add; font-size: 32rpx; line-height: 1.7; margin: 24rpx 0; }
+.processing .secondary { margin-top: 36rpx; }
+.result-photo { width: 100%; height: 760rpx; display: block; background: #131116; border-radius: 22rpx; margin: 24rpx 0; }
+.success-label { color: #83dfbd; font-size: 28rpx; margin-top: 32rpx; }
+.footer-links { margin-top: 36rpx; border-top: 2rpx solid #302631; padding-top: 18rpx; }
+.privacy-overlay { position: fixed; z-index: 100; top: 0; right: 0; bottom: 0; left: 0; background: rgba(0, 0, 0, .85); display: flex; align-items: center; padding: 40rpx; }
+.privacy-dialog { background: #19171e; padding: 36rpx; border-radius: 24rpx; line-height: 1.75; width: 100%; }
+.privacy-dialog button { margin: 22rpx 0; }

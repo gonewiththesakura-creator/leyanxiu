@@ -1,0 +1,35 @@
+# 乐颜秀生产环境公司交付字段模板（不填写真实密钥，不通过聊天传递）
+DEPLOY_ENV=production
+RELEASE_CHANNEL=wechat-mini-program
+AUTH_MODE=wechat
+WECHAT_APP_ID=<公司密钥系统引用>
+WECHAT_APP_SECRET=<公司密钥系统引用>
+MINIPROGRAM_APPID=<公司填写>
+MINIPROGRAM_RECORD_NO=<公司填写>
+ICP_RECORD_NO=<公司填写>
+PUBLIC_BASE_URL=https://<公司实名域名>
+CORS_ORIGIN=https://<公司实名域名>
+OBJECT_STORAGE_BACKEND=oss
+OSS_BUCKET=<公司私有bucket>
+OSS_REGION=oss-cn-shanghai
+PRIVATE_BUCKET_AUDIT_REPORT=<零公开对象审计报告路径>
+AUTH_SESSION_SECRET=<密钥系统引用，至少32字符>
+OBJECT_SIGNING_SECRET=<密钥系统引用>
+BASIC_CONSENT_VERSION=<公司批准版本>
+FACE_CONSENT_VERSION=<公司批准版本>
+CONTENT_POLICY_VERSION=<公司批准版本>
+PRIVACY_POLICY_URL=https://<已批准隐私政策>
+USER_AGREEMENT_URL=https://<已批准用户协议>
+THIRD_PARTY_LIST_URL=https://<已批准第三方清单>
+PIPIA_REFERENCE=<评估编号/版本>
+SUPPORT_CONTACT=<客服电话或邮箱>
+AI_SERVICE_DISCLOSURES_JSON=[{"provider":"<公司核实>","model":"<公司核实>","filingReference":"<备案号>","purpose":"<用途>","region":"<区域>"}]
+AI_MARKING_REQUIRED=true
+SERVICE_PROVIDER_CODE=<公司/服务者编码>
+AI_MODEL_FILING_REFERENCE=<公司核实的备案引用>
+LICENSED_ASSET_IDS=<已授权模板ID，逗号分隔>
+RETENTION_SUPPLIER_POLICY=<公司批准的供应商保存删除政策>
+SUPPLIER_DELETION_CAPABILITIES_JSON=<逐供应商删除能力JSON>
+CONTENT_SAFETY_MODE=<完成适配的外部审核供应商>
+PAYMENT_MODE=closed_test
+# 正式收费前另行配置 PAYMENT_PROVIDER/PAYMENT_PRODUCTS_JSON/PAYMENT_WEBHOOK_SECRET

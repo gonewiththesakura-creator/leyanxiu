@@ -1,0 +1,164 @@
+apply plugin: 'com.android.application'
+
+def environmentValue = { String name ->
+    def value = System.getenv(name)
+    return value == null ? "" : value.trim()
+}
+
+def versionCodeText = environmentValue("ANDROID_VERSION_CODE") ?: "1"
+if (!(versionCodeText ==~ /[1-9][0-9]*/)) {
+    throw new GradleException("ANDROID_VERSION_CODE must be a positive integer")
+}
+
+def versionNameValue = environmentValue("ANDROID_VERSION_NAME") ?: "1.0.0"
+if (!(versionNameValue ==~ /[0-9]+(?:\.[0-9]+){1,3}(?:[-+][0-9A-Za-z.-]+)?/)) {
+    throw new GradleException("ANDROID_VERSION_NAME must be a dotted version such as 1.0.0")
+}
+
+def signingEnvironmentNames = [
+    "ANDROID_RELEASE_STORE_FILE",
+    "ANDROID_RELEASE_STORE_PASSWORD",
+    "ANDROID_RELEASE_KEY_ALIAS",
+    "ANDROID_RELEASE_KEY_PASSWORD",
+]
+def signingEnvironment = signingEnvironmentNames.collectEntries { [(it): environmentValue(it)] }
+def populatedSigningValues = signingEnvironment.values().count { !it.isEmpty() }
+if (populatedSigningValues != 0 && populatedSigningValues != signingEnvironmentNames.size()) {
+    throw new GradleException("Release signing is partially configured; provide all ANDROID_RELEASE_* variables")
+}
+
+def releaseSigningReady = populatedSigningValues == signingEnvironmentNames.size()
+def releaseKeystore = releaseSigningReady ? file(signingEnvironment["ANDROID_RELEASE_STORE_FILE"]) : null
+if (releaseSigningReady) {
+    if (!releaseKeystore.isFile()) {
+        throw new GradleException("ANDROID_RELEASE_STORE_FILE does not point to a readable keystore")
+    }
+    def projectPath = rootProject.projectDir.canonicalFile.toPath()
+    if (releaseKeystore.canonicalFile.toPath().startsWith(projectPath)) {
+        throw new GradleException("The release keystore must stay outside the source checkout")
+    }
+}
+if (environmentValue("ANDROID_REQUIRE_SIGNING").equalsIgnoreCase("true") && !releaseSigningReady) {
+    throw new GradleException("Company release signing is required but ANDROID_RELEASE_* variables are missing")
+}
+
+android {
+    namespace = "com.yibohuaxia.leyanxiu"
+    compileSdk = rootProject.ext.compileSdkVersion
+    signingConfigs {
+        if (releaseSigningReady) {
+            release {
+                storeFile releaseKeystore
+                storePassword signingEnvironment["ANDROID_RELEASE_STORE_PASSWORD"]
+                keyAlias signingEnvironment["ANDROID_RELEASE_KEY_ALIAS"]
+                keyPassword signingEnvironment["ANDROID_RELEASE_KEY_PASSWORD"]
+                enableV1Signing true
+                enableV2Signing true
+                enableV3Signing true
+                enableV4Signing true
+            }
+        }
+    }
+    defaultConfig {
+        applicationId "com.yibohuaxia.leyanxiu"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode versionCodeText.toInteger()
+        versionName versionNameValue
+        def wechatAppId = environmentValue("WECHAT_APP_ID")
+        if (wechatAppId && !(wechatAppId ==~ /wx[0-9a-fA-F]{16}/)) throw new GradleException("WECHAT_APP_ID has an invalid format")
+        resValue "string", "wechat_app_id", wechatAppId
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
+        }
+        release {
+            debuggable false
+            jniDebuggable false
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (releaseSigningReady) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}
+
+tasks.register("verifyReleaseWebAssets") {
+    def publicAssets = layout.projectDirectory.dir("src/main/assets/public")
+    inputs.dir(publicAssets)
+    doLast {
+        def indexFile = publicAssets.file("index.html").asFile
+        def configFile = layout.projectDirectory.file("src/main/assets/capacitor.config.json").asFile
+        if (!indexFile.isFile() || !configFile.isFile()) {
+            throw new GradleException("Release web assets are missing; run the web build and Capacitor sync first")
+        }
+        def indexText = indexFile.getText("UTF-8")
+        def configText = configFile.getText("UTF-8")
+        if (indexText.contains("__API_CONNECT_SOURCE__")) {
+            throw new GradleException("Release CSP still contains an unresolved API placeholder")
+        }
+        if ((indexText =~ /(?i)(?:connect-src|img-src|media-src)[^;\"]*http:\/\//).find()) {
+            throw new GradleException("Release CSP contains a cleartext resource origin")
+        }
+        if (indexText.contains("REDACTED_COMPANY_INFRASTRUCTURE") || indexText.contains("PRIVATE_IP")) {
+            throw new GradleException("Release web assets contain a debug backend address")
+        }
+        publicAssets.asFileTree.matching {
+            include "**/*.html", "**/*.js", "**/*.json", "**/*.css"
+        }.each { assetFile ->
+            def assetText = assetFile.getText("UTF-8")
+            if (assetText.contains("REDACTED_COMPANY_INFRASTRUCTURE") || assetText.contains("PRIVATE_IP")) {
+                throw new GradleException("Release web asset ${assetFile.name} contains a debug backend address")
+            }
+        }
+        if ((configText =~ /"allowMixedContent"\s*:\s*true/).find()) {
+            throw new GradleException("Release Capacitor config enables mixed content")
+        }
+    }
+}
+
+tasks.matching { it.name == "preReleaseBuild" }.configureEach {
+    dependsOn tasks.named("verifyReleaseWebAssets")
+}
+
+tasks.register("releaseApk") {
+    group = "build"
+    description = "Build the release APK (signed only when all ANDROID_RELEASE_* variables are present)."
+    dependsOn tasks.named("assembleRelease")
+}
+
+tasks.register("releaseBundle") {
+    group = "build"
+    description = "Build the release Android App Bundle."
+    dependsOn tasks.named("bundleRelease")
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android:6.8.40'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'

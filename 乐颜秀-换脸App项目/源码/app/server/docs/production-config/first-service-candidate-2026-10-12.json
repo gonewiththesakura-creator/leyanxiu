@@ -1,0 +1,83 @@
+{
+  "recordVersion": 1,
+  "state": "local-first-service-candidate-not-runtime-config",
+  "preparedAt": "2026-10-12",
+  "effect": {
+    "id": "natural-avatar",
+    "version": "natural-avatar-v1-20261012",
+    "title": "自然 AI 头像",
+    "subtitle": "单人头像、简洁背景与自然柔光；结果带 AI 标识，人物细节可能改变。",
+    "provider": "aliyun-qwen-image",
+    "model": "qwen-image-2.0-2026-03-03",
+    "purpose": "photo-effect:natural-avatar",
+    "parameters": {
+      "prompt": "以输入照片为唯一人物参考，严格保留同一个人的身份、五官、脸型、肤色、真实年龄、发型、神态和主要构图；只执行指定效果。不要换脸，不增加人物，不改变性别，不添加文字、标志或边框。制作自然高级的个人头像，干净中性背景、专业柔光和头肩构图，保留真实年龄。输出一张高清完整照片。",
+      "negativePrompt": "",
+      "size": "1024*1024",
+      "n": 1,
+      "watermark": true,
+      "promptExtend": false
+    },
+    "suitableInput": "清晰的单人照片；用户须有权将该照片用于本次编辑并完成必要授权。",
+    "limitations": "不保证与本人完全一致，不用于证件、身份验证或原始事实证明；不采用历史其他效果的样例充当本型号实测。",
+    "qualityAccepted": false,
+    "qualityReview": {
+      "date": "2026-10-13",
+      "result": "rejected-for-sale",
+      "reason": "本次固定虚构人像实测的输出新增明显眼周皱纹、年龄观感增大，不符合保留年龄与人物细节的首发要求。"
+    }
+  },
+  "product": {
+    "id": "photo10",
+    "name": "图片处理10次包",
+    "amountFen": 990,
+    "type": "pack",
+    "days": 365,
+    "components": [{ "kind": "photo", "quantity": 10, "valueFen": 990 }]
+  },
+  "commercialTerms": {
+    "eligibleNewPurchasePlatform": "android",
+    "autoRenewal": false,
+    "unitChargeAfterConfirmedDelivery": 1,
+    "refundUnusedValueOnlyInSelfService": true,
+    "fullUnusedRefundFen": 990,
+    "refundAfterOneDeliveredImageFen": 891,
+    "qualityDisputes": "公开客服邮箱人工核查；剩余次数公式不排除法定权利。",
+    "sourceHours": 24,
+    "resultHours": 24,
+    "retentionStart": "分别从原图上传意图、结果生成记录建立时起算"
+  },
+  "publicDocuments": {
+    "PRIVACY_POLICY_URL": "https://REDACTED_COMPANY_INFRASTRUCTURE/mini/legal/privacy.html",
+    "USER_AGREEMENT_URL": "https://REDACTED_COMPANY_INFRASTRUCTURE/mini/legal/terms.html",
+    "THIRD_PARTY_LIST_URL": "https://REDACTED_COMPANY_INFRASTRUCTURE/mini/legal/third-parties.html"
+  },
+  "selectedAcceptanceInput": {
+    "kind": "ai-generated-fictional-adult-portrait",
+    "selectedByUserAt": "2026-10-12",
+    "workspaceRelativePath": "output/imagegen/fictional-adult-avatar-20261012.jpg",
+    "contentType": "image/jpeg",
+    "width": 768,
+    "height": 1024,
+    "byteLength": 133268,
+    "sha256": "56eb47602d36864b6eec9514ddb091cfa2b71309558c3e12917b3970329b947f",
+    "inputGenerationCompleted": true,
+    "aliyunEditingTestExecuted": true,
+    "androidDeliveryVerified": false,
+    "limitation": "用户选择的虚构成人素材可验收人像处理流程，不证明真人身份保真或任意真实用户照片的效果。"
+  },
+  "notYetVerified": [
+    "授权人像的实际效果质量与完整 Android 交付",
+    "平台正式道具发布及价格、次数与此候选一致",
+    "固定模型和用途对应的正式备案材料及应用主体合作证明",
+    "正式 env=0 购买、交付扣次、退款及运营员处理",
+    "正式清理调度及撤回、到期的云端观察"
+  ],
+  "feeAuthorization": {
+    "newPaymentAllowed": false,
+    "newModelCallsAllowed": 0,
+    "newModerationCallsAllowed": 0,
+    "reason": "本次授权的人像验收已于2026-10-13执行1次编辑及2次审核，额度已用完；技术管线通过但视觉质量拒绝开售，不自动重试。"
+  },
+  "deployment": { "uploaded": false, "generationEnabled": false, "purchaseEnabled": false }
+}

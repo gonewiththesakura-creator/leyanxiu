@@ -1,0 +1,42 @@
+{
+  "recordVersion": 1,
+  "observedAt": "2026-10-13T16:23:00+08:00",
+  "source": "existing-chrome-devtools-mcp-visible-ui",
+  "appName": "乐颜秀",
+  "appId": "REDACTED_APP_IDENTIFIER",
+  "authentication": { "status": "已认证", "completedOn": "2026-08-05" },
+  "filing": { "status": "已备案", "reference": "京ICP备2026059978号-2X" },
+  "category": ["深度合成", "AI换脸"],
+  "virtualPayment": {
+    "productionProductCount": 0,
+    "developmentProduct": {
+      "id": "photo10",
+      "name": "图片处理10次包",
+      "amountFen": 990,
+      "status": "未发布",
+      "remark": "开发联调样例暂不发布"
+    }
+  },
+  "versions": { "developmentUploaded": false, "auditSubmitted": false, "onlinePublished": false },
+  "serviceDeclarations": {
+    "privacySettingsLabel": "已更新",
+    "ugcSettingsLabel": "已声明",
+    "orderCenterPath": "/pages/payments/index",
+    "privacyApprovalVerified": false,
+    "privacyDetailObservation": "去完善打开 ver=1/id=0 的新编辑表单，未读回历史已提交的分类用途和补充附件；不能据此断言历史提交丢失或审核通过。没有提交新协议。"
+  },
+  "browserRecovery": {
+    "transport": "existing chrome-devtools-mcp bridge",
+    "newBrowserOrProfile": false,
+    "computerUseUsedInThisCheck": false,
+    "identityCheck": "根入口曾返回正确乐颜秀；之后在已核实的同一标签页内点击导航连续读回正确账号。",
+    "limitation": "旧公众号标签页仍可显示另一账号；额外新标签可能进入不同配置档并使带旧token的链接显示登录超时。不能仅凭旧标签或自动选中页判断当前小程序登录。"
+  },
+  "changes": {
+    "productPublished": false,
+    "privacyAgreementSubmitted": false,
+    "miniProgramUploaded": false,
+    "backendDeployed": false,
+    "paymentCreated": false
+  }
+}

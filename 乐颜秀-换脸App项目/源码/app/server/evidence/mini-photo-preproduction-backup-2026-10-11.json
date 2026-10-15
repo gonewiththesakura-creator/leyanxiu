@@ -1,0 +1,19 @@
+{
+  "source": "Existing signed-in Chrome, WeChat CloudRun MySQL, task and backup lists",
+  "verifiedDate": "2026-10-11",
+  "timezone": "Asia/Shanghai",
+  "environment": "leyanxiu-prod",
+  "backupRemark": "before-photo-production-20261011",
+  "backupId": "10935107",
+  "taskId": "17507506",
+  "type": "manual_snapshot",
+  "scope": "entire_existing_cluster",
+  "backupPointLocal": "2026-10-11 18:15:44",
+  "taskFinishedLocal": "2026-10-11 18:16:07",
+  "displayedSize": "3.275M",
+  "backupStatus": "success",
+  "taskProgressPercent": 100,
+  "restoreExecuted": false,
+  "cloudMigrationExecuted": false,
+  "oldBackupPreserved": true
+}

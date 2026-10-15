@@ -1,0 +1,25 @@
+{
+  "recordVersion": 1,
+  "date": "2026-10-15",
+  "source": "official-wechatide-automation-evaluate-wx-cloud-callContainer",
+  "runtime": "original-miniprogram-pages-mine-index",
+  "appIdMatched": true,
+  "service": "buildtest",
+  "anonymous": true,
+  "testRoute": false,
+  "paymentCalled": false,
+  "generationCalled": false,
+  "completed": true,
+  "error": false,
+  "reads": [
+    { "path": "/health", "status": 200, "ok": true, "env": 0, "mode": "merchant_test", "salesEnabled": true, "generationAvailable": true },
+    { "path": "/api/mini/payments/products", "status": 200, "count": 0, "available": false },
+    { "path": "/api/catalog", "status": 200, "count": 0, "available": false },
+    { "path": "/api/capabilities", "status": 200, "ready": false }
+  ],
+  "limitations": [
+    "Health does not expose a version ID; this verifies the current default endpoint, not the candidate 017.",
+    "No authenticated catalog, purchase, upload, generation, callback or refund was exercised.",
+    "An earlier direct-await diagnostic returned unconfirmed; the separately correlated background read above completed and was polled back."
+  ]
+}

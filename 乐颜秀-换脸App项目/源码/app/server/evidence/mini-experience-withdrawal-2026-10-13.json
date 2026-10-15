@@ -1,0 +1,29 @@
+{
+  "recordVersion": 1,
+  "observedOn": "2026-10-13",
+  "timezone": "Asia/Shanghai",
+  "source": "existing-chrome-devtools-mcp-visible-ui",
+  "appId": "REDACTED_APP_IDENTIFIER",
+  "appName": "乐颜秀",
+  "developmentVersion": "0.1.13",
+  "reason": "User rejected the separate payment/photo verification UI as the original product. Original black-and-pink five-tab product remains the intended release baseline.",
+  "action": "取消体验",
+  "readback": {
+    "developmentVersionPresent": true,
+    "experienceLabelPresent": false,
+    "auditVersionPresent": false,
+    "onlineVersionPresent": false,
+    "onlineStatusText": "尚未提交线上版本",
+    "auditStatusText": "你暂无提交审核的版本或者版本已发布上线"
+  },
+  "localSourceDeleted": false,
+  "originalProductFilesModifiedInThisCorrection": false,
+  "paymentOrGenerationInitiatedInThisCorrection": false,
+  "backendRollbackPerformed": false,
+  "retainedBackendVersion": "buildtest-016",
+  "limitations": [
+    "Experience withdrawal does not revoke previously installed developer copies or disable the retained backend.",
+    "The backend, published test product, download domain and public legal pages were not rolled back by this UI action.",
+    "No new claim is made about historical online releases or original-source completeness beyond files inspected on disk."
+  ]
+}

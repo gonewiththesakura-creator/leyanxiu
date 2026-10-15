@@ -1,0 +1,82 @@
+{
+  "format": "mini-merchant-cloud-promotion-observation-v1",
+  "checkedAt": "2026-10-13T10:13:17.005Z",
+  "source": "official-wxcloud-sdk-readonly",
+  "remoteStateChangedByThisCheck": false,
+  "controlPlanePromotionVerified": true,
+  "target": {
+    "service": "buildtest",
+    "candidateVersion": "buildtest-016",
+    "paymentEnvironment": 0,
+    "mode": "merchant_test"
+  },
+  "release": {
+    "exists": true,
+    "orderId": 2844375,
+    "serverMatches": true,
+    "fromVersion": "buildtest-013",
+    "toVersion": "buildtest-016",
+    "status": "success",
+    "isReleasing": false
+  },
+  "task": {
+    "id": 2349217,
+    "status": "finished",
+    "matchesSubmittedJournal": true
+  },
+  "versions": {
+    "total": 10,
+    "defaultCandidateOnly": true,
+    "oldDefault": {
+      "name": "buildtest-013",
+      "status": "normal",
+      "flowRatio": 0
+    },
+    "candidate": {
+      "name": "buildtest-016",
+      "status": "normal",
+      "flowRatio": 100
+    },
+    "allOtherVersionsZero": true
+  },
+  "configuration": {
+    "candidateMatchesExactSubmittedVariables": true,
+    "baseMatchesExactSubmittedVariables": true,
+    "candidateVersionIdentityMatches": true,
+    "candidateAppIdMatches": true,
+    "candidateEnv0": true,
+    "candidateMerchantMode": true,
+    "sessionEncryptionKeyPreserved": true,
+    "oldDefaultEnv1Preserved": true,
+    "miniappIngressOnly": true,
+    "candidateCapacityUnchanged": true
+  },
+  "artifacts": {
+    "manifestSha256": "276619461e2e80ba626b193379132b38c3f065585a4d65e9b397a3105e54c3a8",
+    "zipSha256": "43eb8a96e678db9176f2c5d9d473a90b2e82c52c81016cb3ae158467335edf8b"
+  },
+  "relatedNativeObservation": {
+    "path": "mini-merchant-default-native-boundaries-2026-10-13.json",
+    "sha256": "767c7f200545e0c1dafd0f1a1e5293a578fc4a8d474af6f221ac9069cb45a258",
+    "performedByThisCheck": false,
+    "passed": true,
+    "completedAt": "2026-10-13T10:04:22Z",
+    "cloudCalls": 5,
+    "grayParameterUsed": false,
+    "bearerAuthorizationUsed": false,
+    "healthEnvironment": 0,
+    "healthMode": "merchant_test",
+    "anonymousSalesAndCreationClosed": true,
+    "notificationPathGetStatus": 405,
+    "healthExposesVersionIdentifier": false
+  },
+  "limitations": {
+    "nativeRequestsPerformed": false,
+    "paymentNotificationDeliveryVerified": false,
+    "realPaymentVerified": false,
+    "realGenerationVerified": false,
+    "refundReceiptVerified": false,
+    "miniProgramUploadedByThisCheck": false
+  },
+  "sensitiveValuesEmitted": false
+}

@@ -1,0 +1,35 @@
+<import src="../../components/privacy-consent/template.wxml"/>
+<template is="privacy-consent" data="{{privacyVisible,privacyName,privacyDescription}}"/>
+<view class="page">
+  <view class="header"><button size="mini" class="back" bindtap="openCreation" aria-label="{{returnLabel}}">‹</button><view><view class="heading">套餐与订单</view><text class="subtitle">按需购买，明白使用</text></view><button size="mini" class="text-button" bindtap="openService">帮助</button></view>
+  <view class="balance"><view><text class="eyebrow">{{ledgerOnlySandbox ? '沙箱测试记录' : '我的制作次数'}}</text><view class="balance-value">{{connected ? photo : '—'}}<text class="unit"> 次图片</text></view></view><text wx:if="{{connected && video}}" class="description">视频 {{video}} 次</text><text wx:else class="balance-note">不自动续费</text></view>
+  <view class="tabs" role="tablist" aria-label="套餐与订单"><button class="tab {{activeTab === 'plans' ? 'active' : ''}}" role="tab" aria-selected="{{activeTab === 'plans'}}" data-tab="plans" bindtap="selectTab">购买套餐</button><button class="tab {{activeTab === 'orders' ? 'active' : ''}}" role="tab" aria-selected="{{activeTab === 'orders'}}" data-tab="orders" bindtap="selectTab">我的订单</button></view>
+  <view class="notice" role="status">{{notice}}</view>
+  <view class="warning" wx:if="{{merchantTest}}">商户测试：会产生真实扣款，仅指定测试账号可购买。</view>
+  <button wx:if="{{!connected}}" class="connect" disabled="{{connecting}}" loading="{{connecting}}" bindtap="connect">{{connecting ? '正在读取账号' : '连接账号，查看套餐与订单'}}</button>
+  <block wx:if="{{activeTab === 'plans'}}">
+    <view class="section-title">图片制作次数包</view>
+    <view class="card product-card" wx:for="{{products}}" wx:key="id"><view class="product-label">{{item.name}}</view><view class="rights">{{item.rights}}</view><view class="description">付款确认后生效 · 有效期 {{item.days}} 天</view><view class="description">一次购买，不自动续费</view><view class="product-bottom"><view class="price"><text class="currency">¥</text>{{item.price}}</view><button disabled="{{!connected || !available || loading || refreshing || connecting || !agreement}}" loading="{{loading}}" bindtap="buy" data-id="{{item.id}}">{{ledgerOnlySandbox ? '测试购买' : '购买次数包'}}</button></view></view>
+    <view class="empty" wx:if="{{connected && !products.length}}">{{purchaseSupported ? '当前没有已核实的可购套餐。' : '当前终端暂不支持购买。'}}<text>已有订单和权益可在“我的订单”查看。</text></view>
+    <view class="scope card" wx:if="{{scopeVerified}}"><view class="title">这个次数包可以做什么</view><view class="effect-tag" wx:for="{{includedEffects}}" wx:key="id">{{item.title}}</view><view class="description">以上每次图片制作使用 1 次图片次数。其余图片效果和视频不在本次可购范围内。</view></view>
+    <view class="rules" wx:if="{{purchaseSupported}}">
+      <view class="section-title">购买与使用说明</view><view wx:if="{{ledgerOnlySandbox}}" class="warning">沙箱联调可能实际扣款，以微信收银台为准；图片创作尚未开放。</view>
+      <view class="rule"><text class="rule-label">次数如何使用</text><text>制作前冻结 1 次，成功交付后核销；明确失败返还。状态不明时核实原任务，请勿重复制作。</text></view>
+      <view class="rule"><text class="rule-label">有效期与保存</text><text>套餐期限以卡片及已购权益记录为准。到期后确认失败补回的次数有效期为 7 天。作品在线保存期与次数有效期不同，请及时保存。</text></view>
+      <view class="rule"><text class="rule-label">退款与售后</text><text>可在“我的订单”申请原订单未使用部分退款；申请后冻结该订单剩余次数。审核与原路到账以实际处理结果为准，制作中的任务需先结束。</text></view>
+      <checkbox-group bindchange="agreementChanged"><label class="agreement"><checkbox value="accepted" checked="{{agreement}}" color="#f23bd1"/>我已确认适用效果、金额、次数、有效期和退款规则</label></checkbox-group>
+    </view>
+    <button class="text-button order-link" bindtap="showOrders">查看已购次数、订单与退款 ›</button>
+  </block>
+  <block wx:else>
+    <view class="section-row"><text class="section-title">购买记录</text><button class="text-button" disabled="{{!connected || loading || refreshing || connecting}}" loading="{{refreshing}}" bindtap="refresh">刷新</button></view>
+    <view class="empty" wx:if="{{connected && !orders.length}}">暂无购买记录<text>付款后可在这里查询到账结果。</text></view>
+    <view class="card" wx:for="{{orders}}" wx:key="id"><view class="section-row"><text class="title">{{item.product.name}}</text><text class="order-price">¥{{item.price}}</text></view><view class="order-state">{{item.statusText}}</view><view class="description">{{item.time}}</view><view class="order-id">订单号 {{item.id}}</view><view class="row"><button class="secondary" size="mini" disabled="{{!connected || loading || refreshing || connecting}}" bindtap="queryOrder" data-id="{{item.id}}">查询结果</button><button wx:if="{{item.canRefund}}" class="secondary" size="mini" disabled="{{!connected || loading || refreshing || connecting}}" bindtap="refundOrder" data-id="{{item.id}}">申请退款</button></view></view>
+    <view class="section-title" wx:if="{{buckets.length}}">已购次数与有效期</view>
+    <view class="card" wx:for="{{buckets}}" wx:key="id"><view class="title">{{item.name}} · {{item.state}}</view><view>可用 {{item.remaining}} 次</view><view class="description">制作中 {{item.reserved}} 次 · 退款冻结 {{item.frozen}} 次</view><view class="description">{{item.starts}} 至 {{item.expires}}</view></view>
+    <view class="section-title" wx:if="{{refunds.length}}">退款进度</view>
+    <view class="card" wx:for="{{refunds}}" wx:key="id"><view class="section-row"><text class="title">{{ledgerOnlySandbox ? '沙箱退款' : '退款记录'}}</text><text class="order-price">¥{{item.price}}</text></view><view class="order-state">{{item.statusText}}</view><view class="order-id">订单号 {{item.orderId}}</view><button wx:if="{{item.canConfirm}}" class="secondary" size="mini" disabled="{{!connected || loading || refreshing || connecting}}" bindtap="confirmSandboxRefund" data-id="{{item.id}}">确认沙箱退款</button></view>
+    <view class="description footer-note">已付款但结果未确认时，请查询原订单，勿重复付款。退款申请不代表已经到账。</view>
+  </block>
+  <button class="return-button secondary" bindtap="openCreation">{{returnLabel}}</button>
+</view>

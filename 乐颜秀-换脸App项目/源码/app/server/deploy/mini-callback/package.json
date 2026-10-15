@@ -1,0 +1,8 @@
+{
+  "name": "leyanxiu-mini-payment-callback",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.23.1 <23" },
+  "scripts": { "start": "node payments/virtual/callback-server.js" }
+}
